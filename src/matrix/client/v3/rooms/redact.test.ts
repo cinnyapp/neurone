@@ -2,7 +2,7 @@ import { putRedact } from "./redact";
 
 test("put redact message with reason request", () => {
   const roomId = "!roomId:server.name";
-  const eventId = "evt_type";
+  const eventId = "$eventId:server.name";
   const txnId = "txn";
 
   const body = {

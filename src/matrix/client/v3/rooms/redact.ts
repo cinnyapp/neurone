@@ -1,6 +1,9 @@
 import { MatrixRequestStruct } from "../../../MatrixRequestStruct";
 import { PutRedactBody, PutRedactPathParams } from "./redact.type";
 
+/**
+ * https://spec.matrix.org/v1.9/client-server-api/#put_matrixclientv3roomsroomidredacteventidtxnid
+ */
 export const putRedact = (
   pathParams: PutRedactPathParams,
   body?: PutRedactBody,
