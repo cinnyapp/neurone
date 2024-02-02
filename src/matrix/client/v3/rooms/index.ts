@@ -10,6 +10,9 @@ export * from "./members.type";
 export * from "./messages";
 export * from "./messages.type";
 
+export * from "./redact";
+export * from "./redact.type";
+
 export * from "./send";
 export * from "./send.type";
 
