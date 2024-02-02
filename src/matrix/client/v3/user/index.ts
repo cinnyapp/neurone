@@ -4,6 +4,9 @@ export * from "./accountData.type";
 export * from "./filter";
 export * from "./filter.type";
 
+export * from "./openidRequestToken";
+export * from "./openidRequestToken.type";
+
 export * from "./roomAccountData";
 export * from "./roomAccountData.type";
 
