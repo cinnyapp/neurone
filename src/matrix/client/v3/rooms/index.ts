@@ -4,6 +4,9 @@ export * from "./aliases.type";
 export * from "./event";
 export * from "./event.type";
 
+export * from "./invite";
+export * from "./invite.type";
+
 export * from "./joinedMembers";
 export * from "./joinedMembers.type";
 
