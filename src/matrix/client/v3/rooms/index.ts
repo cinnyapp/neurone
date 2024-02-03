@@ -13,9 +13,6 @@ export * from "./messages.type";
 export * from "./redact";
 export * from "./redact.type";
 
-export * from "./relations";
-export * from "./relations.type";
-
 export * from "./send";
 export * from "./send.type";
 

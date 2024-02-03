@@ -1,4 +1,4 @@
-import { ClientEvent } from "./event.type";
+import { ClientEvent } from "../../v3/rooms/event.type";
 
 /**
  * relations types
