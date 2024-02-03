@@ -1,6 +1,9 @@
 export * from "./aliases";
 export * from "./aliases.type";
 
+export * from "./ban";
+export * from "./ban.type";
+
 export * from "./event";
 export * from "./event.type";
 
