@@ -18,6 +18,3 @@ export * from "./send.type";
 
 export * from "./state";
 export * from "./state.type";
-
-export * from "./timestampToEvent";
-export * from "./timestampToEvent.type";
