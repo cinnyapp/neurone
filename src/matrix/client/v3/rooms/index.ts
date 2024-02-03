@@ -39,3 +39,6 @@ export * from "./send.type";
 
 export * from "./state";
 export * from "./state.type";
+
+export * from "./unban";
+export * from "./unban.type";
