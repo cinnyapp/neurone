@@ -1,3 +1,6 @@
+export * from "./hierarchy";
+export * from "./hierarchy.type";
+
 export * from "./relations";
 export * from "./relations.type";
 
