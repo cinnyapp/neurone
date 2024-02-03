@@ -16,6 +16,9 @@ export * from "./join.type";
 export * from "./joinedMembers";
 export * from "./joinedMembers.type";
 
+export * from "./leave";
+export * from "./leave.type";
+
 export * from "./members";
 export * from "./members.type";
 
