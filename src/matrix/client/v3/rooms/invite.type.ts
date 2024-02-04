@@ -1,3 +1,10 @@
+export type Invite3PID = {
+  address: string;
+  id_access_token: string;
+  id_server: string;
+  medium: string;
+};
+
 /**
  * postInvite types
  */
@@ -8,10 +15,5 @@ export type PostInviteBody = {
   reason?: string;
   user_id: string;
 };
-export type PostInvite1Body = {
-  address: string;
-  id_access_token: string;
-  id_server: string;
-  medium: string;
-};
+export type PostInvite1Body = Invite3PID;
 export type PostInviteOK = Record<string, never>;
