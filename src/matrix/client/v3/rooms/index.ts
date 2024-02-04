@@ -31,6 +31,9 @@ export * from "./members.type";
 export * from "./messages";
 export * from "./messages.type";
 
+export * from "./receipt";
+export * from "./receipt.type";
+
 export * from "./redact";
 export * from "./redact.type";
 
