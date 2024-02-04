@@ -43,6 +43,9 @@ export * from "./receipt.type";
 export * from "./redact";
 export * from "./redact.type";
 
+export * from "./report";
+export * from "./report.type";
+
 export * from "./send";
 export * from "./send.type";
 
