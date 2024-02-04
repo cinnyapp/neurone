@@ -1,3 +1,4 @@
+import { RoomVisibility } from "./directory/list.type";
 import { Invite3PID } from "./rooms/invite.type";
 
 export type CreateRoomStateEvent = {
@@ -10,8 +11,6 @@ export type CreateRoomPreset =
   | "private_chat"
   | "public_chat"
   | "trusted_private_chat";
-
-export type RoomVisibility = "public" | "private";
 
 /***
  * postCreateRoom types
