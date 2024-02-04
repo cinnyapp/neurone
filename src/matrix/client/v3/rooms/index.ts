@@ -57,3 +57,6 @@ export * from "./typing.type";
 
 export * from "./unban";
 export * from "./unban.type";
+
+export * from "./upgrade";
+export * from "./upgrade.type";
