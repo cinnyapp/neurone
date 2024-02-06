@@ -1,3 +1,5 @@
+import { UserProfile } from "./profile/profile.type";
+import { ClientEvent } from "./rooms/event.type";
 import { RoomEventFilter } from "./user/filter.type";
 
 export type SearchEventOrder = "recent" | "rank";
@@ -16,7 +18,7 @@ export type IncludeEventContext = {
   include_profile?: boolean;
 };
 
-export type RoomEventsCriteria = {
+export type SearchRoomEventsCriteria = {
   event_context?: IncludeEventContext;
   filter?: RoomEventFilter;
   groupings?: SearchEventGroupings;
@@ -27,7 +29,39 @@ export type RoomEventsCriteria = {
 };
 
 export type SearchCategories = {
-  room_events: RoomEventsCriteria;
+  room_events: SearchRoomEventsCriteria;
+};
+
+export type SearchEventContext = {
+  end?: string;
+  events_after?: ClientEvent[];
+  events_before?: ClientEvent[];
+  profile_info?: Record<string, UserProfile>;
+  start?: string;
+};
+
+export type SearchResult = {
+  context?: SearchEventContext;
+  rank?: number;
+  result?: ClientEvent;
+};
+
+export type SearchResultEventGroup = {
+  next_batch?: string;
+  order?: number;
+  results?: string[];
+};
+
+export type SearchResultRoomEvents = {
+  count?: number;
+  groups?: SearchResultEventGroup;
+  highlights?: string[];
+  next_batch?: string;
+  results?: SearchResult[];
+};
+
+export type SearchResultCategories = {
+  room_events?: SearchResultRoomEvents;
 };
 
 /**
@@ -38,4 +72,7 @@ export type PostSearchSearchParams = {
 };
 export type PostSearchBody = {
   search_categories: SearchCategories;
+};
+export type PostSearchOK = {
+  search_categories: SearchResultCategories;
 };
