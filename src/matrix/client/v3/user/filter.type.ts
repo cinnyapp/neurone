@@ -44,7 +44,7 @@ export type RoomFilter = {
 
 export type FilterEventFormat = "client" | "federation";
 
-export type FilterDef = {
+export type Filter = {
   account_data?: EventFilter;
   event_fields?: string[];
   event_format?: FilterEventFormat;
@@ -59,7 +59,7 @@ export type PostFilterPathParams = {
   userId: string;
 };
 
-export type PostFilterBody = FilterDef;
+export type PostFilterBody = Filter;
 
 export type PostFilterOK = {
   filter_id: string;
@@ -73,4 +73,4 @@ export type FilterPathParams = {
   filterId: string;
 };
 
-export type FilterOK = FilterDef;
+export type FilterOK = Filter;

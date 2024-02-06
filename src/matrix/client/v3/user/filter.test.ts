@@ -1,8 +1,8 @@
 import { postFilter, filter } from "./filter";
-import { FilterDef } from "./filter.type";
+import { Filter } from "./filter.type";
 
 test("post user filter request", () => {
-  const filter: FilterDef = {
+  const filter: Filter = {
     room: {
       state: {
         lazy_load_members: true,
