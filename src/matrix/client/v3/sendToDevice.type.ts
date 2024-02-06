@@ -13,3 +13,5 @@ export type PutSendToDevicePathParams = {
   txnId: string;
 };
 export type PutSendToDeviceBody = SendToDeviceMessages;
+
+export type PutSendToDeviceOK = Record<string, never>;
