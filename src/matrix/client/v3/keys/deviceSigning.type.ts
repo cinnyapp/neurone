@@ -3,11 +3,9 @@ export type AuthenticationData = {
   type?: string;
 } & object;
 
-export type Signatures = Record<string, Record<string, string>>;
-
 export type CrossSigningKey = {
   keys: Record<string, string>;
-  signatures?: Signatures;
+  signatures?: Record<string, Record<string, string>>;
   usage: string[];
   user_id: string;
 };
