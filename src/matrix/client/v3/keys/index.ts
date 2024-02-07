@@ -12,3 +12,6 @@ export * from "./query.type";
 
 export * from "./signatures";
 export * from "./signatures.type";
+
+export * from "./upload";
+export * from "./upload.type";
