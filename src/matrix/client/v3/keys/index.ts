@@ -1,3 +1,6 @@
+export * from "./changes";
+export * from "./changes.type";
+
 export * from "./deviceSigning";
 export * from "./deviceSigning.type";
 
