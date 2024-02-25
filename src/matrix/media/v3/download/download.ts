@@ -28,7 +28,7 @@ export const download = (
 };
 
 /**
- * https://spec.matrix.org/v1.9/client-server-api/#get_matrixmediav3downloadservernamemediaid
+ * https://spec.matrix.org/v1.9/client-server-api/#get_matrixmediav3downloadservernamemediaidfilename
  */
 export const downloadFile = (
   pathParams: DownloadFilePathParams,
