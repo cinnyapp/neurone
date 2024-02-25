@@ -3,5 +3,5 @@ export type MatrixRequestStruct = {
   path: string;
   rateLimited?: true;
   requireAuthentication?: true;
-  body?: string;
+  body?: string | FormData | Blob;
 };
