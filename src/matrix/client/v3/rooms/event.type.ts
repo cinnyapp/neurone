@@ -1,3 +1,5 @@
+import { StateEvent } from "./state.type";
+
 export type UnsignedData<
   PrevContent extends object = object,
   RedirectedBecause extends object = object,
@@ -8,19 +10,25 @@ export type UnsignedData<
   transaction_id?: string;
 };
 
-export type ClientEvent<
+export type MessageEvent<
   EventContent extends object = object,
   UnsignedData extends object = object,
 > = {
   event_id: string;
   room_id: string;
   sender: string;
-  state_key?: string;
   type: string;
   content: EventContent;
   origin_server_ts: number;
   unsigned?: UnsignedData;
 };
+
+export type ClientEvent<
+  EventContent extends object = object,
+  UnsignedData extends object = object,
+> =
+  | MessageEvent<EventContent, UnsignedData>
+  | StateEvent<EventContent, UnsignedData>;
 
 /**
  * event type

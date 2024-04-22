@@ -1,5 +1,6 @@
 import { Presence } from "../presence/status.type";
-import { ClientEvent } from "../rooms/event.type";
+import { MessageEvent } from "../rooms/event.type";
+import { StateEvent } from "../rooms/state.type";
 
 export type AccountDataEvent<Content extends object = object> = {
   type: string;
@@ -47,10 +48,13 @@ export type Ephemeral = {
   events?: EphemeralEvent[];
 };
 
-export type ClientEventWithoutRoomId = Omit<ClientEvent, "room_id">;
+export type StateEventWithoutRoomId = Omit<StateEvent, "room_id">;
+export type ClientEventWithoutRoomId =
+  | Omit<MessageEvent, "room_id">
+  | Omit<StateEvent, "room_id">;
 
 export type State = {
-  events?: ClientEventWithoutRoomId[];
+  events?: StateEventWithoutRoomId[];
 };
 
 export type RoomSummary = {

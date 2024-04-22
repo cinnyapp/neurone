@@ -1,4 +1,5 @@
 import { ClientEvent } from "./event.type";
+import { StateEvent } from "./state.type";
 
 /**
  * context type
@@ -17,5 +18,5 @@ export type ContextOK = {
   events_after?: ClientEvent[];
   events_before?: ClientEvent[];
   start?: string;
-  state?: ClientEvent[];
+  state?: StateEvent[];
 };

@@ -1,8 +1,8 @@
-import { ClientEvent } from "./rooms/event.type";
+import { ClientEventWithoutRoomId } from "./sync/sync.type";
 
 export type Notification = {
   actions: object | string;
-  event: Omit<ClientEvent, "room_id">;
+  event: ClientEventWithoutRoomId;
   profile_tag?: string;
   read: boolean;
   room_id: string;
