@@ -49,7 +49,7 @@ export type Ephemeral = {
 };
 
 export type StateEventWithoutRoomId = Omit<StateEvent, "room_id">;
-export type ClientEventWithoutRoomId =
+export type TimelineEventWithoutRoomId =
   | Omit<MessageEvent, "room_id">
   | Omit<StateEvent, "room_id">;
 
@@ -64,7 +64,7 @@ export type RoomSummary = {
 };
 
 export type Timeline = {
-  events: ClientEventWithoutRoomId[];
+  events: TimelineEventWithoutRoomId[];
   limited?: boolean;
   prev_batch?: string;
 };
@@ -74,10 +74,7 @@ export type UnreadNotificationCounts = {
   notification_count?: number;
 };
 
-export type ThreadNotificationCounts = {
-  highlight_count?: number;
-  notification_count?: number;
-};
+export type ThreadNotificationCounts = Record<string, UnreadNotificationCounts>;
 
 export type JoinedRoom = {
   account_data?: SyncAccountData;
