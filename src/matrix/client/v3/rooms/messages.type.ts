@@ -1,4 +1,4 @@
-import { ClientEvent } from "./event.type";
+import { TimelineEvent } from "./event.type";
 import { StateEvent } from "./state.type";
 
 /**
@@ -16,7 +16,7 @@ export type MessagesSearchParams = {
 };
 
 export type MessagesOK = {
-  chunk: ClientEvent[];
+  chunk: TimelineEvent[];
   start: string;
   end?: string;
   state?: StateEvent[];

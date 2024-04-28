@@ -23,7 +23,7 @@ export type MessageEvent<
   unsigned?: UnsignedData;
 };
 
-export type ClientEvent<
+export type TimelineEvent<
   EventContent extends object = object,
   UnsignedData extends object = object,
 > =
@@ -41,4 +41,4 @@ export type EventPathParams = {
 export type EventOK<
   EventContent extends object = object,
   PrevEventContent extends object = object,
-> = ClientEvent<EventContent, PrevEventContent>;
+> = TimelineEvent<EventContent, PrevEventContent>;

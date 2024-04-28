@@ -1,4 +1,4 @@
-import { ClientEvent } from "./event.type";
+import { TimelineEvent } from "./event.type";
 import { StateEvent } from "./state.type";
 
 /**
@@ -14,9 +14,9 @@ export type ContextSearchParams = {
 };
 export type ContextOK = {
   end?: string;
-  event?: ClientEvent;
-  events_after?: ClientEvent[];
-  events_before?: ClientEvent[];
+  event?: TimelineEvent;
+  events_after?: TimelineEvent[];
+  events_before?: TimelineEvent[];
   start?: string;
   state?: StateEvent[];
 };

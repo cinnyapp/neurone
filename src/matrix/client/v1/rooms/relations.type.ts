@@ -1,4 +1,4 @@
-import { ClientEvent } from "../../v3/rooms/event.type";
+import { TimelineEvent } from "../../v3/rooms/event.type";
 
 /**
  * relations types
@@ -16,7 +16,7 @@ export type RelationsSearchParams = {
 };
 
 export type RelationsOK = {
-  chunk: ClientEvent[];
+  chunk: TimelineEvent[];
   next_batch?: string;
   prev_batch?: string;
 };
@@ -38,7 +38,7 @@ export type RelationsRelTypeSearchParams = {
 };
 
 export type RelationsRelTypeOK = {
-  chunk: ClientEvent[];
+  chunk: TimelineEvent[];
   next_batch?: string;
   prev_batch?: string;
 };
@@ -61,7 +61,7 @@ export type RelationsRelTypeEventTypeSearchParams = {
 };
 
 export type RelationsRelTypeEventTypeOK = {
-  chunk: ClientEvent[];
+  chunk: TimelineEvent[];
   next_batch?: string;
   prev_batch?: string;
 };

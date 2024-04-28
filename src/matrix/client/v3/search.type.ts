@@ -1,5 +1,5 @@
 import { UserProfile } from "./profile/profile.type";
-import { ClientEvent } from "./rooms/event.type";
+import { TimelineEvent } from "./rooms/event.type";
 import { RoomEventFilter } from "./user/filter.type";
 
 export type SearchEventOrder = "recent" | "rank";
@@ -34,8 +34,8 @@ export type SearchCategories = {
 
 export type SearchEventContext = {
   end?: string;
-  events_after?: ClientEvent[];
-  events_before?: ClientEvent[];
+  events_after?: TimelineEvent[];
+  events_before?: TimelineEvent[];
   profile_info?: Record<string, UserProfile>;
   start?: string;
 };
@@ -43,7 +43,7 @@ export type SearchEventContext = {
 export type SearchResult = {
   context?: SearchEventContext;
   rank?: number;
-  result?: ClientEvent;
+  result?: TimelineEvent;
 };
 
 export type SearchResultEventGroup = {

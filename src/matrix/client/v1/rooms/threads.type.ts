@@ -1,4 +1,4 @@
-import { ClientEvent } from "../../v3/rooms/event.type";
+import { TimelineEvent } from "../../v3/rooms/event.type";
 
 /**
  * threads types
@@ -12,6 +12,6 @@ export type ThreadsSearchParams = {
   limit?: string;
 };
 export type ThreadsOK = {
-  chunk: ClientEvent[];
+  chunk: TimelineEvent[];
   next_batch: string;
 };
