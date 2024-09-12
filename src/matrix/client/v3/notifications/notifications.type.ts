@@ -1,4 +1,4 @@
-import { TimelineEventWithoutRoomId } from "./sync/sync.type";
+import { TimelineEventWithoutRoomId } from "../sync/sync.type";
 
 export type Notification = {
   actions: object | string;

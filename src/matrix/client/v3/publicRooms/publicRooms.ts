@@ -1,5 +1,5 @@
-import { MatrixRequestStruct } from "../../MatrixRequestStruct";
-import { withSearchParams } from "../../_utils/withSearchParams";
+import { MatrixRequestStruct } from "../../../MatrixRequestStruct";
+import { withSearchParams } from "../../../_utils/withSearchParams";
 import {
   PostPublicRoomsBody,
   PostPublicRoomsSearchParams,

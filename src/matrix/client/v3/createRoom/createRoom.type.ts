@@ -1,5 +1,5 @@
-import { RoomVisibility } from "./directory/list.type";
-import { Invite3PID } from "./rooms/invite.type";
+import { RoomVisibility } from "../directory/list.type";
+import { Invite3PID } from "../rooms/invite.type";
 
 export type CreateRoomStateEvent = {
   content: object;

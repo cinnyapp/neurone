@@ -1,6 +1,6 @@
-import { UserProfile } from "./profile/profile.type";
-import { TimelineEvent } from "./rooms/event.type";
-import { RoomEventFilter } from "./user/filter.type";
+import { UserProfile } from "../profile/profile.type";
+import { TimelineEvent } from "../rooms/event.type";
+import { RoomEventFilter } from "../user/filter.type";
 
 export type SearchEventOrder = "recent" | "rank";
 

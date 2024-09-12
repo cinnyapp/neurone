@@ -1,4 +1,4 @@
-import { ThirdPartySigned } from "./rooms/join.type";
+import { ThirdPartySigned } from "../rooms/join.type";
 
 /**
  * postJoin types

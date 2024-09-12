@@ -1,4 +1,4 @@
-import { MatrixRequestStruct } from "../../MatrixRequestStruct";
+import { MatrixRequestStruct } from "../../../MatrixRequestStruct";
 import { PostDeleteDevicesBody } from "./deleteDevices.type";
 
 /**
