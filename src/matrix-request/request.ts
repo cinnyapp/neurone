@@ -1,15 +1,15 @@
-import { MatrixRequestStruct } from "../matrix/MatrixRequestStruct";
+import { MatrixRequest } from "./types";
 
 export const makeRequest = (
   fetchFunc: typeof fetch,
   baseUrl: string,
   requestInit: RequestInit,
-) => {
-  const request = async (
-    mxRequestStruct: MatrixRequestStruct,
-    abortSignal?: AbortSignal,
+): MatrixRequest => {
+  const request: MatrixRequest = async (
+    requestStruct,
+    abortSignal,
   ): Promise<Response> => {
-    const { method, path, requireAuthentication, body } = mxRequestStruct;
+    const { method, path, requireAuthentication, body } = requestStruct;
     const signal = abortSignal ?? requestInit.signal;
 
     const headers = new Headers(requestInit.headers);
