@@ -10,7 +10,8 @@
     "noUnusedParameters": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
+    "moduleResolution": "Node"
   },
   "exclude": ["node_modules", "dist", "**/*.test.*"],
-  "include": ["src/**/*"],
+  "include": ["src/**/*"]
 }
