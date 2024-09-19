@@ -11,7 +11,7 @@ export const makeSyncLoop = (
   options: SyncLoopOptions,
 ) => {
   let presence: Presence | undefined;
-  let abortController: AbortController = new AbortController();
+  let abortController: AbortController | undefined;
 
   let since: string | undefined = options.since;
   const timeout: number | undefined = options.timeout;
@@ -27,51 +27,60 @@ export const makeSyncLoop = (
   }
 
   async function start(listener: SyncListener): Promise<void> {
+    if (abortController) {
+      throw new Error("Failed to start! SyncLoop is already running.");
+    }
+
     abortController = new AbortController();
-    const request = matrixRequest(
-      sync({
-        full_state: fullState?.toString(),
-        filter: filter,
-        set_presence: presence,
-        since: since,
-        timeout: timeout?.toString(),
-      }),
-      abortController.signal,
-    );
-    listener.onRequest();
-    const [requestError, response] = await to(request);
+    while (abortController && !abortController.signal.aborted) {
+      const request = matrixRequest(
+        sync({
+          full_state: fullState?.toString(),
+          filter: filter,
+          set_presence: presence,
+          since: since,
+          timeout: timeout?.toString(),
+        }),
+        abortController.signal,
+      );
+      listener.onRequest();
+      const [requestError, response] = await to(request);
 
-    if (requestError) {
-      listener.onRequestError(requestError);
-      return;
-    }
+      if (requestError) {
+        abortController = undefined;
+        listener.onRequestError(requestError);
+        return;
+      }
 
-    const [parseError, parsedResp] = await to(
-      parseMatrixResp<SyncOK>(response),
-    );
+      const [parseError, parsedResp] = await to(
+        parseMatrixResp<SyncOK>(response),
+      );
 
-    if (parseError) {
-      listener.onRequestError(parseError);
-      return;
-    }
+      if (parseError) {
+        abortController = undefined;
+        listener.onRequestError(parseError);
+        return;
+      }
 
-    const [error, data] = parsedResp;
-    if (error) {
-      listener.onResponseError(error);
-      return;
-    }
+      const [error, data] = parsedResp;
+      if (error) {
+        abortController = undefined;
+        listener.onResponseError(error);
+        return;
+      }
 
-    const sinceToken = data.next_batch;
-    listener.onResponseData(data);
-    setSince(sinceToken);
-
-    if (!abortController.signal.aborted) {
-      start(listener);
+      const sinceToken = data.next_batch;
+      listener.onResponseData(data);
+      setSince(sinceToken);
     }
   }
 
   function stop(): void {
+    if (!abortController) {
+      throw new Error("Failed to abort! SyncLoop is not running.");
+    }
     abortController.abort();
+    abortController = undefined;
   }
 
   const syncLoop: SyncLoop = {

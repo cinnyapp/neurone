@@ -1,5 +1,6 @@
 import { MatrixRequest } from "../matrix-request";
 import { makeSyncLoop } from "./SyncLoop";
+import { SyncListener } from "./SyncLoop.type";
 
 test("sync loop request called first", async () => {
   let requestCalledFirst = false;
@@ -93,7 +94,6 @@ test("sync loop response data", async () => {
     syncLoop.start({
       onRequest() {},
       onRequestError() {
-        syncLoop.stop();
         reject();
       },
       onResponseData(data) {
@@ -104,7 +104,6 @@ test("sync loop response data", async () => {
         resolve(undefined);
       },
       onResponseError() {
-        syncLoop.stop();
         reject();
       },
     });
@@ -137,7 +136,6 @@ test("sync loop response error", async () => {
     syncLoop.start({
       onRequest() {},
       onRequestError() {
-        syncLoop.stop();
         reject();
       },
       onResponseData() {
@@ -145,7 +143,6 @@ test("sync loop response error", async () => {
         reject();
       },
       onResponseError(error) {
-        syncLoop.stop();
         expect(error).toEqual({
           status: 400,
           url: "",
@@ -156,5 +153,76 @@ test("sync loop response error", async () => {
         resolve(undefined);
       },
     });
+  });
+});
+
+test("sync loop restart after error", async () => {
+  let restarted = false;
+  const matrixRequest: MatrixRequest = async () =>
+    new Promise((resolve) => {
+      setTimeout(() => {
+        if (restarted) {
+          resolve(
+            new Response(
+              JSON.stringify({
+                next_token: "zyx",
+              }),
+              {
+                status: 200,
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              },
+            ),
+          );
+        }
+
+        resolve(
+          new Response(
+            JSON.stringify({
+              error: "xyz",
+            }),
+            {
+              status: 400,
+              headers: {
+                "Content-Type": "application/json",
+              },
+            },
+          ),
+        );
+      }, 500);
+    });
+
+  const syncLoop = makeSyncLoop(matrixRequest, { timeout: 2000 });
+
+  return new Promise((resolve, reject) => {
+    const mockListener: SyncListener = {
+      onRequest() {},
+      onRequestError() {
+        reject();
+      },
+      onResponseData(data) {
+        syncLoop.stop();
+        expect(data).toEqual({
+          next_token: "zyx",
+        });
+        resolve(undefined);
+      },
+      onResponseError(error) {
+        if (restarted) {
+          reject();
+        }
+        expect(error).toEqual({
+          status: 400,
+          url: "",
+          data: {
+            error: "xyz",
+          },
+        });
+        restarted = true;
+        syncLoop.start(mockListener);
+      },
+    };
+    syncLoop.start(mockListener);
   });
 });
