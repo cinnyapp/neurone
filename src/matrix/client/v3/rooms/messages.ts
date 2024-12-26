@@ -9,10 +9,9 @@ export const messages = (
   pathParams: MessagesPathParams,
   searchParams: MessagesSearchParams,
 ): MatrixRequestStruct => {
-  const sParams = new URLSearchParams(searchParams);
   const path = withSearchParams(
     `/_matrix/client/v3/rooms/${encodeURIComponent(pathParams.roomId)}/messages`,
-    sParams.toString(),
+    searchParams,
   );
 
   return {

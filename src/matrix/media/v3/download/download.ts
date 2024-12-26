@@ -14,10 +14,9 @@ export const download = (
   pathParams: DownloadPathParams,
   searchParams?: DownloadSearchParams,
 ): MatrixRequestStruct => {
-  const sParams = new URLSearchParams(searchParams);
   const path = withSearchParams(
     `/_matrix/media/v3/download/${encodeURIComponent(pathParams.serverName)}/${encodeURIComponent(pathParams.mediaId)}`,
-    sParams.toString(),
+    searchParams,
   );
 
   return {
@@ -34,10 +33,9 @@ export const downloadFile = (
   pathParams: DownloadFilePathParams,
   searchParams?: DownloadFileSearchParams,
 ): MatrixRequestStruct => {
-  const sParams = new URLSearchParams(searchParams);
   const path = withSearchParams(
     `/_matrix/media/v3/download/${encodeURIComponent(pathParams.serverName)}/${encodeURIComponent(pathParams.mediaId)}/${encodeURIComponent(pathParams.fileName)}`,
-    sParams.toString(),
+    searchParams,
   );
 
   return {

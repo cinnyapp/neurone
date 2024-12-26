@@ -8,10 +8,9 @@ import { NotificationsSearchParams } from "./notifications.type";
 export const notifications = (
   searchParams?: NotificationsSearchParams,
 ): MatrixRequestStruct => {
-  const sParams = new URLSearchParams(searchParams);
   const path = withSearchParams(
     "/_matrix/client/v3/notifications",
-    sParams.toString(),
+    searchParams,
   );
 
   return {

@@ -8,10 +8,9 @@ import { AvailableSearchParams } from "./available.type";
 export const available = (
   searchParams: AvailableSearchParams,
 ): MatrixRequestStruct => {
-  const sParams = new URLSearchParams(searchParams);
   const path = withSearchParams(
     "/_matrix/client/v3/register/available",
-    sParams.toString(),
+    searchParams,
   );
 
   return {

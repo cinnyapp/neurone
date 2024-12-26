@@ -10,10 +10,9 @@ import {
  * https://spec.matrix.org/v1.9/client-server-api/#get_matrixclientv3thirdpartyuser
  */
 export const user = (searchParams: UserSearchParams): MatrixRequestStruct => {
-  const sParams = new URLSearchParams(searchParams);
   const path = withSearchParams(
     "/_matrix/client/v3/thirdparty/user",
-    sParams.toString(),
+    searchParams,
   );
 
   return {
@@ -30,10 +29,9 @@ export const userProtocol = (
   pathParams: UserProtocolPathParams,
   searchParams?: UserProtocolSearchParams,
 ): MatrixRequestStruct => {
-  const sParams = new URLSearchParams(searchParams);
   const path = withSearchParams(
     `/_matrix/client/v3/thirdparty/user/${encodeURIComponent(pathParams.protocol)}`,
-    sParams.toString(),
+    searchParams,
   );
 
   return {

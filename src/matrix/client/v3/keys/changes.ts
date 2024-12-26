@@ -8,10 +8,9 @@ import { ChangesSearchParams } from "./changes.type";
 export const changes = (
   searchParams: ChangesSearchParams,
 ): MatrixRequestStruct => {
-  const sParams = new URLSearchParams(searchParams);
   const path = withSearchParams(
     "/_matrix/client/v3/keys/changes",
-    sParams.toString(),
+    searchParams,
   );
 
   return {

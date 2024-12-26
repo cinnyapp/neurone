@@ -9,10 +9,9 @@ export const thumbnail = (
   pathParams: ThumbnailPathParams,
   searchParams: ThumbnailSearchParams,
 ): MatrixRequestStruct => {
-  const sParams = new URLSearchParams(searchParams);
   const path = withSearchParams(
     `/_matrix/media/v3/thumbnail/${encodeURIComponent(pathParams.serverName)}/${encodeURIComponent(pathParams.mediaId)}`,
-    sParams.toString(),
+    searchParams,
   );
 
   return {

@@ -25,10 +25,9 @@ import {
  * https://spec.matrix.org/v1.9/client-server-api/#get_matrixclientv3room_keyskeys
  */
 export const keys = (searchParams: KeysSearchParams): MatrixRequestStruct => {
-  const sParams = new URLSearchParams(searchParams);
   const path = withSearchParams(
     "/_matrix/client/v3/room_keys/keys",
-    sParams.toString(),
+    searchParams,
   );
 
   return {
@@ -46,10 +45,9 @@ export const putKeys = (
   searchParams: PutKeysSearchParams,
   body: PutKeysBody,
 ): MatrixRequestStruct => {
-  const sParams = new URLSearchParams(searchParams);
   const path = withSearchParams(
     "/_matrix/client/v3/room_keys/keys",
-    sParams.toString(),
+    searchParams,
   );
 
   return {
@@ -67,10 +65,9 @@ export const putKeys = (
 export const deleteKeys = (
   searchParams: DeleteKeysSearchParams,
 ): MatrixRequestStruct => {
-  const sParams = new URLSearchParams(searchParams);
   const path = withSearchParams(
     "/_matrix/client/v3/room_keys/keys",
-    sParams.toString(),
+    searchParams,
   );
 
   return {
@@ -88,10 +85,9 @@ export const keysRoomId = (
   pathParams: KeysRoomIdPathParams,
   searchParams: KeysRoomIdSearchParams,
 ): MatrixRequestStruct => {
-  const sParams = new URLSearchParams(searchParams);
   const path = withSearchParams(
     `/_matrix/client/v3/room_keys/keys/${encodeURIComponent(pathParams.roomId)}`,
-    sParams.toString(),
+    searchParams,
   );
 
   return {
@@ -110,10 +106,9 @@ export const putKeysRoomId = (
   searchParams: PutKeysRoomIdSearchParams,
   body: PutKeysRoomIdBody,
 ): MatrixRequestStruct => {
-  const sParams = new URLSearchParams(searchParams);
   const path = withSearchParams(
     `/_matrix/client/v3/room_keys/keys/${encodeURIComponent(pathParams.roomId)}`,
-    sParams.toString(),
+    searchParams,
   );
 
   return {
@@ -132,10 +127,9 @@ export const deleteKeysRoomId = (
   pathParams: DeleteKeysRoomIdPathParams,
   searchParams: DeleteKeysRoomIdSearchParams,
 ): MatrixRequestStruct => {
-  const sParams = new URLSearchParams(searchParams);
   const path = withSearchParams(
     `/_matrix/client/v3/room_keys/keys/${encodeURIComponent(pathParams.roomId)}`,
-    sParams.toString(),
+    searchParams,
   );
 
   return {
@@ -153,10 +147,9 @@ export const keysRoomIdSessionId = (
   pathParams: KeysRoomIdSessionIdPathParams,
   searchParams: KeysRoomIdSessionIdSearchParams,
 ): MatrixRequestStruct => {
-  const sParams = new URLSearchParams(searchParams);
   const path = withSearchParams(
     `/_matrix/client/v3/room_keys/keys/${encodeURIComponent(pathParams.roomId)}/${encodeURIComponent(pathParams.sessionId)}`,
-    sParams.toString(),
+    searchParams,
   );
 
   return {
@@ -175,10 +168,9 @@ export const putKeysRoomIdSessionId = (
   searchParams: PutKeysRoomIdSessionIdSearchParams,
   body: PutKeysRoomIdSessionIdBody,
 ): MatrixRequestStruct => {
-  const sParams = new URLSearchParams(searchParams);
   const path = withSearchParams(
     `/_matrix/client/v3/room_keys/keys/${encodeURIComponent(pathParams.roomId)}/${encodeURIComponent(pathParams.sessionId)}`,
-    sParams.toString(),
+    searchParams,
   );
 
   return {
@@ -197,10 +189,9 @@ export const deleteKeysRoomIdSessionId = (
   pathParams: DeleteKeysRoomIdSessionIdPathParams,
   searchParams: DeleteKeysRoomIdSessionIdSearchParams,
 ): MatrixRequestStruct => {
-  const sParams = new URLSearchParams(searchParams);
   const path = withSearchParams(
     `/_matrix/client/v3/room_keys/keys/${encodeURIComponent(pathParams.roomId)}/${encodeURIComponent(pathParams.sessionId)}`,
-    sParams.toString(),
+    searchParams,
   );
 
   return {

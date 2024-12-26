@@ -8,11 +8,7 @@ import { PreviewUrlSearchParams } from "./previewUrl.type";
 export const previewUrl = (
   searchParams: PreviewUrlSearchParams,
 ): MatrixRequestStruct => {
-  const sParams = new URLSearchParams(searchParams);
-  const path = withSearchParams(
-    "/_matrix/media/v3/preview_url",
-    sParams.toString(),
-  );
+  const path = withSearchParams("/_matrix/media/v3/preview_url", searchParams);
 
   return {
     method: "GET",

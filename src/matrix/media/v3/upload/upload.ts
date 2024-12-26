@@ -15,8 +15,7 @@ export const postUpload = (
   body: PostUploadBody,
   searchParams?: PostUploadSearchParams,
 ): MatrixRequestStruct => {
-  const sParams = new URLSearchParams(searchParams);
-  const path = withSearchParams("/_matrix/media/v3/upload", sParams.toString());
+  const path = withSearchParams("/_matrix/media/v3/upload", searchParams);
 
   return {
     method: "POST",
@@ -35,10 +34,9 @@ export const putUpload = (
   body: PutUploadBody,
   searchParams?: PutUploadSearchParams,
 ): MatrixRequestStruct => {
-  const sParams = new URLSearchParams(searchParams);
   const path = withSearchParams(
     `/_matrix/media/v3/upload/${encodeURIComponent(pathParams.serverName)}/${encodeURIComponent(pathParams.mediaId)}`,
-    sParams.toString(),
+    searchParams,
   );
 
   return {

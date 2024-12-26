@@ -12,11 +12,7 @@ import {
 export const publicRooms = (
   searchParams?: PublicRoomsSearchParams,
 ): MatrixRequestStruct => {
-  const sParams = new URLSearchParams(searchParams);
-  const path = withSearchParams(
-    `/_matrix/client/v3/publicRooms`,
-    sParams.toString(),
-  );
+  const path = withSearchParams(`/_matrix/client/v3/publicRooms`, searchParams);
 
   return {
     method: "GET",
@@ -31,11 +27,7 @@ export const postPublicRooms = (
   searchParams?: PostPublicRoomsSearchParams,
   body?: PostPublicRoomsBody,
 ): MatrixRequestStruct => {
-  const sParams = new URLSearchParams(searchParams);
-  const path = withSearchParams(
-    `/_matrix/client/v3/publicRooms`,
-    sParams.toString(),
-  );
+  const path = withSearchParams(`/_matrix/client/v3/publicRooms`, searchParams);
 
   return {
     method: "POST",

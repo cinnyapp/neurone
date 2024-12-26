@@ -9,10 +9,9 @@ export const hierarchy = (
   pathParams: HierarchyPathParams,
   searchParams?: HierarchySearchParams,
 ): MatrixRequestStruct => {
-  const sParams = new URLSearchParams(searchParams);
   const path = withSearchParams(
     `/_matrix/client/v1/rooms/${encodeURIComponent(pathParams.roomId)}/hierarchy`,
-    sParams.toString(),
+    searchParams,
   );
 
   return {

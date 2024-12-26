@@ -12,10 +12,9 @@ import {
 export const ssoRedirect = (
   searchParams: SSORedirectSearchParams,
 ): MatrixRequestStruct => {
-  const sParams = new URLSearchParams(searchParams);
   const path = withSearchParams(
     "/_matrix/client/v3/login/sso/redirect",
-    sParams.toString(),
+    searchParams,
   );
 
   return {
@@ -30,10 +29,9 @@ export const ssoRedirectIdpId = (
   pathParams: SSORedirectIdpIdPathParams,
   searchParams: SSORedirectIdpIdSearchParams,
 ): MatrixRequestStruct => {
-  const sParams = new URLSearchParams(searchParams);
   const path = withSearchParams(
     `/_matrix/client/v3/login/sso/redirect/${encodeURIComponent(pathParams.idpId)}`,
-    sParams.toString(),
+    searchParams,
   );
 
   return {

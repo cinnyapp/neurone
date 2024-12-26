@@ -9,10 +9,9 @@ export const threads = (
   pathParams: ThreadsPathParams,
   searchParams?: ThreadsSearchParams,
 ): MatrixRequestStruct => {
-  const sParams = new URLSearchParams(searchParams);
   const path = withSearchParams(
     `/_matrix/client/v1/rooms/${encodeURIComponent(pathParams.roomId)}/threads`,
-    sParams.toString(),
+    searchParams,
   );
 
   return {

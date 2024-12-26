@@ -14,10 +14,9 @@ export const postJoin = (
   searchParams?: PostJoinSearchParams,
   body?: PostJoinBody,
 ): MatrixRequestStruct => {
-  const sParams = new URLSearchParams(searchParams);
   const path = withSearchParams(
     `/_matrix/client/v3/join/${encodeURIComponent(pathParams.roomIdOrAlias)}`,
-    sParams.toString(),
+    searchParams,
   );
 
   return {

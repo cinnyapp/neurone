@@ -16,10 +16,9 @@ export const relations = (
   pathParams: RelationsPathParams,
   searchParams?: RelationsSearchParams,
 ): MatrixRequestStruct => {
-  const sParams = new URLSearchParams(searchParams);
   const path = withSearchParams(
     `/_matrix/client/v1/rooms/${encodeURIComponent(pathParams.roomId)}/relations/${encodeURIComponent(pathParams.eventId)}`,
-    sParams.toString(),
+    searchParams,
   );
 
   return {
@@ -36,10 +35,9 @@ export const relationsRelType = (
   pathParams: RelationsRelTypePathParams,
   searchParams?: RelationsRelTypeSearchParams,
 ): MatrixRequestStruct => {
-  const sParams = new URLSearchParams(searchParams);
   const path = withSearchParams(
     `/_matrix/client/v1/rooms/${encodeURIComponent(pathParams.roomId)}/relations/${encodeURIComponent(pathParams.eventId)}/${encodeURIComponent(pathParams.relType)}`,
-    sParams.toString(),
+    searchParams,
   );
 
   return {
@@ -56,10 +54,9 @@ export const relationsRelTypeEventType = (
   pathParams: RelationsRelTypeEventTypePathParams,
   searchParams?: RelationsRelTypeEventTypeSearchParams,
 ): MatrixRequestStruct => {
-  const sParams = new URLSearchParams(searchParams);
   const path = withSearchParams(
     `/_matrix/client/v1/rooms/${encodeURIComponent(pathParams.roomId)}/relations/${encodeURIComponent(pathParams.eventId)}/${encodeURIComponent(pathParams.relType)}/${encodeURIComponent(pathParams.eventType)}`,
-    sParams.toString(),
+    searchParams,
   );
 
   return {

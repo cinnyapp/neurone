@@ -12,10 +12,9 @@ import {
 export const location = (
   searchParams: LocationSearchParams,
 ): MatrixRequestStruct => {
-  const sParams = new URLSearchParams(searchParams);
   const path = withSearchParams(
     "/_matrix/client/v3/thirdparty/location",
-    sParams.toString(),
+    searchParams,
   );
 
   return {
@@ -32,10 +31,9 @@ export const locationProtocol = (
   pathParams: LocationProtocolPathParams,
   searchParams?: LocationProtocolSearchParams,
 ): MatrixRequestStruct => {
-  const sParams = new URLSearchParams(searchParams);
   const path = withSearchParams(
     `/_matrix/client/v3/thirdparty/location/${encodeURIComponent(pathParams.protocol)}`,
-    sParams.toString(),
+    searchParams,
   );
 
   return {

@@ -9,10 +9,9 @@ export const members = (
   pathParams: MembersPathParams,
   searchParams?: MembersSearchParams,
 ): MatrixRequestStruct => {
-  const sParams = new URLSearchParams(searchParams);
   const path = withSearchParams(
     `/_matrix/client/v3/rooms/${encodeURIComponent(pathParams.roomId)}/members`,
-    sParams.toString(),
+    searchParams,
   );
 
   return {

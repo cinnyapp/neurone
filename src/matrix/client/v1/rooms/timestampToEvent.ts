@@ -12,10 +12,9 @@ export const timestampToEvent = (
   pathParams: TimestampToEventPathParams,
   searchParams: TimestampToEventSearchParams,
 ): MatrixRequestStruct => {
-  const sParams = new URLSearchParams(searchParams);
   const path = withSearchParams(
     `/_matrix/client/v1/rooms/${encodeURIComponent(pathParams.roomId)}/timestamp_to_event`,
-    sParams.toString(),
+    searchParams,
   );
 
   return {

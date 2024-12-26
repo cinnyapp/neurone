@@ -9,11 +9,7 @@ export const postSearch = (
   body: PostSearchBody,
   searchParams?: PostSearchSearchParams,
 ): MatrixRequestStruct => {
-  const sParams = new URLSearchParams(searchParams);
-  const path = withSearchParams(
-    "/_matrix/client/v3/search",
-    sParams.toString(),
-  );
+  const path = withSearchParams("/_matrix/client/v3/search", searchParams);
 
   return {
     method: "POST",

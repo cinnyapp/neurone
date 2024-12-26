@@ -8,10 +8,9 @@ import { MLoginRegistrationTokenValiditySearchParams } from "./mLoginRegistratio
 export const mLoginRegistrationTokenValidity = (
   searchParams: MLoginRegistrationTokenValiditySearchParams,
 ): MatrixRequestStruct => {
-  const sParams = new URLSearchParams(searchParams);
   const path = withSearchParams(
     "/_matrix/client/v1/register/m.login.registration_token/validity",
-    sParams.toString(),
+    searchParams,
   );
 
   return {

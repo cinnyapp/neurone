@@ -9,10 +9,9 @@ export const context = (
   pathParams: ContextPathParams,
   searchParams?: ContextSearchParams,
 ): MatrixRequestStruct => {
-  const sParams = new URLSearchParams(searchParams);
   const path = withSearchParams(
     `/_matrix/client/v3/rooms/${encodeURIComponent(pathParams.roomId)}/context/${encodeURIComponent(pathParams.eventId)}`,
-    sParams.toString(),
+    searchParams,
   );
 
   return {

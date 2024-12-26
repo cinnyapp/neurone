@@ -14,10 +14,9 @@ export const postKnock = (
   searchParams?: PostKnockSearchParams,
   body?: PostKnockBody,
 ): MatrixRequestStruct => {
-  const sParams = new URLSearchParams(searchParams);
   const path = withSearchParams(
     `/_matrix/client/v3/knock/${encodeURIComponent(pathParams.roomIdOrAlias)}`,
-    sParams.toString(),
+    searchParams,
   );
 
   return {

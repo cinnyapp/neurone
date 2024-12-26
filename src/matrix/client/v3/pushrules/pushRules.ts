@@ -50,10 +50,9 @@ export const putPushRule = (
   body: PutPushRuleBody,
   searchParams?: PutPushRuleSearchParams,
 ): MatrixRequestStruct => {
-  const sParams = new URLSearchParams(searchParams);
   const path = withSearchParams(
     `/_matrix/client/v3/pushrules/${encodeURIComponent(pathParams.scope)}/${encodeURIComponent(pathParams.kind)}/${encodeURIComponent(pathParams.ruleId)}`,
-    sParams.toString(),
+    searchParams,
   );
 
   return {
