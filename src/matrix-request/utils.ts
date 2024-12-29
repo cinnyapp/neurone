@@ -1,12 +1,10 @@
-import { MatrixErrorData, MatrixError } from "./types";
+import { MatrixResponseParser } from "./types";
 
-export const parseMatrixResp = async <SuccessData, ErrorData = MatrixErrorData>(
-  response: Response,
-): Promise<[undefined, SuccessData] | [MatrixError<ErrorData>, undefined]> => {
+export const parseMatrixResp: MatrixResponseParser = async (response) => {
   const data = await response.json();
 
   if (!response.ok) {
-    const err: MatrixError<ErrorData> = {
+    const err = {
       url: response.url,
       status: response.status,
       data,
