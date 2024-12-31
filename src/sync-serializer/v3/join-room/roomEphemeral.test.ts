@@ -1,4 +1,4 @@
-import { JoinedRoom } from "../../../matrix/client/v3/sync/sync.type";
+import { JoinedRoom } from "../../../api/matrix/client/v3/sync/sync.type";
 import { serializeRoomReceipt, serializeRoomTyping } from "./roomEphemeral";
 
 test("serialize room typing from sync data", () => {

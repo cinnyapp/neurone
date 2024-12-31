@@ -6,10 +6,10 @@ export const makeRequest = (
   requestInit: RequestInit,
 ): MatrixRequest => {
   const request: MatrixRequest = async (
-    requestStruct,
+    matrixEndpointStruct,
     abortSignal,
   ): Promise<Response> => {
-    const { method, path, requireAuthentication, body } = requestStruct;
+    const { method, path, requireAuthentication, body } = matrixEndpointStruct;
     const signal = abortSignal ?? requestInit.signal;
 
     const headers = new Headers(requestInit.headers);

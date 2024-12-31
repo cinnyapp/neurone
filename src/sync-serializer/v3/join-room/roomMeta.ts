@@ -1,5 +1,4 @@
-import { StateEvent } from "../../../matrix/client/v3/rooms/state.type";
-import { RoomSummary } from "../../../matrix/client/v3/sync/sync.type";
+import { RoomSummary, StateEvent } from "../../../api/types";
 import { RoomMeta } from "./roomMeta.type";
 
 export const serializeRoomMeta = (

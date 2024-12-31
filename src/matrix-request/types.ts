@@ -1,7 +1,7 @@
-import { MatrixRequestStruct } from "../matrix/MatrixRequestStruct";
+import { MatrixEndpointStruct } from "../api/MatrixEndpoint";
 
 export type MatrixRequest = (
-  requestStruct: MatrixRequestStruct,
+  matrixEndpointStruct: MatrixEndpointStruct,
   abortSignal?: AbortSignal,
 ) => Promise<Response>;
 

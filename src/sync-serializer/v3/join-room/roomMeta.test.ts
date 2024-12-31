@@ -1,15 +1,11 @@
-import {
-  JoinedRoom,
-  StateEventWithoutRoomId,
-  TimelineEventWithoutRoomId,
-} from "../../../matrix/client/v3/sync/sync.type";
+import { JoinedRoom } from "../../../api/matrix/client/v3/sync/sync.type";
 import { serializeRoomMeta } from "./roomMeta";
 import { RoomMeta } from "./roomMeta.type";
 import { serializeRoomState } from "./roomState";
 
 test("serialize room meta from sync response (all fields)", () => {
   const roomId = "!jEsUZKDJdhlrceRyVU:example.org";
-  const stateEventsWithoutRoomId: StateEventWithoutRoomId[] = [
+  const stateEventsWithoutRoomId = [
     {
       content: {},
       event_id: "$1:example.org",
@@ -87,7 +83,7 @@ test("serialize room meta from sync response (all fields)", () => {
       type: "m.room.guest_access",
     },
   ];
-  const timelineEventsWithoutRoomId: TimelineEventWithoutRoomId[] = [
+  const timelineEventsWithoutRoomId = [
     {
       content: {
         avatar_url: "mxc://example.org/SEsfnsuifSDFSSEF",

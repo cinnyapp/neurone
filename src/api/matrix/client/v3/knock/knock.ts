@@ -1,0 +1,24 @@
+import { withSearchParams } from "../../../../utils/withSearchParams";
+import { PostKnockEndpoint } from "./knock.type";
+
+/**
+ * https://spec.matrix.org/v1.9/client-server-api/#post_matrixclientv3knockroomidoralias
+ */
+export const postKnock: PostKnockEndpoint = ({
+  pathParams,
+  searchParams,
+  body,
+}) => {
+  const path = withSearchParams(
+    `/_matrix/client/v3/knock/${encodeURIComponent(pathParams.roomIdOrAlias)}`,
+    searchParams,
+  );
+
+  return {
+    method: "POST",
+    path,
+    rateLimited: true,
+    requireAuthentication: true,
+    body: body ? JSON.stringify(body) : undefined,
+  };
+};

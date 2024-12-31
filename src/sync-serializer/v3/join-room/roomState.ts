@@ -1,12 +1,9 @@
-import { StateEvent } from "../../../matrix/client/v3/rooms/state.type";
-import {
-  StateEventWithoutRoomId,
-  JoinedRoom,
-} from "../../../matrix/client/v3/sync/sync.type";
+import { JoinedRoom } from "../../../api/matrix/client/v3/sync/sync.type";
+import { StateEvent } from "../../../api/types";
 
 export const serializeWithoutRoomIdStateEvent = (
   roomId: string,
-  stateEvent: StateEventWithoutRoomId,
+  stateEvent: Omit<StateEvent, "room_id">,
 ): StateEvent => ({
   room_id: roomId,
   ...stateEvent,
@@ -21,7 +18,7 @@ export const serializeRoomState = (
   const collection: StateEvent[] = [];
 
   const serializeAndPush = (
-    stateEventWithoutRoomId: StateEventWithoutRoomId,
+    stateEventWithoutRoomId: Omit<StateEvent, "room_id">,
   ) => {
     collection.push(
       serializeWithoutRoomIdStateEvent(roomId, stateEventWithoutRoomId),

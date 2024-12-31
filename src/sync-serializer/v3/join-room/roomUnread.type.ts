@@ -1,4 +1,4 @@
-import { UnreadNotificationCounts } from "../../../matrix/client/v3/sync/sync.type";
+import { UnreadNotificationCounts } from "../../../api/types";
 
 export type RoomUnread = {
   roomId: string;

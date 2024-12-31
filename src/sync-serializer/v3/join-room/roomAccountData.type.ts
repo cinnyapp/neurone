@@ -1,4 +1,4 @@
-import { AccountDataEvent } from "../../../matrix/client/v3/sync/sync.type";
+import { AccountDataEvent } from "../../../api/types";
 
 export type RoomAccountDataEvent<Content extends object = object> =
   AccountDataEvent<Content> & {

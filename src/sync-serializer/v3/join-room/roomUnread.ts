@@ -1,4 +1,4 @@
-import { JoinedRoom } from "../../../matrix/client/v3/sync/sync.type";
+import { JoinedRoom } from "../../../api/matrix/client/v3/sync/sync.type";
 import { RoomThreadUnread, RoomUnread } from "./roomUnread.type";
 
 export const serializeRoomUnread = (

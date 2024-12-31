@@ -1,7 +1,5 @@
-import {
-  AccountDataEvent,
-  JoinedRoom,
-} from "../../../matrix/client/v3/sync/sync.type";
+import { JoinedRoom } from "../../../api/matrix/client/v3/sync/sync.type";
+import { AccountDataEvent } from "../../../api/types";
 import { RoomAccountDataEvent } from "./roomAccountData.type";
 
 export const serializeRoomAccountDataEvent = (
