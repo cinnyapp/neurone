@@ -1,17 +1,12 @@
-import { Entry } from "./Entry";
+import { Entry, KeyValue } from "./Entry";
+import { QueryRange } from "./QueryRange";
 
 export type QueryDirection = {
   dir?: "Next" | "Prev";
   unique?: boolean;
 };
 
-// QueryRange should be a class to check its type
-export type QueryRange<T> = {
-  lowerBound?: T;
-  upperBound?: T;
-};
-
-export type QueryMatch<T> = T | QueryRange<T>;
+export type QueryMatch<T extends KeyValue> = T | QueryRange<T>;
 
 export enum WriteOperation {
   PUT = "PUT",

@@ -1,6 +1,6 @@
 export type Indexes = string;
 
-export type PermitiveKeyValue = number | string | boolean;
+export type PermitiveKeyValue = number | string;
 export type KeyValue = PermitiveKeyValue | PermitiveKeyValue[];
 
 export type Entry<
