@@ -31,6 +31,7 @@ export class Collection<
     this.writeObserverBridge = new WriteObserverBridge();
     this.read = new CollectionRead(this.meta, driver);
     this.observableRead = new CollectionObservableRead(
+      this.meta,
       this.read,
       this.writeObserverBridge,
     );

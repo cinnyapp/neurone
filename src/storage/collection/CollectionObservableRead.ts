@@ -1,20 +1,30 @@
+import { CollectionMeta } from "./CollectionMeta";
 import { CollectionRead } from "./CollectionRead";
 import { Entry, Indexes } from "./Entry";
+import { QueryRange } from "./QueryRange";
 import { WriteObserverBridge } from "./WriteObserverBridge";
-import { WriteObserverCallback, WriteOperation } from "./type";
+import {
+  QueryDirection,
+  QueryMatch,
+  WriteObserverCallback,
+  WriteOperation,
+} from "./type";
 
 export class CollectionObservableRead<
   PrimaryKey extends string,
   IndexKeys extends Indexes = never,
   E extends Entry<PrimaryKey, IndexKeys> = Entry<PrimaryKey, Indexes>,
 > {
+  private readonly meta: CollectionMeta<PrimaryKey>;
   private readonly read: CollectionRead<PrimaryKey, IndexKeys, E>;
   private readonly writeObserverBridge: WriteObserverBridge<PrimaryKey, E>;
 
   constructor(
+    meta: CollectionMeta<PrimaryKey>,
     read: CollectionRead<PrimaryKey, IndexKeys, E>,
     writeObserverBridge: WriteObserverBridge<PrimaryKey, E>,
   ) {
+    this.meta = meta;
     this.read = read;
     this.writeObserverBridge = writeObserverBridge;
   }
@@ -66,6 +76,80 @@ export class CollectionObservableRead<
           .getMultiple(remaningKeys)
           .then((enteries) => observer(enteries));
         return;
+      }
+    };
+
+    return this.writeObserverBridge.observe(writeObserver);
+  }
+
+  public query(
+    match: QueryMatch<E[PrimaryKey]>,
+    observer: (enteries: E[]) => void,
+    direction?: QueryDirection,
+  ): () => void {
+    this.read.query(match, direction).then((enteries) => observer(enteries));
+
+    const writeObserver: WriteObserverCallback<PrimaryKey, E> = async (
+      operation,
+      updateKeys,
+    ) => {
+      if (operation === WriteOperation.DELETE) {
+        this.read
+          .query(match, direction)
+          .then((enteries) => observer(enteries));
+        return;
+      }
+      const updatedEnteries = await this.read.getMultiple(updateKeys);
+      const hasUpdate = updatedEnteries.some((entry) => {
+        const value = entry[this.meta.primaryKey];
+        if (match instanceof QueryRange) {
+          return match.includes(value);
+        }
+        return value === match;
+      });
+
+      if (hasUpdate) {
+        this.read
+          .query(match, direction)
+          .then((enteries) => observer(enteries));
+      }
+    };
+
+    return this.writeObserverBridge.observe(writeObserver);
+  }
+  public queryIndex<IndexKey extends IndexKeys>(
+    indexKey: IndexKey,
+    match: QueryMatch<E[IndexKey]>,
+    observer: (enteries: E[]) => void,
+    direction?: QueryDirection,
+  ): () => void {
+    this.read
+      .queryIndex(indexKey, match, direction)
+      .then((enteries) => observer(enteries));
+
+    const writeObserver: WriteObserverCallback<PrimaryKey, E> = async (
+      operation,
+      updateKeys,
+    ) => {
+      if (operation === WriteOperation.DELETE) {
+        this.read
+          .queryIndex(indexKey, match, direction)
+          .then((enteries) => observer(enteries));
+        return;
+      }
+      const updatedEnteries = await this.read.getMultiple(updateKeys);
+      const hasUpdate = updatedEnteries.some((entry) => {
+        const value = entry[indexKey];
+        if (match instanceof QueryRange) {
+          return match.includes(value);
+        }
+        return value === match;
+      });
+
+      if (hasUpdate) {
+        this.read
+          .queryIndex(indexKey, match, direction)
+          .then((enteries) => observer(enteries));
       }
     };
 
