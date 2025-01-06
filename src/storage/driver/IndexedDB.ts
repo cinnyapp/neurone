@@ -52,7 +52,7 @@ export class IndexedDBStorageDriver implements StorageDriver {
     return direction.unique ? "nextunique" : "next";
   }
 
-  async getEnteries<PrimaryKey extends string, E extends Entry<PrimaryKey>>(
+  async getEntries<PrimaryKey extends string, E extends Entry<PrimaryKey>>(
     collectionMeta: CollectionMeta<PrimaryKey>,
     keys: E[PrimaryKey][],
   ): Promise<E[]> {
@@ -73,7 +73,7 @@ export class IndexedDBStorageDriver implements StorageDriver {
     return values;
   }
 
-  async putEnteries<PrimaryKey extends string, E extends Entry<PrimaryKey>>(
+  async putEntries<PrimaryKey extends string, E extends Entry<PrimaryKey>>(
     collectionMeta: CollectionMeta<PrimaryKey>,
     data: E[],
   ): Promise<void> {
@@ -83,7 +83,7 @@ export class IndexedDBStorageDriver implements StorageDriver {
     await Promise.allSettled(promises);
   }
 
-  async deleteEnteries<PrimaryKey extends string, E extends Entry<PrimaryKey>>(
+  async deleteEntries<PrimaryKey extends string, E extends Entry<PrimaryKey>>(
     collectionMeta: CollectionMeta<PrimaryKey>,
     keys: E[PrimaryKey][],
   ): Promise<void> {
@@ -93,7 +93,7 @@ export class IndexedDBStorageDriver implements StorageDriver {
     await Promise.allSettled(promises);
   }
 
-  async queryEnteries<PrimaryKey extends string, E extends Entry<PrimaryKey>>(
+  async queryEntries<PrimaryKey extends string, E extends Entry<PrimaryKey>>(
     collectionMeta: CollectionMeta<PrimaryKey>,
     match: QueryMatch<E[PrimaryKey]>,
     direction?: QueryDirection | undefined,
@@ -107,16 +107,16 @@ export class IndexedDBStorageDriver implements StorageDriver {
       direction ? this.getIDBCursorDirection(direction) : undefined,
     );
 
-    const enteries: E[] = [];
+    const entries: E[] = [];
     while (cursor) {
-      enteries.push(cursor.value);
+      entries.push(cursor.value);
       cursor = await cursor.continue();
     }
 
-    return enteries;
+    return entries;
   }
 
-  async queryIndexEnteries<
+  async queryIndexEntries<
     IndexKey extends string = never,
     E extends Entry<string, IndexKey> = never,
   >(
@@ -135,12 +135,12 @@ export class IndexedDBStorageDriver implements StorageDriver {
       direction ? this.getIDBCursorDirection(direction) : undefined,
     );
 
-    const enteries: E[] = [];
+    const entries: E[] = [];
     while (cursor) {
-      enteries.push(cursor.value);
+      entries.push(cursor.value);
       cursor = await cursor.continue();
     }
 
-    return enteries;
+    return entries;
   }
 }

@@ -8,7 +8,7 @@ export class CollectionRead<
   E extends Entry<PrimaryKey, IndexKeys> = Entry<PrimaryKey, Indexes>,
 > extends CollectionOperator<PrimaryKey> {
   public async get(key: E[PrimaryKey]): Promise<E | undefined> {
-    const [entry] = await this.driver.getEnteries<PrimaryKey, E>(this.meta, [
+    const [entry] = await this.driver.getEntries<PrimaryKey, E>(this.meta, [
       key,
     ]);
 
@@ -16,7 +16,7 @@ export class CollectionRead<
   }
 
   public async getMultiple(keys: E[PrimaryKey][]): Promise<E[]> {
-    const entries = await this.driver.getEnteries<PrimaryKey, E>(
+    const entries = await this.driver.getEntries<PrimaryKey, E>(
       this.meta,
       keys,
     );
@@ -28,7 +28,7 @@ export class CollectionRead<
     match: QueryMatch<E[PrimaryKey]>,
     direction?: QueryDirection,
   ): Promise<E[]> {
-    const entries = this.driver.queryEnteries<PrimaryKey, E>(
+    const entries = this.driver.queryEntries<PrimaryKey, E>(
       this.meta,
       match,
       direction,
@@ -42,13 +42,13 @@ export class CollectionRead<
     match: QueryMatch<E[IndexKey]>,
     direction?: QueryDirection,
   ): Promise<E[]> {
-    const enteries = this.driver.queryIndexEnteries<IndexKey, E>(
+    const entries = this.driver.queryIndexEntries<IndexKey, E>(
       indexKey,
       this.meta,
       match,
       direction,
     );
 
-    return enteries;
+    return entries;
   }
 }

@@ -55,9 +55,9 @@ export class CollectionObservableRead<
 
   public getMultiple(
     keys: E[PrimaryKey][],
-    observer: (enteries: E[]) => void,
+    observer: (entries: E[]) => void,
   ): () => void {
-    this.read.getMultiple(keys).then((enteries) => observer(enteries));
+    this.read.getMultiple(keys).then((entries) => observer(entries));
 
     const writeObserver: WriteObserverCallback<PrimaryKey, E> = (
       operation,
@@ -67,14 +67,14 @@ export class CollectionObservableRead<
       if (!hasUpdate) return;
 
       if (operation === WriteOperation.PUT) {
-        this.read.getMultiple(keys).then((enteries) => observer(enteries));
+        this.read.getMultiple(keys).then((entries) => observer(entries));
         return;
       }
       if (operation === WriteOperation.DELETE) {
         const remaningKeys = keys.filter((k) => updateKeys.includes(k));
         this.read
           .getMultiple(remaningKeys)
-          .then((enteries) => observer(enteries));
+          .then((entries) => observer(entries));
         return;
       }
     };
@@ -84,23 +84,21 @@ export class CollectionObservableRead<
 
   public query(
     match: QueryMatch<E[PrimaryKey]>,
-    observer: (enteries: E[]) => void,
+    observer: (entries: E[]) => void,
     direction?: QueryDirection,
   ): () => void {
-    this.read.query(match, direction).then((enteries) => observer(enteries));
+    this.read.query(match, direction).then((entries) => observer(entries));
 
     const writeObserver: WriteObserverCallback<PrimaryKey, E> = async (
       operation,
       updateKeys,
     ) => {
       if (operation === WriteOperation.DELETE) {
-        this.read
-          .query(match, direction)
-          .then((enteries) => observer(enteries));
+        this.read.query(match, direction).then((entries) => observer(entries));
         return;
       }
-      const updatedEnteries = await this.read.getMultiple(updateKeys);
-      const hasUpdate = updatedEnteries.some((entry) => {
+      const updatedEntries = await this.read.getMultiple(updateKeys);
+      const hasUpdate = updatedEntries.some((entry) => {
         const value = entry[this.meta.primaryKey];
         if (match instanceof QueryRange) {
           return match.includes(value);
@@ -109,9 +107,7 @@ export class CollectionObservableRead<
       });
 
       if (hasUpdate) {
-        this.read
-          .query(match, direction)
-          .then((enteries) => observer(enteries));
+        this.read.query(match, direction).then((entries) => observer(entries));
       }
     };
 
@@ -120,12 +116,12 @@ export class CollectionObservableRead<
   public queryIndex<IndexKey extends IndexKeys>(
     indexKey: IndexKey,
     match: QueryMatch<E[IndexKey]>,
-    observer: (enteries: E[]) => void,
+    observer: (entries: E[]) => void,
     direction?: QueryDirection,
   ): () => void {
     this.read
       .queryIndex(indexKey, match, direction)
-      .then((enteries) => observer(enteries));
+      .then((entries) => observer(entries));
 
     const writeObserver: WriteObserverCallback<PrimaryKey, E> = async (
       operation,
@@ -134,11 +130,11 @@ export class CollectionObservableRead<
       if (operation === WriteOperation.DELETE) {
         this.read
           .queryIndex(indexKey, match, direction)
-          .then((enteries) => observer(enteries));
+          .then((entries) => observer(entries));
         return;
       }
-      const updatedEnteries = await this.read.getMultiple(updateKeys);
-      const hasUpdate = updatedEnteries.some((entry) => {
+      const updatedEntries = await this.read.getMultiple(updateKeys);
+      const hasUpdate = updatedEntries.some((entry) => {
         const value = entry[indexKey];
         if (match instanceof QueryRange) {
           return match.includes(value);
@@ -149,7 +145,7 @@ export class CollectionObservableRead<
       if (hasUpdate) {
         this.read
           .queryIndex(indexKey, match, direction)
-          .then((enteries) => observer(enteries));
+          .then((entries) => observer(entries));
       }
     };
 

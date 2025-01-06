@@ -22,26 +22,26 @@ export class CollectionWrite<
   }
 
   public async put(entry: E): Promise<void> {
-    await this.driver.putEnteries<PrimaryKey, E>(this.meta, [entry]);
+    await this.driver.putEntries<PrimaryKey, E>(this.meta, [entry]);
     const key = entry[this.meta.primaryKey];
     this.writeObserverBridge.onWrite(WriteOperation.PUT, [key]);
   }
 
-  public async putMultiple(enteries: E[]): Promise<void> {
-    await this.driver.putEnteries<PrimaryKey, E>(this.meta, enteries);
+  public async putMultiple(entries: E[]): Promise<void> {
+    await this.driver.putEntries<PrimaryKey, E>(this.meta, entries);
     this.writeObserverBridge.onWrite(
       WriteOperation.PUT,
-      enteries.map((entry) => entry[this.meta.primaryKey]),
+      entries.map((entry) => entry[this.meta.primaryKey]),
     );
   }
 
   public async delete(key: E[PrimaryKey]): Promise<void> {
-    await this.driver.deleteEnteries<PrimaryKey, E>(this.meta, [key]);
+    await this.driver.deleteEntries<PrimaryKey, E>(this.meta, [key]);
     this.writeObserverBridge.onWrite(WriteOperation.DELETE, [key]);
   }
 
   public async deleteMultiple(keys: E[PrimaryKey][]): Promise<void> {
-    await this.driver.deleteEnteries<PrimaryKey, E>(this.meta, keys);
+    await this.driver.deleteEntries<PrimaryKey, E>(this.meta, keys);
     this.writeObserverBridge.onWrite(WriteOperation.DELETE, keys);
   }
 }
