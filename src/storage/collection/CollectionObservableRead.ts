@@ -37,10 +37,12 @@ export class CollectionObservableRead<
 
     const writeObserver: WriteObserverCallback<PrimaryKey, E> = (
       operation,
-      data,
+      updateKeys,
     ) => {
+      const hasUpdate = updateKeys.includes(key);
+      if (!hasUpdate) return;
+
       if (operation === WriteOperation.PUT) {
-        data.find((entry) => entry);
         this.read.get(key).then((entry) => observer(entry));
         return;
       }
@@ -87,65 +89,74 @@ export class CollectionObservableRead<
     observer: (entries: E[]) => void,
     direction?: QueryDirection,
   ): () => void {
-    this.read.query(match, direction).then((entries) => observer(entries));
+    let accessedEntries: E[PrimaryKey][] = [];
+
+    const submit = (entries: E[]) => {
+      accessedEntries = entries.map((entry) => entry[this.meta.primaryKey]);
+      observer(entries);
+    };
+
+    this.read.query(match, direction).then(submit);
 
     const writeObserver: WriteObserverCallback<PrimaryKey, E> = async (
       operation,
       updateKeys,
     ) => {
-      if (operation === WriteOperation.DELETE) {
-        this.read.query(match, direction).then((entries) => observer(entries));
+      if (accessedEntries.some((key) => updateKeys.includes(key))) {
+        this.read.query(match, direction).then(submit);
         return;
       }
-      const updatedEntries = await this.read.getMultiple(updateKeys);
-      const hasUpdate = updatedEntries.some((entry) => {
-        const value = entry[this.meta.primaryKey];
-        if (match instanceof QueryRange) {
-          return match.includes(value);
-        }
-        return value === match;
-      });
+      if (operation === WriteOperation.PUT) {
+        const updatedEntries = await this.read.getMultiple(updateKeys);
+        const hasUpdate = updatedEntries.some((entry) =>
+          match instanceof QueryRange
+            ? match.includes(entry[this.meta.primaryKey])
+            : entry[this.meta.primaryKey] === match,
+        );
 
-      if (hasUpdate) {
-        this.read.query(match, direction).then((entries) => observer(entries));
+        if (hasUpdate) {
+          this.read.query(match, direction).then(submit);
+        }
       }
     };
 
     return this.writeObserverBridge.observe(writeObserver);
   }
+
   public queryIndex<IndexKey extends IndexKeys>(
     indexKey: IndexKey,
     match: QueryMatch<E[IndexKey]>,
     observer: (entries: E[]) => void,
     direction?: QueryDirection,
   ): () => void {
-    this.read
-      .queryIndex(indexKey, match, direction)
-      .then((entries) => observer(entries));
+    let accessedEntries: E[PrimaryKey][] = [];
+
+    const submit = (entries: E[]) => {
+      accessedEntries = entries.map((entry) => entry[this.meta.primaryKey]);
+      observer(entries);
+    };
+    this.read.queryIndex(indexKey, match, direction).then(submit);
 
     const writeObserver: WriteObserverCallback<PrimaryKey, E> = async (
       operation,
       updateKeys,
     ) => {
-      if (operation === WriteOperation.DELETE) {
-        this.read
-          .queryIndex(indexKey, match, direction)
-          .then((entries) => observer(entries));
+      if (accessedEntries.some((key) => updateKeys.includes(key))) {
+        this.read.queryIndex(indexKey, match, direction).then(submit);
         return;
       }
-      const updatedEntries = await this.read.getMultiple(updateKeys);
-      const hasUpdate = updatedEntries.some((entry) => {
-        const value = entry[indexKey];
-        if (match instanceof QueryRange) {
-          return match.includes(value);
-        }
-        return value === match;
-      });
 
-      if (hasUpdate) {
-        this.read
-          .queryIndex(indexKey, match, direction)
-          .then((entries) => observer(entries));
+      if (operation === WriteOperation.PUT) {
+        const updatedEntries = await this.read.getMultiple(updateKeys);
+        const hasUpdate = updatedEntries.some((entry) =>
+          match instanceof QueryRange
+            ? match.includes(entry[indexKey])
+            : entry[indexKey] === match,
+        );
+
+        if (hasUpdate) {
+          this.read.queryIndex(indexKey, match, direction).then(submit);
+        }
       }
     };
 
