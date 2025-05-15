@@ -1,4 +1,4 @@
-import { withSearchParams } from "../../../../utils/withSearchParams";
+import { withSearchParams } from "../../../../utils";
 import { GetDownloadEndpoint, GetDownloadFileEndpoint } from "./download.type";
 
 /**
