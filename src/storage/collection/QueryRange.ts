@@ -1,4 +1,4 @@
-import { KeyValue, PermitiveKeyValue } from "./Entry";
+import { KeyValue, PrimitiveKeyValue } from "./Entry";
 
 export class QueryRange<T extends KeyValue> {
   public readonly lower?: T;
@@ -10,7 +10,7 @@ export class QueryRange<T extends KeyValue> {
     this.upper = upper;
   }
 
-  private comparePermitiveLower<U extends PermitiveKeyValue>(
+  private comparePrimitiveLower<U extends PrimitiveKeyValue>(
     value: U,
     lower?: U,
   ): boolean {
@@ -26,7 +26,7 @@ export class QueryRange<T extends KeyValue> {
       if (Array.isArray(lower)) {
         if (value.length < lower.length) return false;
         return value.every((v, index) =>
-          this.comparePermitiveLower(v, lower[index]),
+          this.comparePrimitiveLower(v, lower[index]),
         );
       }
       return true;
@@ -34,10 +34,10 @@ export class QueryRange<T extends KeyValue> {
     if (Array.isArray(lower)) {
       return false;
     }
-    return this.comparePermitiveLower(value, lower);
+    return this.comparePrimitiveLower(value, lower);
   }
 
-  private comparePermitiveUpper<U extends PermitiveKeyValue>(
+  private comparePrimitiveUpper<U extends PrimitiveKeyValue>(
     value: U,
     upper?: U,
   ): boolean {
@@ -53,7 +53,7 @@ export class QueryRange<T extends KeyValue> {
       if (Array.isArray(upper)) {
         if (value.length > upper.length) return false;
         return value.every((v, index) =>
-          this.comparePermitiveUpper(v, upper[index]),
+          this.comparePrimitiveUpper(v, upper[index]),
         );
       }
       return false;
@@ -61,7 +61,7 @@ export class QueryRange<T extends KeyValue> {
     if (Array.isArray(upper)) {
       return true;
     }
-    return this.comparePermitiveUpper(value, upper);
+    return this.comparePrimitiveUpper(value, upper);
   }
 
   public includes(value: T): boolean {

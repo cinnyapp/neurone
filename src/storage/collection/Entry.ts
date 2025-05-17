@@ -1,7 +1,7 @@
 export type Indexes = string;
 
-export type PermitiveKeyValue = number | string;
-export type KeyValue = PermitiveKeyValue | PermitiveKeyValue[];
+export type PrimitiveKeyValue = number | string;
+export type KeyValue = PrimitiveKeyValue | PrimitiveKeyValue[];
 
 export type Entry<
   PrimaryKey extends string,
