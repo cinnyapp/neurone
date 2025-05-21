@@ -1,4 +1,3 @@
-import to from "await-to-js";
 import { LongPoll } from "./types";
 
 export const longPoll: LongPoll = async (
@@ -10,21 +9,26 @@ export const longPoll: LongPoll = async (
   while (!abortSignal.aborted) {
     const reqPromise = request(abortSignal);
     listener.onRequest();
-    const [requestError, response] = await to(reqPromise);
 
-    if (requestError) {
-      listener.onRequestError(requestError);
+    let response: Response;
+
+    try {
+      response = await reqPromise;
+    } catch (requestError) {
+      listener.onRequestError(requestError as Error);
       return;
     }
 
-    const [parsingError, parsedResp] = await to(parseResponse(response));
+    let result: Awaited<ReturnType<typeof parseResponse>>;
 
-    if (parsingError) {
-      listener.onRequestError(parsingError);
+    try {
+      result = await parseResponse(response);
+    } catch (parsingError) {
+      listener.onRequestError(parsingError as Error);
       return;
     }
 
-    const [error, data] = parsedResp;
+    const [error, data] = result;
     if (error) {
       listener.onResponseError(error);
       return;
