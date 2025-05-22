@@ -1,4 +1,4 @@
-import { JoinedRoom } from "../../../../api/matrix/client/v3/sync/sync.type";
+import { JoinRoom } from "../../../../api/matrix/client/v3/sync/sync.type";
 import { roomState } from "./state";
 
 test("get room state events from joined room sync response", () => {
@@ -53,7 +53,7 @@ test("get room state events from joined room sync response", () => {
       },
     },
   ];
-  const joinedRoom: JoinedRoom = {
+  const joinRoom: JoinRoom = {
     state: {
       events: stateEventsWithoutRoomId,
     },
@@ -62,12 +62,12 @@ test("get room state events from joined room sync response", () => {
     },
   };
 
-  expect(roomState(joinedRoom)).toEqual([
+  expect(roomState(joinRoom)).toEqual([
     ...stateEventsWithoutRoomId,
     timelineEventsWithoutRoomId[0],
   ]);
 
-  expect(roomState(joinedRoom)).not.toEqual([
+  expect(roomState(joinRoom)).not.toEqual([
     ...stateEventsWithoutRoomId,
     timelineEventsWithoutRoomId[1],
   ]);

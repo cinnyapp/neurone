@@ -1,4 +1,4 @@
-import { JoinedRoom, Timeline } from "../../../../api/matrix/client/v3/sync";
+import { JoinRoom, Timeline } from "../../../../api/matrix/client/v3/sync";
 import { ClientEventWithoutRoomId } from "../../../../api/types";
 import { roomTimeline } from "./timeline";
 
@@ -41,11 +41,11 @@ test("get room timeline from sync response", () => {
     events: timelineEventsWithoutRoomId,
   };
 
-  const joinedRoom: JoinedRoom = {
+  const joinRoom: JoinRoom = {
     timeline,
   };
 
-  expect(roomTimeline(joinedRoom)).toEqual(timelineEventsWithoutRoomId);
+  expect(roomTimeline(joinRoom)).toEqual(timelineEventsWithoutRoomId);
 
   expect(roomTimeline({})).toEqual([]);
 });

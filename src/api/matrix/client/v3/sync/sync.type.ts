@@ -18,13 +18,13 @@ export type Timeline = {
   prev_batch?: string;
 };
 
-export type InvitedRoom = {
+export type InviteRoom = {
   invite_state?: {
     events?: StrippedStateEvent[];
   };
 };
 
-export type JoinedRoom = {
+export type JoinRoom = {
   account_data?: {
     events?: AccountDataEvent[];
   };
@@ -40,13 +40,13 @@ export type JoinedRoom = {
   unread_thread_notifications?: Record<string, UnreadNotificationCounts>;
 };
 
-export type KnockedRoom = {
+export type KnockRoom = {
   knock_state?: {
     events?: StrippedStateEvent[];
   };
 };
 
-export type LeftRoom = {
+export type LeaveRoom = {
   account_data?: {
     events?: AccountDataEvent[];
   };
@@ -81,10 +81,10 @@ export type GetSyncOK = {
     events?: PresenceEvent[];
   };
   rooms?: {
-    invite?: Record<string, InvitedRoom>;
-    join?: Record<string, JoinedRoom>;
-    knock?: Record<string, KnockedRoom>;
-    leave?: Record<string, LeftRoom>;
+    invite?: Record<string, InviteRoom>;
+    join?: Record<string, JoinRoom>;
+    knock?: Record<string, KnockRoom>;
+    leave?: Record<string, LeaveRoom>;
   };
   to_device?: {
     events?: ToDeviceEvent[];

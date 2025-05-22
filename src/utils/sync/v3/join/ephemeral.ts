@@ -3,10 +3,10 @@ import {
   TypingEphemeralEvent,
   ReceiptEphemeralEvent,
 } from "../../../../api/types";
-import { JoinedRoom } from "../../../../api/matrix/client/v3/sync";
+import { JoinRoom } from "../../../../api/matrix/client/v3/sync";
 
-export const roomEphemeral = (joinedRoom: JoinedRoom): EphemeralEvent[] =>
-  joinedRoom.ephemeral?.events ?? [];
+export const roomEphemeral = (joinRoom: JoinRoom): EphemeralEvent[] =>
+  joinRoom.ephemeral?.events ?? [];
 
 export const roomTypingEphemeral = (
   events: EphemeralEvent[],

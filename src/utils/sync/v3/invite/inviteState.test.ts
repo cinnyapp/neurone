@@ -1,4 +1,4 @@
-import { InvitedRoom } from "../../../../api/matrix/client/v3/sync";
+import { InviteRoom } from "../../../../api/matrix/client/v3/sync";
 import { StrippedStateEvent } from "../../../../api/types";
 import { roomInviteState } from "./inviteState";
 
@@ -14,7 +14,7 @@ test("get room invite state events from sync response", () => {
     },
   ];
 
-  const inviteRoom: InvitedRoom = {
+  const inviteRoom: InviteRoom = {
     invite_state: {
       events,
     },

@@ -1,11 +1,11 @@
-import { JoinedRoom } from "../../../../api/matrix/client/v3/sync";
+import { JoinRoom } from "../../../../api/matrix/client/v3/sync";
 import { UnreadNotificationCounts } from "../../../../api/types";
 
 export const roomUnreadNotifications = (
-  joinedRoom: JoinedRoom,
-): UnreadNotificationCounts | undefined => joinedRoom.unread_notifications;
+  joinRoom: JoinRoom,
+): UnreadNotificationCounts | undefined => joinRoom.unread_notifications;
 
 export const roomUnreadThreadNotifications = (
-  joinedRoom: JoinedRoom,
+  joinRoom: JoinRoom,
 ): Record<string, UnreadNotificationCounts> | undefined =>
-  joinedRoom.unread_thread_notifications;
+  joinRoom.unread_thread_notifications;

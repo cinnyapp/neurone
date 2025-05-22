@@ -1,4 +1,4 @@
-import { JoinedRoom } from "../../../../api/matrix/client/v3/sync/sync.type";
+import { JoinRoom } from "../../../../api/matrix/client/v3/sync/sync.type";
 import {
   roomEphemeral,
   roomReceiptEphemeral,
@@ -15,13 +15,13 @@ test("get room typing ephemeral events from sync data", () => {
     },
   ];
 
-  const joinedRoom: JoinedRoom = {
+  const joinRoom: JoinRoom = {
     ephemeral: {
       events,
     },
   };
 
-  expect(roomTypingEphemeral(roomEphemeral(joinedRoom))).toEqual(events[0]);
+  expect(roomTypingEphemeral(roomEphemeral(joinRoom))).toEqual(events[0]);
 
   expect(roomTypingEphemeral(roomEphemeral({}))).toEqual(undefined);
 });
@@ -54,13 +54,13 @@ test("get room event receipt ephemeral events from sync data", () => {
     },
   ];
 
-  const joinedRoom: JoinedRoom = {
+  const joinRoom: JoinRoom = {
     ephemeral: {
       events: events,
     },
   };
 
-  expect(roomReceiptEphemeral(roomEphemeral(joinedRoom))).toEqual(events[0]);
+  expect(roomReceiptEphemeral(roomEphemeral(joinRoom))).toEqual(events[0]);
 
   expect(roomReceiptEphemeral(roomEphemeral({}))).toEqual(undefined);
 });

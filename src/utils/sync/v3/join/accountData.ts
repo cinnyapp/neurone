@@ -1,5 +1,5 @@
 import { AccountDataEvent } from "../../../../api/types";
-import { JoinedRoom } from "../../../../api/matrix/client/v3/sync/sync.type";
+import { JoinRoom } from "../../../../api/matrix/client/v3/sync/sync.type";
 
-export const roomAccountData = (joinedRoom: JoinedRoom): AccountDataEvent[] =>
-  joinedRoom.account_data?.events ?? [];
+export const roomAccountData = (joinRoom: JoinRoom): AccountDataEvent[] =>
+  joinRoom.account_data?.events ?? [];

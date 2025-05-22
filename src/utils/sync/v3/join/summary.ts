@@ -1,5 +1,5 @@
 import { RoomSummary } from "../../../../api/types";
-import { JoinedRoom } from "../../../../api/matrix/client/v3/sync";
+import { JoinRoom } from "../../../../api/matrix/client/v3/sync";
 
-export const roomSummary = (joinedRoom: JoinedRoom): RoomSummary | undefined =>
-  joinedRoom.summary ?? undefined;
+export const roomSummary = (joinRoom: JoinRoom): RoomSummary | undefined =>
+  joinRoom.summary ?? undefined;

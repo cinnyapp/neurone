@@ -1,11 +1,9 @@
-import { JoinedRoom } from "../../../../api/matrix/client/v3/sync/sync.type";
+import { JoinRoom } from "../../../../api/matrix/client/v3/sync/sync.type";
 import { StateEventWithoutRoomId } from "../../../../api/types";
 
-export const roomState = (
-  joinedRoom: JoinedRoom,
-): StateEventWithoutRoomId[] => {
-  const stateEvents = joinedRoom.state?.events;
-  const timelineEvents = joinedRoom.timeline?.events;
+export const roomState = (joinRoom: JoinRoom): StateEventWithoutRoomId[] => {
+  const stateEvents = joinRoom.state?.events;
+  const timelineEvents = joinRoom.timeline?.events;
   const collection: StateEventWithoutRoomId[] = [];
 
   stateEvents?.forEach((event) => collection.push(event));

@@ -1,4 +1,4 @@
-import { JoinedRoom } from "../../../../api/matrix/client/v3/sync";
+import { JoinRoom } from "../../../../api/matrix/client/v3/sync";
 import { RoomSummary } from "../../../../api/types";
 import { roomSummary } from "./summary";
 
@@ -8,11 +8,11 @@ test("get room summary from sync response", () => {
     "m.invited_member_count": 1,
   };
 
-  const joinedRoom: JoinedRoom = {
+  const joinRoom: JoinRoom = {
     summary,
   };
 
-  expect(roomSummary(joinedRoom)).toEqual(summary);
+  expect(roomSummary(joinRoom)).toEqual(summary);
 
   expect(roomSummary({})).toBe(undefined);
 });

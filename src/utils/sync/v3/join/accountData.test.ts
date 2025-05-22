@@ -1,8 +1,8 @@
 import { AccountDataEvent } from "../../../../api/types";
-import { JoinedRoom } from "../../../../api/matrix/client/v3/sync/sync.type";
+import { JoinRoom } from "../../../../api/matrix/client/v3/sync/sync.type";
 import { roomAccountData } from "./accountData";
 
-test("get joined room account data event", () => {
+test("get join room account data event", () => {
   const events: AccountDataEvent[] = [
     {
       content: {
@@ -18,24 +18,24 @@ test("get joined room account data event", () => {
     },
   ];
 
-  const joinedRoom: JoinedRoom = {
+  const joinRoom: JoinRoom = {
     account_data: {
       events,
     },
   };
 
-  expect(roomAccountData(joinedRoom)).toEqual(events);
-  expect(roomAccountData(joinedRoom)).not.toEqual([]);
+  expect(roomAccountData(joinRoom)).toEqual(events);
+  expect(roomAccountData(joinRoom)).not.toEqual([]);
 });
 
-test("get joined room account data event with no events", () => {
+test("get join room account data event with no events", () => {
   const events: AccountDataEvent[] = [];
 
-  const joinedRoom: JoinedRoom = {
+  const joinRoom: JoinRoom = {
     account_data: {
       events,
     },
   };
 
-  expect(roomAccountData(joinedRoom).length).toEqual(0);
+  expect(roomAccountData(joinRoom).length).toEqual(0);
 });
