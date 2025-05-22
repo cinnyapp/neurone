@@ -29,7 +29,7 @@ module.exports = {
   "plugins": [
     "@typescript-eslint"
   ],
-  "ignorePatterns": ["dist"],
+  "ignorePatterns": ["lib"],
   "rules": {
     "indent": [
       "error",

@@ -6,7 +6,7 @@ import {
   Presence,
   PresenceEvent,
   RoomSummary,
-  StateEvent,
+  StateEventWithoutRoomId,
   StrippedStateEvent,
   ToDeviceEvent,
   UnreadNotificationCounts,
@@ -32,7 +32,7 @@ export type JoinedRoom = {
     events?: EphemeralEvent[];
   };
   state?: {
-    events?: Omit<StateEvent, "room_id">[];
+    events?: StateEventWithoutRoomId[];
   };
   summary?: RoomSummary;
   timeline?: Timeline;
@@ -51,7 +51,7 @@ export type LeftRoom = {
     events?: AccountDataEvent[];
   };
   state?: {
-    events?: Omit<StateEvent, "room_id">[];
+    events?: StateEventWithoutRoomId[];
   };
   timeline?: Timeline;
 };

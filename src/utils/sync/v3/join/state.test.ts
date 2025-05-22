@@ -1,38 +1,7 @@
-import { JoinedRoom } from "../../../api/matrix/client/v3/sync/sync.type";
-import {
-  serializeRoomState,
-  serializeWithoutRoomIdStateEvent,
-} from "./roomState";
+import { JoinedRoom } from "../../../../api/matrix/client/v3/sync/sync.type";
+import { roomState } from "./state";
 
-test("serialize without roomId state event", () => {
-  const roomId = "!jEsUZKDJdhlrceRyVU:example.org";
-  const stateEventWithoutRoomId = {
-    content: {
-      avatar_url: "mxc://example.org/SEsfnsuifSDFSSEF",
-      displayname: "Alice Margatroid",
-      membership: "join",
-      reason: "Looking for support",
-    },
-    event_id: "$143273582443PhrSn:example.org",
-    origin_server_ts: 1432735824653,
-    sender: "@example:example.org",
-    state_key: "@alice:example.org",
-    type: "m.room.member",
-    unsigned: {
-      age: 1234,
-    },
-  };
-
-  expect(
-    serializeWithoutRoomIdStateEvent(roomId, stateEventWithoutRoomId),
-  ).toEqual({
-    room_id: roomId,
-    ...stateEventWithoutRoomId,
-  });
-});
-
-test("serialize state events from joined room sync response", () => {
-  const roomId = "!jEsUZKDJdhlrceRyVU:example.org";
+test("get room state events from joined room sync response", () => {
   const stateEventsWithoutRoomId = [
     {
       content: {
@@ -93,25 +62,13 @@ test("serialize state events from joined room sync response", () => {
     },
   };
 
-  expect(serializeRoomState(roomId, joinedRoom)).toEqual([
-    ...stateEventsWithoutRoomId.map((evt) => ({
-      room_id: roomId,
-      ...evt,
-    })),
-    {
-      room_id: roomId,
-      ...timelineEventsWithoutRoomId[0],
-    },
+  expect(roomState(joinedRoom)).toEqual([
+    ...stateEventsWithoutRoomId,
+    timelineEventsWithoutRoomId[0],
   ]);
 
-  expect(serializeRoomState(roomId, joinedRoom)).not.toEqual([
-    ...stateEventsWithoutRoomId.map((evt) => ({
-      room_id: roomId,
-      ...evt,
-    })),
-    {
-      room_id: roomId,
-      ...timelineEventsWithoutRoomId[1],
-    },
+  expect(roomState(joinedRoom)).not.toEqual([
+    ...stateEventsWithoutRoomId,
+    timelineEventsWithoutRoomId[1],
   ]);
 });

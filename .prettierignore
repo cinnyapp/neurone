@@ -1,4 +1,4 @@
 # Ignore artifacts:
-dist
+lib
 node_bodules
 *.json
