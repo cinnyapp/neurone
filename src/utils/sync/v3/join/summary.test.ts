@@ -15,4 +15,10 @@ test("get room summary from sync response", () => {
   expect(roomSummary(joinRoom)).toEqual(summary);
 
   expect(roomSummary({})).toBe(undefined);
+
+  expect(
+    roomSummary({
+      summary: {},
+    }),
+  ).toBe(undefined);
 });
