@@ -40,4 +40,7 @@ export type ClientEventWithoutRoomId<
   | Omit<StateEvent<EventContent, UnsignedData>, "room_id">
   | Omit<MessageEvent<EventContent, UnsignedData>, "room_id">;
 
-export type StateEventWithoutRoomId = Omit<StateEvent, "room_id">;
+export type StateEventWithoutRoomId<
+  EventContent extends object = object,
+  UnsignedData extends object = object,
+> = Omit<StateEvent<EventContent, UnsignedData>, "room_id">;
