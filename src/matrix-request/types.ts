@@ -28,7 +28,7 @@ export interface PollListener<SuccessData, ErrorData = MatrixErrorData> {
   onRequest: () => void;
   onRequestError: (error: Error) => void;
   onResponseError: (error: MatrixError<ErrorData>) => void;
-  onResponseSuccess: (data: SuccessData) => void;
+  onResponseSuccess: (data: SuccessData) => Promise<void>;
 }
 export type LongPollRequest = (abortSignal: AbortSignal) => Promise<Response>;
 

@@ -63,7 +63,7 @@ describe("longPoll", () => {
           onResponseError() {
             reject();
           },
-          onResponseSuccess() {
+          async onResponseSuccess() {
             reject();
           },
         });
@@ -83,7 +83,7 @@ describe("longPoll", () => {
           onResponseError() {
             reject();
           },
-          onResponseSuccess() {
+          async onResponseSuccess() {
             reject();
           },
         });
@@ -105,7 +105,7 @@ describe("longPoll", () => {
           onResponseError() {
             reject();
           },
-          onResponseSuccess() {
+          async onResponseSuccess() {
             reject();
           },
         });
@@ -133,14 +133,14 @@ describe("longPoll", () => {
             expect(error.status).toBe(404);
             resolve(undefined);
           },
-          onResponseSuccess() {
+          async onResponseSuccess() {
             reject();
           },
         });
       });
     });
 
-    test("onResponseSuccess shoud be called after getting reponse data", async () => {
+    test("async onResponseSuccess shoud be called after getting reponse data", async () => {
       const requestData = {
         some: true,
       };
@@ -163,7 +163,7 @@ describe("longPoll", () => {
           onResponseError() {
             reject();
           },
-          onResponseSuccess(data) {
+          async onResponseSuccess(data) {
             expect(data).toEqual(requestData);
             abortController.abort();
             resolve(true);
@@ -183,7 +183,7 @@ describe("longPoll", () => {
         onResponseError() {
           reject();
         },
-        onResponseSuccess() {
+        async onResponseSuccess() {
           reject();
         },
       })
@@ -208,7 +208,7 @@ describe("longPoll", () => {
         onResponseError() {
           reject();
         },
-        onResponseSuccess() {
+        async onResponseSuccess() {
           reject();
         },
       })
@@ -239,7 +239,7 @@ describe("longPoll", () => {
           reject();
         },
         onResponseError() {},
-        onResponseSuccess() {
+        async onResponseSuccess() {
           reject();
         },
       })

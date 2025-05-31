@@ -34,6 +34,6 @@ export const longPoll: LongPoll = async (
       return;
     }
 
-    listener.onResponseSuccess(data);
+    await listener.onResponseSuccess(data);
   }
 };
