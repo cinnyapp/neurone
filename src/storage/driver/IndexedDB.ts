@@ -61,7 +61,7 @@ export class IndexedDBStorageDriver implements StorageDriver {
     return query as string;
   }
 
-  private prepareIDBDirection(
+  private prepareIDBCursorDirection(
     cursor?: QueryCursor,
   ): IDBCursorDirection | undefined {
     return cursor ? this.getIDBCursorDirection(cursor) : undefined;
@@ -117,7 +117,7 @@ export class IndexedDBStorageDriver implements StorageDriver {
 
     let idbCursor = await txn.store.openCursor(
       this.prepareIDBQuery(query),
-      this.prepareIDBDirection(cursor),
+      this.prepareIDBCursorDirection(cursor),
     );
 
     const entries: E[] = [];
@@ -146,7 +146,7 @@ export class IndexedDBStorageDriver implements StorageDriver {
     const index = txn.store.index(indexKey);
     let idbCursor = await index.openCursor(
       this.prepareIDBQuery(query),
-      this.prepareIDBDirection(cursor),
+      this.prepareIDBCursorDirection(cursor),
     );
 
     const entries: E[] = [];
