@@ -90,7 +90,7 @@ describe("CollectionRead", () => {
 
   describe("query", () => {
     it("should return entries when match found", async () => {
-      const match = "u1";
+      const query = "u1";
       const mockEntry: UserEntry = {
         id: "u1",
         membership: "join",
@@ -98,25 +98,25 @@ describe("CollectionRead", () => {
       };
       mockDriver.queryEntries.mockResolvedValueOnce([mockEntry]);
 
-      const users = await read.query(match);
+      const users = await read.query(query);
 
       expect(users).toEqual([mockEntry]);
       expect(mockDriver.queryEntries).toHaveBeenCalledWith(
         meta,
-        match,
+        query,
         undefined,
       );
     });
     it("should return an empty array when no entries match", async () => {
-      const match = "u1";
+      const query = "u1";
       mockDriver.queryEntries.mockResolvedValueOnce([]);
 
-      const result = await read.query(match);
+      const result = await read.query(query);
 
       expect(result).toEqual([]);
       expect(mockDriver.queryEntries).toHaveBeenCalledWith(
         meta,
-        match,
+        query,
         undefined,
       );
     });
@@ -125,35 +125,35 @@ describe("CollectionRead", () => {
   describe("queryIndex", () => {
     it("should return entries matching the indexed query", async () => {
       const indexKey = "membership";
-      const match = "join";
+      const query = "join";
       const mockEntries: UserEntry[] = [
         { id: "u1", name: "John Doe", membership: "join" },
       ];
       mockDriver.queryIndexEntries.mockResolvedValueOnce(mockEntries);
 
-      const result = await read.queryIndex(indexKey, match);
+      const result = await read.queryIndex(indexKey, query);
 
       expect(result).toEqual(mockEntries);
       expect(mockDriver.queryIndexEntries).toHaveBeenCalledWith(
         indexKey,
         meta,
-        match,
+        query,
         undefined,
       );
     });
 
     it("should return an empty array when no entries match the indexed query", async () => {
       const indexKey = "membership";
-      const match = "join";
+      const query = "join";
       mockDriver.queryIndexEntries.mockResolvedValueOnce([]);
 
-      const result = await read.queryIndex(indexKey, match);
+      const result = await read.queryIndex(indexKey, query);
 
       expect(result).toEqual([]);
       expect(mockDriver.queryIndexEntries).toHaveBeenCalledWith(
         indexKey,
         meta,
-        match,
+        query,
         undefined,
       );
     });
