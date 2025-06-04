@@ -1,6 +1,6 @@
 import { CollectionOperator } from "./CollectionOperator";
 import { Entry, Indexes } from "./Entry";
-import { QueryDirection, QueryMatch } from "./type";
+import { QueryCursor, Query } from "./type";
 
 export class CollectionRead<
   PrimaryKey extends string,
@@ -25,13 +25,13 @@ export class CollectionRead<
   }
 
   public async query(
-    match: QueryMatch<E[PrimaryKey]>,
-    direction?: QueryDirection,
+    query: Query<E[PrimaryKey]>,
+    cursor?: QueryCursor,
   ): Promise<E[]> {
     const entries = this.driver.queryEntries<PrimaryKey, E>(
       this.meta,
-      match,
-      direction,
+      query,
+      cursor,
     );
 
     return entries;
@@ -39,14 +39,14 @@ export class CollectionRead<
 
   public async queryIndex<IndexKey extends IndexKeys>(
     indexKey: IndexKey,
-    match: QueryMatch<E[IndexKey]>,
-    direction?: QueryDirection,
+    query: Query<E[IndexKey]>,
+    cursor?: QueryCursor,
   ): Promise<E[]> {
     const entries = this.driver.queryIndexEntries<IndexKey, E>(
       indexKey,
       this.meta,
-      match,
-      direction,
+      query,
+      cursor,
     );
 
     return entries;

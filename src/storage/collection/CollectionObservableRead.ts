@@ -4,8 +4,8 @@ import { Entry, Indexes } from "./Entry";
 import { QueryRange } from "./QueryRange";
 import { WriteObserverBridge } from "./WriteObserverBridge";
 import {
-  QueryDirection,
-  QueryMatch,
+  QueryCursor,
+  Query,
   WriteObserverCallback,
   WriteOperation,
 } from "./type";
@@ -85,9 +85,9 @@ export class CollectionObservableRead<
   }
 
   public query(
-    match: QueryMatch<E[PrimaryKey]>,
+    query: Query<E[PrimaryKey]>,
     observer: (entries: E[]) => void,
-    direction?: QueryDirection,
+    cursor?: QueryCursor,
   ): () => void {
     let accessedEntries: E[PrimaryKey][] = [];
 
@@ -96,26 +96,26 @@ export class CollectionObservableRead<
       observer(entries);
     };
 
-    this.read.query(match, direction).then(submit);
+    this.read.query(query, cursor).then(submit);
 
     const writeObserver: WriteObserverCallback<PrimaryKey, E> = async (
       operation,
       updateKeys,
     ) => {
       if (accessedEntries.some((key) => updateKeys.includes(key))) {
-        this.read.query(match, direction).then(submit);
+        this.read.query(query, cursor).then(submit);
         return;
       }
       if (operation === WriteOperation.PUT) {
         const updatedEntries = await this.read.getMultiple(updateKeys);
         const hasUpdate = updatedEntries.some((entry) =>
-          match instanceof QueryRange
-            ? match.includes(entry[this.meta.primaryKey])
-            : entry[this.meta.primaryKey] === match,
+          query instanceof QueryRange
+            ? query.includes(entry[this.meta.primaryKey])
+            : entry[this.meta.primaryKey] === query,
         );
 
         if (hasUpdate) {
-          this.read.query(match, direction).then(submit);
+          this.read.query(query, cursor).then(submit);
         }
       }
     };
@@ -125,9 +125,9 @@ export class CollectionObservableRead<
 
   public queryIndex<IndexKey extends IndexKeys>(
     indexKey: IndexKey,
-    match: QueryMatch<E[IndexKey]>,
+    query: Query<E[IndexKey]>,
     observer: (entries: E[]) => void,
-    direction?: QueryDirection,
+    cursor?: QueryCursor,
   ): () => void {
     let accessedEntries: E[PrimaryKey][] = [];
 
@@ -135,27 +135,27 @@ export class CollectionObservableRead<
       accessedEntries = entries.map((entry) => entry[this.meta.primaryKey]);
       observer(entries);
     };
-    this.read.queryIndex(indexKey, match, direction).then(submit);
+    this.read.queryIndex(indexKey, query, cursor).then(submit);
 
     const writeObserver: WriteObserverCallback<PrimaryKey, E> = async (
       operation,
       updateKeys,
     ) => {
       if (accessedEntries.some((key) => updateKeys.includes(key))) {
-        this.read.queryIndex(indexKey, match, direction).then(submit);
+        this.read.queryIndex(indexKey, query, cursor).then(submit);
         return;
       }
 
       if (operation === WriteOperation.PUT) {
         const updatedEntries = await this.read.getMultiple(updateKeys);
         const hasUpdate = updatedEntries.some((entry) =>
-          match instanceof QueryRange
-            ? match.includes(entry[indexKey])
-            : entry[indexKey] === match,
+          query instanceof QueryRange
+            ? query.includes(entry[indexKey])
+            : entry[indexKey] === query,
         );
 
         if (hasUpdate) {
-          this.read.queryIndex(indexKey, match, direction).then(submit);
+          this.read.queryIndex(indexKey, query, cursor).then(submit);
         }
       }
     };

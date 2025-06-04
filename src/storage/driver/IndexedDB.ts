@@ -4,8 +4,8 @@ import {
   CollectionMeta,
   Entry,
   KeyValue,
-  QueryDirection,
-  QueryMatch,
+  QueryCursor,
+  Query,
   QueryRange,
 } from "../collection";
 
@@ -45,11 +45,11 @@ export class IndexedDBStorageDriver implements StorageDriver {
     return null;
   }
 
-  private getIDBCursorDirection(direction: QueryDirection): IDBCursorDirection {
-    if (direction.dir === "Prev") {
-      return direction.unique ? "prevunique" : "prev";
+  private getIDBCursorDirection(cursor: QueryCursor): IDBCursorDirection {
+    if (cursor.dir === "Prev") {
+      return cursor.unique ? "prevunique" : "prev";
     }
-    return direction.unique ? "nextunique" : "next";
+    return cursor.unique ? "nextunique" : "next";
   }
 
   async getEntries<PrimaryKey extends string, E extends Entry<PrimaryKey>>(
@@ -95,22 +95,22 @@ export class IndexedDBStorageDriver implements StorageDriver {
 
   async queryEntries<PrimaryKey extends string, E extends Entry<PrimaryKey>>(
     collectionMeta: CollectionMeta<PrimaryKey>,
-    match: QueryMatch<E[PrimaryKey]>,
-    direction?: QueryDirection | undefined,
+    query: Query<E[PrimaryKey]>,
+    cursor?: QueryCursor | undefined,
   ): Promise<E[]> {
-    const txn = this.db.transaction(collectionMeta.name, "readwrite");
+    const txn = this.db.transaction(collectionMeta.name, "readonly");
 
-    let cursor = await txn.store.openCursor(
-      match instanceof QueryRange
-        ? this.getIDBKeyRange(match)
-        : (match as string),
-      direction ? this.getIDBCursorDirection(direction) : undefined,
+    let idbCursor = await txn.store.openCursor(
+      query instanceof QueryRange
+        ? this.getIDBKeyRange(query)
+        : (query as string),
+      cursor ? this.getIDBCursorDirection(cursor) : undefined,
     );
 
     const entries: E[] = [];
-    while (cursor) {
-      entries.push(cursor.value);
-      cursor = await cursor.continue();
+    while (idbCursor) {
+      entries.push(idbCursor.value);
+      idbCursor = await idbCursor.continue();
     }
 
     return entries;
@@ -122,23 +122,23 @@ export class IndexedDBStorageDriver implements StorageDriver {
   >(
     indexKey: IndexKey,
     collectionMeta: CollectionMeta<string>,
-    match: QueryMatch<E[IndexKey]>,
-    direction?: QueryDirection | undefined,
+    query: Query<E[IndexKey]>,
+    cursor?: QueryCursor | undefined,
   ): Promise<E[]> {
-    const txn = this.db.transaction(collectionMeta.name, "readwrite");
+    const txn = this.db.transaction(collectionMeta.name, "readonly");
 
     const index = txn.store.index(indexKey);
-    let cursor = await index.openCursor(
-      match instanceof QueryRange
-        ? this.getIDBKeyRange(match)
-        : (match as string),
-      direction ? this.getIDBCursorDirection(direction) : undefined,
+    let idbCursor = await index.openCursor(
+      query instanceof QueryRange
+        ? this.getIDBKeyRange(query)
+        : (query as string),
+      cursor ? this.getIDBCursorDirection(cursor) : undefined,
     );
 
     const entries: E[] = [];
-    while (cursor) {
-      entries.push(cursor.value);
-      cursor = await cursor.continue();
+    while (idbCursor) {
+      entries.push(idbCursor.value);
+      idbCursor = await idbCursor.continue();
     }
 
     return entries;

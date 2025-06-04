@@ -1,6 +1,6 @@
 import { CollectionMeta } from "./collection/CollectionMeta";
 import { Entry, Indexes } from "./collection/Entry";
-import { QueryDirection, QueryMatch } from "./collection/type";
+import { QueryCursor, Query } from "./collection/type";
 
 export interface StorageDriver {
   getEntries<PrimaryKey extends string, E extends Entry<PrimaryKey>>(
@@ -20,8 +20,8 @@ export interface StorageDriver {
 
   queryEntries<PrimaryKey extends string, E extends Entry<PrimaryKey>>(
     collectionMeta: CollectionMeta<PrimaryKey>,
-    match: QueryMatch<E[PrimaryKey]>,
-    direction?: QueryDirection,
+    query: Query<E[PrimaryKey]>,
+    cursor?: QueryCursor,
   ): Promise<E[]>;
 
   queryIndexEntries<
@@ -30,7 +30,7 @@ export interface StorageDriver {
   >(
     indexKey: IndexKey,
     collectionMeta: CollectionMeta<string>,
-    match: QueryMatch<E[IndexKey]>,
-    direction?: QueryDirection,
+    query: Query<E[IndexKey]>,
+    cursor?: QueryCursor,
   ): Promise<E[]>;
 }
