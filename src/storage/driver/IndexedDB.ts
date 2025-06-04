@@ -110,6 +110,9 @@ export class IndexedDBStorageDriver implements StorageDriver {
     const entries: E[] = [];
     while (idbCursor) {
       entries.push(idbCursor.value);
+      if (entries.length === cursor?.limit) {
+        break;
+      }
       idbCursor = await idbCursor.continue();
     }
 
@@ -138,6 +141,9 @@ export class IndexedDBStorageDriver implements StorageDriver {
     const entries: E[] = [];
     while (idbCursor) {
       entries.push(idbCursor.value);
+      if (entries.length === cursor?.limit) {
+        break;
+      }
       idbCursor = await idbCursor.continue();
     }
 

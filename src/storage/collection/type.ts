@@ -4,6 +4,7 @@ import { QueryRange } from "./QueryRange";
 export type QueryCursor = {
   dir?: "Next" | "Prev";
   unique?: boolean;
+  limit?: number;
 };
 
 export type Query<T extends KeyValue> = T | QueryRange<T>;
