@@ -52,6 +52,21 @@ export class IndexedDBStorageDriver implements StorageDriver {
     return cursor.unique ? "nextunique" : "next";
   }
 
+  private prepareIDBQuery<T extends KeyValue>(
+    query: Query<T>,
+  ): IDBKeyRange | null | string {
+    if (query instanceof QueryRange) {
+      return this.getIDBKeyRange(query);
+    }
+    return query as string;
+  }
+
+  private prepareIDBDirection(
+    cursor?: QueryCursor,
+  ): IDBCursorDirection | undefined {
+    return cursor ? this.getIDBCursorDirection(cursor) : undefined;
+  }
+
   async getEntries<PrimaryKey extends string, E extends Entry<PrimaryKey>>(
     collectionMeta: CollectionMeta<PrimaryKey>,
     keys: E[PrimaryKey][],
@@ -101,10 +116,8 @@ export class IndexedDBStorageDriver implements StorageDriver {
     const txn = this.db.transaction(collectionMeta.name, "readonly");
 
     let idbCursor = await txn.store.openCursor(
-      query instanceof QueryRange
-        ? this.getIDBKeyRange(query)
-        : (query as string),
-      cursor ? this.getIDBCursorDirection(cursor) : undefined,
+      this.prepareIDBQuery(query),
+      this.prepareIDBDirection(cursor),
     );
 
     const entries: E[] = [];
@@ -132,10 +145,8 @@ export class IndexedDBStorageDriver implements StorageDriver {
 
     const index = txn.store.index(indexKey);
     let idbCursor = await index.openCursor(
-      query instanceof QueryRange
-        ? this.getIDBKeyRange(query)
-        : (query as string),
-      cursor ? this.getIDBCursorDirection(cursor) : undefined,
+      this.prepareIDBQuery(query),
+      this.prepareIDBDirection(cursor),
     );
 
     const entries: E[] = [];
