@@ -1,6 +1,7 @@
 import { CollectionMeta } from "./CollectionMeta";
 import { CollectionRead } from "./CollectionRead";
 import { Entry, Indexes } from "./Entry";
+import { ObservableValue } from "./ObservableValue";
 import { QueryRange } from "./QueryRange";
 import { WriteObserverBridge } from "./WriteObserverBridge";
 import {
@@ -29,13 +30,15 @@ export class CollectionObservableRead<
     this.writeObserverBridge = writeObserverBridge;
   }
 
-  public get(
+  public async get(
     key: E[PrimaryKey],
-    observer: (entry: E | undefined) => void,
-  ): () => void {
-    this.read.get(key).then((entry) => observer(entry));
+  ): Promise<ObservableValue<E | undefined>> {
+    const entry = await this.read.get(key);
 
-    const writeObserver: WriteObserverCallback<PrimaryKey, E> = (
+    const publisherKey = Math.random().toString();
+    const observable = new ObservableValue(entry, publisherKey);
+
+    const writeObserver: WriteObserverCallback<PrimaryKey, E> = async (
       operation,
       updateKeys,
     ) => {
@@ -43,25 +46,32 @@ export class CollectionObservableRead<
       if (!hasUpdate) return;
 
       if (operation === WriteOperation.PUT) {
-        this.read.get(key).then((entry) => observer(entry));
+        const e = await this.read.get(key);
+        observable.publish(publisherKey, e);
         return;
       }
+
       if (operation === WriteOperation.DELETE) {
-        observer(undefined);
+        observable.publish(publisherKey, undefined);
         return;
       }
     };
 
-    return this.writeObserverBridge.observe(writeObserver);
+    const disconnectObserver = this.writeObserverBridge.observe(writeObserver);
+    observable.onDispose(publisherKey, disconnectObserver);
+
+    return observable;
   }
 
-  public getMultiple(
+  public async getMultiple(
     keys: E[PrimaryKey][],
-    observer: (entries: E[]) => void,
-  ): () => void {
-    this.read.getMultiple(keys).then((entries) => observer(entries));
+  ): Promise<ObservableValue<E[]>> {
+    const entries = await this.read.getMultiple(keys);
 
-    const writeObserver: WriteObserverCallback<PrimaryKey, E> = (
+    const publisherKey = Math.random().toString();
+    const observable = new ObservableValue(entries, publisherKey);
+
+    const writeObserver: WriteObserverCallback<PrimaryKey, E> = async (
       operation,
       updateKeys,
     ) => {
@@ -69,41 +79,48 @@ export class CollectionObservableRead<
       if (!hasUpdate) return;
 
       if (operation === WriteOperation.PUT) {
-        this.read.getMultiple(keys).then((entries) => observer(entries));
+        const e = await this.read.getMultiple(keys);
+        observable.publish(publisherKey, e);
         return;
       }
       if (operation === WriteOperation.DELETE) {
-        const remaningKeys = keys.filter((k) => updateKeys.includes(k));
-        this.read
-          .getMultiple(remaningKeys)
-          .then((entries) => observer(entries));
+        const remainingKeys = keys.filter((k) => updateKeys.includes(k));
+        const e = await this.read.getMultiple(remainingKeys);
+        observable.publish(publisherKey, e);
         return;
       }
     };
 
-    return this.writeObserverBridge.observe(writeObserver);
+    const disconnectObserver = this.writeObserverBridge.observe(writeObserver);
+    observable.onDispose(publisherKey, disconnectObserver);
+
+    return observable;
   }
 
-  public query(
+  public async query(
     query: Query<E[PrimaryKey]>,
-    observer: (entries: E[]) => void,
     cursor?: QueryCursor,
-  ): () => void {
-    let accessedEntries: E[PrimaryKey][] = [];
+  ): Promise<ObservableValue<E[]>> {
+    let accessedKeys: E[PrimaryKey][] = [];
 
-    const submit = (entries: E[]) => {
-      accessedEntries = entries.map((entry) => entry[this.meta.primaryKey]);
-      observer(entries);
+    const cacheKeys = (entries: E[]) => {
+      accessedKeys = entries.map((entry) => entry[this.meta.primaryKey]);
     };
 
-    this.read.query(query, cursor).then(submit);
+    const entries = await this.read.query(query, cursor);
+    cacheKeys(entries);
+
+    const publisherKey = Math.random().toString();
+    const observable = new ObservableValue(entries, publisherKey);
 
     const writeObserver: WriteObserverCallback<PrimaryKey, E> = async (
       operation,
       updateKeys,
     ) => {
-      if (accessedEntries.some((key) => updateKeys.includes(key))) {
-        this.read.query(query, cursor).then(submit);
+      if (accessedKeys.some((key) => updateKeys.includes(key))) {
+        const e = await this.read.query(query, cursor);
+        cacheKeys(e);
+        observable.publish(publisherKey, e);
         return;
       }
       if (operation === WriteOperation.PUT) {
@@ -115,34 +132,43 @@ export class CollectionObservableRead<
         );
 
         if (hasUpdate) {
-          this.read.query(query, cursor).then(submit);
+          const e = await this.read.query(query, cursor);
+          cacheKeys(e);
+          observable.publish(publisherKey, e);
         }
       }
     };
 
-    return this.writeObserverBridge.observe(writeObserver);
+    const disconnectObserver = this.writeObserverBridge.observe(writeObserver);
+    observable.onDispose(publisherKey, disconnectObserver);
+
+    return observable;
   }
 
-  public queryIndex<IndexKey extends IndexKeys>(
+  public async queryIndex<IndexKey extends IndexKeys>(
     indexKey: IndexKey,
     query: Query<E[IndexKey]>,
-    observer: (entries: E[]) => void,
     cursor?: QueryCursor,
-  ): () => void {
-    let accessedEntries: E[PrimaryKey][] = [];
+  ): Promise<ObservableValue<E[]>> {
+    let accessedKeys: E[PrimaryKey][] = [];
 
-    const submit = (entries: E[]) => {
-      accessedEntries = entries.map((entry) => entry[this.meta.primaryKey]);
-      observer(entries);
+    const cacheKeys = (entries: E[]) => {
+      accessedKeys = entries.map((entry) => entry[this.meta.primaryKey]);
     };
-    this.read.queryIndex(indexKey, query, cursor).then(submit);
+    const entries = await this.read.queryIndex(indexKey, query, cursor);
+    cacheKeys(entries);
+
+    const publisherKey = Math.random().toString();
+    const observable = new ObservableValue(entries, publisherKey);
 
     const writeObserver: WriteObserverCallback<PrimaryKey, E> = async (
       operation,
       updateKeys,
     ) => {
-      if (accessedEntries.some((key) => updateKeys.includes(key))) {
-        this.read.queryIndex(indexKey, query, cursor).then(submit);
+      if (accessedKeys.some((key) => updateKeys.includes(key))) {
+        const e = await this.read.queryIndex(indexKey, query, cursor);
+        cacheKeys(e);
+        observable.publish(publisherKey, e);
         return;
       }
 
@@ -155,11 +181,16 @@ export class CollectionObservableRead<
         );
 
         if (hasUpdate) {
-          this.read.queryIndex(indexKey, query, cursor).then(submit);
+          const e = await this.read.queryIndex(indexKey, query, cursor);
+          cacheKeys(e);
+          observable.publish(publisherKey, e);
         }
       }
     };
 
-    return this.writeObserverBridge.observe(writeObserver);
+    const disconnectObserver = this.writeObserverBridge.observe(writeObserver);
+    observable.onDispose(publisherKey, disconnectObserver);
+
+    return observable;
   }
 }
