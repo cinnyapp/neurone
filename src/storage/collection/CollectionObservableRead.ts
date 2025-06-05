@@ -1,7 +1,7 @@
 import { CollectionMeta } from "./CollectionMeta";
 import { CollectionRead } from "./CollectionRead";
 import { Entry, Indexes, KeyValue } from "./Entry";
-import { ObservableValue } from "./ObservableValue";
+import { ObservableValue } from "../../utils/observable/ObservableValue";
 import { QueryRange } from "./QueryRange";
 import { WriteObserverBridge } from "./WriteObserverBridge";
 import {

@@ -45,6 +45,7 @@ export class ObservableValue<T> {
 
     this.listeners.clear();
     this.onDisposeCallback?.();
+    this.onDisposeCallback = undefined;
     this.disposed = true;
   }
 
