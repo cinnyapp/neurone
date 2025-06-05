@@ -45,8 +45,6 @@ export class CollectionObservableRead<
   ) {
     const disconnectObserver = this.writeObserverBridge.observe(onWrite);
     observable.onDispose(publisherKey, disconnectObserver);
-
-    return observable;
   }
 
   private entriesHasQueriedEntry<K extends PrimaryKey | IndexKeys>(
