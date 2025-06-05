@@ -160,4 +160,26 @@ describe("CollectionRead", () => {
       );
     });
   });
+
+  describe("queryKeys", () => {
+    it("should return keys when match found", async () => {
+      const query = "u1";
+      const mockKeys = ["u1"];
+      mockDriver.queryKeys.mockResolvedValueOnce(mockKeys);
+
+      const userKeys = await read.queryKeys(query);
+
+      expect(userKeys).toEqual(mockKeys);
+      expect(mockDriver.queryKeys).toHaveBeenCalledWith(meta, query, undefined);
+    });
+    it("should return an empty array when no entries match", async () => {
+      const query = "u1";
+      mockDriver.queryKeys.mockResolvedValueOnce([]);
+
+      const result = await read.queryKeys(query);
+
+      expect(result).toEqual([]);
+      expect(mockDriver.queryKeys).toHaveBeenCalledWith(meta, query, undefined);
+    });
+  });
 });
