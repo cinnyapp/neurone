@@ -137,8 +137,8 @@ describe("CollectionRead", () => {
 
       expect(result).toEqual(mockEntries);
       expect(mockDriver.queryIndexEntries).toHaveBeenCalledWith(
-        indexKey,
         meta,
+        indexKey,
         query,
         undefined,
       );
@@ -153,8 +153,8 @@ describe("CollectionRead", () => {
 
       expect(result).toEqual([]);
       expect(mockDriver.queryIndexEntries).toHaveBeenCalledWith(
-        indexKey,
         meta,
+        indexKey,
         query,
         undefined,
       );
