@@ -133,10 +133,11 @@ export class IndexedDBStorageDriver implements StorageDriver {
   }
 
   async queryIndexEntries<
+    PrimaryKey extends string,
     IndexKey extends string = never,
-    E extends Entry<string, IndexKey> = never,
+    E extends Entry<PrimaryKey, IndexKey> = never,
   >(
-    collectionMeta: CollectionMeta<string>,
+    collectionMeta: CollectionMeta<PrimaryKey>,
     indexKey: IndexKey,
     query: Query<E[IndexKey]>,
     cursor?: QueryCursor | undefined,
@@ -164,7 +165,7 @@ export class IndexedDBStorageDriver implements StorageDriver {
   async queryKeys<PrimaryKey extends string, E extends Entry<PrimaryKey>>(
     collectionMeta: CollectionMeta<PrimaryKey>,
     query: Query<E[PrimaryKey]>,
-    cursor?: QueryCursor | undefined,
+    cursor?: QueryCursor,
   ): Promise<E[PrimaryKey][]> {
     const txn = this.db.transaction(collectionMeta.name, "readonly");
 
@@ -190,10 +191,10 @@ export class IndexedDBStorageDriver implements StorageDriver {
     IndexKey extends string = never,
     E extends Entry<PrimaryKey, IndexKey> = never,
   >(
-    collectionMeta: CollectionMeta<string>,
+    collectionMeta: CollectionMeta<PrimaryKey>,
     indexKey: IndexKey,
     query: Query<E[IndexKey]>,
-    cursor?: QueryCursor | undefined,
+    cursor?: QueryCursor,
   ): Promise<E[PrimaryKey][]> {
     const txn = this.db.transaction(collectionMeta.name, "readonly");
 

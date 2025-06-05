@@ -25,10 +25,11 @@ export interface StorageDriver {
   ): Promise<E[]>;
 
   queryIndexEntries<
+    PrimaryKey extends string,
     IndexKey extends Indexes = never,
-    E extends Entry<string, IndexKey> = never,
+    E extends Entry<PrimaryKey, IndexKey> = never,
   >(
-    collectionMeta: CollectionMeta<string>,
+    collectionMeta: CollectionMeta<PrimaryKey>,
     indexKey: IndexKey,
     query: Query<E[IndexKey]>,
     cursor?: QueryCursor,
@@ -37,17 +38,17 @@ export interface StorageDriver {
   queryKeys<PrimaryKey extends string, E extends Entry<PrimaryKey>>(
     collectionMeta: CollectionMeta<PrimaryKey>,
     query: Query<E[PrimaryKey]>,
-    cursor?: QueryCursor | undefined,
+    cursor?: QueryCursor,
   ): Promise<E[PrimaryKey][]>;
 
   queryIndexKeys<
     PrimaryKey extends string,
-    IndexKey extends string = never,
+    IndexKey extends Indexes = never,
     E extends Entry<PrimaryKey, IndexKey> = never,
   >(
-    collectionMeta: CollectionMeta<string>,
+    collectionMeta: CollectionMeta<PrimaryKey>,
     indexKey: IndexKey,
     query: Query<E[IndexKey]>,
-    cursor?: QueryCursor | undefined,
+    cursor?: QueryCursor,
   ): Promise<E[PrimaryKey][]>;
 }
