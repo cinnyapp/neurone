@@ -70,15 +70,15 @@ export class IndexedDBStorageDriver implements StorageDriver {
   async getEntries<PrimaryKey extends string, E extends Entry<PrimaryKey>>(
     collectionMeta: CollectionMeta<PrimaryKey>,
     keys: E[PrimaryKey][],
-  ): Promise<E[]> {
+  ): Promise<Array<E | undefined>> {
     const txn = this.db.transaction(collectionMeta.name, "readonly");
     const itemsPromises = keys.map((key) => {
-      const item = txn.store.get(key as string) as Promise<E>;
+      const item = txn.store.get(key as string) as Promise<E | undefined>;
       return item;
     });
 
     const result = await Promise.allSettled(itemsPromises);
-    const values: E[] = [];
+    const values: Array<E | undefined> = [];
     result.forEach((item) => {
       if (item.status === "fulfilled") {
         values.push(item.value);

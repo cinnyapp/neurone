@@ -50,13 +50,14 @@ export class CollectionObservableRead<
   private entriesHasQueriedEntry<K extends PrimaryKey | IndexKeys>(
     key: K,
     query: Query<E[K]>,
-    entries: E[],
+    entries: Array<E | undefined>,
   ) {
-    return entries.some((entry) =>
-      query instanceof QueryRange
+    return entries.some((entry) => {
+      if (!entry) return false;
+      return query instanceof QueryRange
         ? query.includes(entry[key])
-        : equalKeyValue(entry[key], query),
-    );
+        : equalKeyValue(entry[key], query);
+    });
   }
 
   private entriesHasAnyKey(keys: E[PrimaryKey][], entries: E[]) {
@@ -102,7 +103,7 @@ export class CollectionObservableRead<
 
   public async getMultiple(
     keys: E[PrimaryKey][],
-  ): Promise<ObservableValue<E[]>> {
+  ): Promise<ObservableValue<Array<E | undefined>>> {
     const entries = await this.read.getMultiple(keys);
 
     const publisherKey = Math.random().toString();

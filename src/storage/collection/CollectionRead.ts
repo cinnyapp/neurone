@@ -15,7 +15,9 @@ export class CollectionRead<
     return entry;
   }
 
-  public async getMultiple(keys: E[PrimaryKey][]): Promise<E[]> {
+  public async getMultiple(
+    keys: E[PrimaryKey][],
+  ): Promise<Array<E | undefined>> {
     const entries = await this.driver.getEntries<PrimaryKey, E>(
       this.meta,
       keys,
