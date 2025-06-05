@@ -87,15 +87,16 @@ describe("IndexedDBStorageDriver", () => {
   it("should query index entries", async () => {
     await driver.putEntries(collectionMeta, users);
 
-    const result = await driver.queryIndexEntries<
-      typeof PRIMARY_KEY,
+    const result = await driver.queryIndexEntries<"age", UserEntry>(
+      collectionMeta,
       "age",
-      UserEntry
-    >(collectionMeta, "age", new QueryRange<number>(25, 30), {
-      dir: "Next",
-      limit: 10,
-      unique: false,
-    });
+      new QueryRange<number>(25, 30),
+      {
+        dir: "Next",
+        limit: 10,
+        unique: false,
+      },
+    );
 
     expect(result.length).toBe(2);
     expect(result.map((r) => r.name)).toContain("Alice");

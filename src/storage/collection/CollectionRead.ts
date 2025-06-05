@@ -44,11 +44,12 @@ export class CollectionRead<
     query: Query<E[IndexKey]>,
     cursor?: QueryCursor,
   ): Promise<E[]> {
-    const entries = await this.driver.queryIndexEntries<
-      PrimaryKey,
-      IndexKey,
-      E
-    >(this.meta, indexKey, query, cursor);
+    const entries = await this.driver.queryIndexEntries<IndexKey, E>(
+      this.meta,
+      indexKey,
+      query,
+      cursor,
+    );
 
     return entries;
   }

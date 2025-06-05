@@ -25,11 +25,10 @@ export interface StorageDriver {
   ): Promise<E[]>;
 
   queryIndexEntries<
-    PrimaryKey extends string,
     IndexKey extends Indexes = never,
-    E extends Entry<PrimaryKey, IndexKey> = never,
+    E extends Entry<string, IndexKey> = never,
   >(
-    collectionMeta: CollectionMeta<PrimaryKey>,
+    collectionMeta: CollectionMeta<string>,
     indexKey: IndexKey,
     query: Query<E[IndexKey]>,
     cursor?: QueryCursor,

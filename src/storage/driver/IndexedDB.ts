@@ -133,11 +133,10 @@ export class IndexedDBStorageDriver implements StorageDriver {
   }
 
   async queryIndexEntries<
-    PrimaryKey extends string,
     IndexKey extends string = never,
-    E extends Entry<PrimaryKey, IndexKey> = never,
+    E extends Entry<string, IndexKey> = never,
   >(
-    collectionMeta: CollectionMeta<PrimaryKey>,
+    collectionMeta: CollectionMeta<string>,
     indexKey: IndexKey,
     query: Query<E[IndexKey]>,
     cursor?: QueryCursor | undefined,
