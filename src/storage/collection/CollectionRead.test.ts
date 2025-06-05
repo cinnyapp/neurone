@@ -18,6 +18,8 @@ const mockDriver = {
   deleteEntries: jest.fn(),
   queryEntries: jest.fn(),
   queryIndexEntries: jest.fn(),
+  queryKeys: jest.fn(),
+  queryIndexKeys: jest.fn(),
 };
 
 describe("CollectionRead", () => {

@@ -28,7 +28,7 @@ export class CollectionRead<
     query: Query<E[PrimaryKey]>,
     cursor?: QueryCursor,
   ): Promise<E[]> {
-    const entries = this.driver.queryEntries<PrimaryKey, E>(
+    const entries = await this.driver.queryEntries<PrimaryKey, E>(
       this.meta,
       query,
       cursor,
@@ -42,13 +42,41 @@ export class CollectionRead<
     query: Query<E[IndexKey]>,
     cursor?: QueryCursor,
   ): Promise<E[]> {
-    const entries = this.driver.queryIndexEntries<IndexKey, E>(
-      indexKey,
+    const entries = await this.driver.queryIndexEntries<IndexKey, E>(
       this.meta,
+      indexKey,
       query,
       cursor,
     );
 
     return entries;
+  }
+
+  public async queryKeys(
+    query: Query<E[PrimaryKey]>,
+    cursor?: QueryCursor,
+  ): Promise<E[PrimaryKey][]> {
+    const keys = await this.driver.queryKeys<PrimaryKey, E>(
+      this.meta,
+      query,
+      cursor,
+    );
+
+    return keys;
+  }
+
+  public async queryIndexKeys<IndexKey extends IndexKeys>(
+    indexKey: IndexKey,
+    query: Query<E[IndexKey]>,
+    cursor?: QueryCursor,
+  ): Promise<E[PrimaryKey][]> {
+    const keys = await this.driver.queryIndexKeys<PrimaryKey, IndexKey, E>(
+      this.meta,
+      indexKey,
+      query,
+      cursor,
+    );
+
+    return keys;
   }
 }

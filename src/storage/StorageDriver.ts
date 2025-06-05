@@ -28,9 +28,26 @@ export interface StorageDriver {
     IndexKey extends Indexes = never,
     E extends Entry<string, IndexKey> = never,
   >(
-    indexKey: IndexKey,
     collectionMeta: CollectionMeta<string>,
+    indexKey: IndexKey,
     query: Query<E[IndexKey]>,
     cursor?: QueryCursor,
   ): Promise<E[]>;
+
+  queryKeys<PrimaryKey extends string, E extends Entry<PrimaryKey>>(
+    collectionMeta: CollectionMeta<PrimaryKey>,
+    query: Query<E[PrimaryKey]>,
+    cursor?: QueryCursor | undefined,
+  ): Promise<E[PrimaryKey][]>;
+
+  queryIndexKeys<
+    PrimaryKey extends string,
+    IndexKey extends string = never,
+    E extends Entry<PrimaryKey, IndexKey> = never,
+  >(
+    collectionMeta: CollectionMeta<string>,
+    indexKey: IndexKey,
+    query: Query<E[IndexKey]>,
+    cursor?: QueryCursor | undefined,
+  ): Promise<E[PrimaryKey][]>;
 }

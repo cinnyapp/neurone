@@ -136,8 +136,8 @@ export class IndexedDBStorageDriver implements StorageDriver {
     IndexKey extends string = never,
     E extends Entry<string, IndexKey> = never,
   >(
-    indexKey: IndexKey,
     collectionMeta: CollectionMeta<string>,
+    indexKey: IndexKey,
     query: Query<E[IndexKey]>,
     cursor?: QueryCursor | undefined,
   ): Promise<E[]> {
@@ -159,5 +159,59 @@ export class IndexedDBStorageDriver implements StorageDriver {
     }
 
     return entries;
+  }
+
+  async queryKeys<PrimaryKey extends string, E extends Entry<PrimaryKey>>(
+    collectionMeta: CollectionMeta<PrimaryKey>,
+    query: Query<E[PrimaryKey]>,
+    cursor?: QueryCursor | undefined,
+  ): Promise<E[PrimaryKey][]> {
+    const txn = this.db.transaction(collectionMeta.name, "readonly");
+
+    let idbCursor = await txn.store.openKeyCursor(
+      this.prepareIDBQuery(query),
+      this.prepareIDBCursorDirection(cursor),
+    );
+
+    const keys: E[PrimaryKey][] = [];
+    while (idbCursor) {
+      keys.push(idbCursor.key as E[PrimaryKey]);
+      if (keys.length === cursor?.limit) {
+        break;
+      }
+      idbCursor = await idbCursor.continue();
+    }
+
+    return keys;
+  }
+
+  async queryIndexKeys<
+    PrimaryKey extends string,
+    IndexKey extends string = never,
+    E extends Entry<PrimaryKey, IndexKey> = never,
+  >(
+    collectionMeta: CollectionMeta<string>,
+    indexKey: IndexKey,
+    query: Query<E[IndexKey]>,
+    cursor?: QueryCursor | undefined,
+  ): Promise<E[PrimaryKey][]> {
+    const txn = this.db.transaction(collectionMeta.name, "readonly");
+
+    const index = txn.store.index(indexKey);
+    let idbCursor = await index.openKeyCursor(
+      this.prepareIDBQuery(query),
+      this.prepareIDBCursorDirection(cursor),
+    );
+
+    const keys: E[PrimaryKey][] = [];
+    while (idbCursor) {
+      keys.push(idbCursor.key as unknown as E[PrimaryKey]);
+      if (keys.length === cursor?.limit) {
+        break;
+      }
+      idbCursor = await idbCursor.continue();
+    }
+
+    return keys;
   }
 }
