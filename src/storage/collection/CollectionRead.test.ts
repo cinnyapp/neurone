@@ -182,4 +182,39 @@ describe("CollectionRead", () => {
       expect(mockDriver.queryKeys).toHaveBeenCalledWith(meta, query, undefined);
     });
   });
+
+  describe("queryIndexKeys", () => {
+    it("should return keys matching the indexed query", async () => {
+      const indexKey = "membership";
+      const query = "join";
+      const mockKeys = ["u1"];
+      mockDriver.queryIndexKeys.mockResolvedValueOnce(mockKeys);
+
+      const result = await read.queryIndexKeys(indexKey, query);
+
+      expect(result).toEqual(mockKeys);
+      expect(mockDriver.queryIndexKeys).toHaveBeenCalledWith(
+        meta,
+        indexKey,
+        query,
+        undefined,
+      );
+    });
+
+    it("should return an empty array when no entries match the indexed query", async () => {
+      const indexKey = "membership";
+      const query = "join";
+      mockDriver.queryIndexKeys.mockResolvedValueOnce([]);
+
+      const result = await read.queryIndexKeys(indexKey, query);
+
+      expect(result).toEqual([]);
+      expect(mockDriver.queryIndexKeys).toHaveBeenCalledWith(
+        meta,
+        indexKey,
+        query,
+        undefined,
+      );
+    });
+  });
 });
