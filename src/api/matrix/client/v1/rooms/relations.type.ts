@@ -13,6 +13,7 @@ export type GetRelationsSearchParams = {
   dir?: "b" | "f";
   from?: string;
   limit?: string;
+  recurse?: string;
   to?: string;
 };
 
@@ -40,6 +41,7 @@ export type GetRelationsRelTypeSearchParams = {
   dir?: "b" | "f";
   from?: string;
   limit?: string;
+  recurse?: string;
   to?: string;
 };
 
@@ -68,6 +70,7 @@ export type GetRelationsRelTypeEventTypeSearchParams = {
   dir?: "b" | "f";
   from?: string;
   limit?: string;
+  recurse?: string;
   to?: string;
 };
 

@@ -6,6 +6,7 @@ import { ThirdPartyIdUnbindResult } from "../../../../types";
  */
 export type PostDeactivateBody = {
   auth?: object;
+  erase?: boolean;
   id_server?: string;
 };
 export type PostDeactivateOK = {

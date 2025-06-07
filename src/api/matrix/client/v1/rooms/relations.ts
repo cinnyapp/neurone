@@ -6,7 +6,7 @@ import {
 } from "./relations.type";
 
 /**
- * https://spec.matrix.org/v1.9/client-server-api/#get_matrixclientv1roomsroomidrelationseventid
+ * https://spec.matrix.org/v1.10/client-server-api/#get_matrixclientv1roomsroomidrelationseventid
  */
 export const getRelations: GetRelationsEndpoint = ({
   pathParams,
@@ -25,7 +25,7 @@ export const getRelations: GetRelationsEndpoint = ({
 };
 
 /**
- * https://spec.matrix.org/v1.9/client-server-api/#get_matrixclientv1roomsroomidrelationseventidreltype
+ * https://spec.matrix.org/v1.10/client-server-api/#get_matrixclientv1roomsroomidrelationseventidreltype
  */
 export const getRelationsRelType: GetRelationsRelEndpoint = ({
   pathParams,
@@ -44,7 +44,7 @@ export const getRelationsRelType: GetRelationsRelEndpoint = ({
 };
 
 /**
- * https://spec.matrix.org/v1.9/client-server-api/#get_matrixclientv1roomsroomidrelationseventidreltypeeventtype
+ * https://spec.matrix.org/v1.10/client-server-api/#get_matrixclientv1roomsroomidrelationseventidreltypeeventtype
  */
 export const getRelationsRelTypeEventType: GetRelationsRelTypeEndpoint = ({
   pathParams,
