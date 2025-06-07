@@ -2,7 +2,7 @@ import { withSearchParams } from "../../../../utils";
 import { PostKnockEndpoint } from "./knock.type";
 
 /**
- * https://spec.matrix.org/v1.9/client-server-api/#post_matrixclientv3knockroomidoralias
+ * https://spec.matrix.org/v1.12/client-server-api/#post_matrixclientv3knockroomidoralias
  */
 export const postKnock: PostKnockEndpoint = ({
   pathParams,

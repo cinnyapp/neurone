@@ -8,6 +8,7 @@ export type PostKnockPathParams = {
 };
 export type PostKnockSearchParams = {
   server_name?: string;
+  via?: string;
 };
 export type PostKnockBody = {
   reason?: string;

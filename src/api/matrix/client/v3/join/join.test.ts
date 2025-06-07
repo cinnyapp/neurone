@@ -10,13 +10,13 @@ test("post join room with alias or id request", () => {
     postJoin({
       pathParams: { roomIdOrAlias },
       searchParams: {
-        server_name: "server.name",
+        via: "server.name",
       },
       body,
     }),
   ).toEqual({
     method: "POST",
-    path: `/_matrix/client/v3/join/${encodeURIComponent(roomIdOrAlias)}?server_name=server.name`,
+    path: `/_matrix/client/v3/join/${encodeURIComponent(roomIdOrAlias)}?via=server.name`,
     rateLimited: true,
     requireAuthentication: true,
     body: JSON.stringify(body),

@@ -10,13 +10,13 @@ test("post knock room with alias or id request", () => {
     postKnock({
       pathParams: { roomIdOrAlias },
       searchParams: {
-        server_name: "server.name",
+        via: "server.name",
       },
       body,
     }),
   ).toEqual({
     method: "POST",
-    path: `/_matrix/client/v3/knock/${encodeURIComponent(roomIdOrAlias)}?server_name=server.name`,
+    path: `/_matrix/client/v3/knock/${encodeURIComponent(roomIdOrAlias)}?via=server.name`,
     rateLimited: true,
     requireAuthentication: true,
     body: JSON.stringify(body),

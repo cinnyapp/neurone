@@ -8,7 +8,11 @@ export type PostJoinPathParams = {
   roomIdOrAlias: string;
 };
 export type PostJoinSearchParams = {
-  server_name: string;
+  /**
+   * @deprecated
+   */
+  server_name?: string;
+  via?: string;
 };
 export type PostJoinBody = {
   reason?: string;
