@@ -44,3 +44,8 @@ export type StateEventWithoutRoomId<
   EventContent extends object = object,
   UnsignedData extends object = object,
 > = Omit<StateEvent<EventContent, UnsignedData>, "room_id">;
+
+export type MessageEventWithoutRoomId<
+  EventContent extends object = object,
+  UnsignedData extends object = object,
+> = Omit<MessageEvent<EventContent, UnsignedData>, "room_id">;
