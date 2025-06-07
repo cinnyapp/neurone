@@ -17,7 +17,7 @@ export const postUpload: PostUploadEndpoint = ({ body, searchParams }) => {
 };
 
 /**
- * https://spec.matrix.org/v1.9/client-server-api/#put_matrixmediav3uploadservernamemediaid
+ * https://spec.matrix.org/v1.11/client-server-api/#put_matrixmediav3uploadservernamemediaid
  */
 export const putUpload: PutUploadEndpoint = ({
   pathParams,
@@ -33,6 +33,7 @@ export const putUpload: PutUploadEndpoint = ({
     method: "PUT",
     path,
     rateLimited: true,
+    requireAuthentication: true,
     body,
   };
 };

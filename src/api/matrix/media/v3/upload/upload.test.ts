@@ -36,6 +36,7 @@ test("put media upload request", () => {
     method: "PUT",
     path: `/_matrix/media/v3/upload/${encodeURIComponent(serverName)}/${encodeURIComponent(mediaId)}?filename=myFile.ext`,
     rateLimited: true,
+    requireAuthentication: true,
     body: blob,
   });
 });
