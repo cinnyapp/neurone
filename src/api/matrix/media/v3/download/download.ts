@@ -2,7 +2,8 @@ import { withSearchParams } from "../../../../utils";
 import { GetDownloadEndpoint, GetDownloadFileEndpoint } from "./download.type";
 
 /**
- * https://spec.matrix.org/v1.9/client-server-api/#get_matrixmediav3downloadservernamemediaid
+ * @deprecated
+ * https://spec.matrix.org/v1.11/client-server-api/#get_matrixmediav3downloadservernamemediaid
  */
 export const getDownload: GetDownloadEndpoint = ({
   pathParams,
@@ -21,7 +22,8 @@ export const getDownload: GetDownloadEndpoint = ({
 };
 
 /**
- * https://spec.matrix.org/v1.9/client-server-api/#get_matrixmediav3downloadservernamemediaidfilename
+ * @deprecated
+ * https://spec.matrix.org/v1.11/client-server-api/#get_matrixmediav3downloadservernamemediaidfilename
  */
 export const getDownloadFile: GetDownloadFileEndpoint = ({
   pathParams,

@@ -3,6 +3,7 @@ export type UnsignedData<
   RedirectedBecause extends MessageEvent = MessageEvent,
 > = {
   age?: number;
+  membership?: string;
   prev_content?: PrevContent;
   redacted_because?: RedirectedBecause;
   transaction_id?: string;

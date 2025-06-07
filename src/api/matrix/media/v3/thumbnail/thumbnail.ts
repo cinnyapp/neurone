@@ -2,7 +2,8 @@ import { withSearchParams } from "../../../../utils";
 import { GetThumbnailEndpoint } from "./thumbnail.type";
 
 /**
- * https://spec.matrix.org/v1.9/client-server-api/#get_matrixmediav3thumbnailservernamemediaid
+ * @deprecated
+ * https://spec.matrix.org/v1.11/client-server-api/#get_matrixmediav3thumbnailservernamemediaid
  */
 export const getThumbnail: GetThumbnailEndpoint = ({
   pathParams,
