@@ -1,5 +1,5 @@
 import { MatrixEndpoint } from "../../../../MatrixEndpoint";
-import { LoginFlow, LoginType, UserIdentifier } from "../../../../types";
+import { LoginFlow, UserIdentifier } from "../../../../types";
 
 /**
  * getLogin types
@@ -19,7 +19,7 @@ export type PostLoginBody = {
   password?: string;
   refresh_token?: boolean;
   token?: string;
-  type: LoginType;
+  type: string;
 };
 export type PostLoginOK = {
   access_token: string;
