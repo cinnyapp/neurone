@@ -11,6 +11,6 @@ export const postLeave: PostLeaveEndpoint = ({ pathParams, body }) => {
     path,
     rateLimited: true,
     requireAuthentication: true,
-    body: body ? JSON.stringify(body) : undefined,
+    body: JSON.stringify(body ?? {}),
   };
 };

@@ -29,6 +29,6 @@ export const postPublicRooms: PostPublicRoomsEndpoint = ({
     method: "POST",
     path,
     requireAuthentication: true,
-    body: body ? JSON.stringify(body) : undefined,
+    body: JSON.stringify(body ?? {}),
   };
 };

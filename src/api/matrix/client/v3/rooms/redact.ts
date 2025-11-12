@@ -10,6 +10,6 @@ export const putRedact: PutRedactEndpoint = ({ pathParams, body }) => {
     method: "PUT",
     path,
     requireAuthentication: true,
-    body: body ? JSON.stringify(body) : undefined,
+    body: JSON.stringify(body ?? {}),
   };
 };

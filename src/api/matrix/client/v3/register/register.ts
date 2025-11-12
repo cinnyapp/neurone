@@ -11,6 +11,6 @@ export const postRegister: PostRegisterEndpoint = ({ searchParams, body }) => {
     method: "POST",
     path,
     rateLimited: true,
-    body: body ? JSON.stringify(body) : undefined,
+    body: JSON.stringify(body ?? {}),
   };
 };

@@ -10,6 +10,6 @@ export const postReport: PostReportEndpoint = ({ pathParams, body }) => {
     method: "POST",
     path,
     requireAuthentication: true,
-    body: body ? JSON.stringify(body) : undefined,
+    body: JSON.stringify(body ?? {}),
   };
 };

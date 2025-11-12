@@ -14,6 +14,6 @@ export const postReceiptEventId: PostReceiptEventIdEndpoint = ({
     path,
     rateLimited: true,
     requireAuthentication: true,
-    body: body ? JSON.stringify(body) : undefined,
+    body: JSON.stringify(body ?? {}),
   };
 };
