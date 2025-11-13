@@ -1,4 +1,4 @@
-import { MatrixResponseParser } from "./types";
+import { MatrixError, MatrixErrorData, MatrixResponseParser } from "./types";
 
 export const parseMatrixResp: MatrixResponseParser = async (response) => {
   const data = await response.json();
@@ -14,3 +14,12 @@ export const parseMatrixResp: MatrixResponseParser = async (response) => {
   }
   return [undefined, data];
 };
+
+export function printMatrixError<ErrorData extends MatrixErrorData>(
+  error: MatrixError<ErrorData>,
+): string {
+  const { url, status, data } = error;
+  const errcode = data.errcode ?? "UNKNOWN_ERROR";
+  const message = data.error ?? "An unexpected error occurred.";
+  return `[${status}] ${errcode}: ${message} (${url})`;
+}
