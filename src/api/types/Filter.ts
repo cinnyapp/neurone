@@ -17,6 +17,7 @@ export type StateFilter = {
   rooms?: string[];
   senders?: string[];
   types?: string[];
+  unread_thread_notifications?: boolean;
 };
 
 export type RoomEventFilter = {
@@ -30,6 +31,7 @@ export type RoomEventFilter = {
   rooms?: string[];
   senders?: string[];
   types?: string[];
+  unread_thread_notifications?: boolean;
 };
 
 export type RoomFilter = {
