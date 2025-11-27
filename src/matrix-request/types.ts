@@ -23,20 +23,3 @@ export type MatrixResponseResult<SuccessData, ErrorData = MatrixErrorData> =
 export type MatrixResponseParser = <SuccessData, ErrorData = MatrixErrorData>(
   response: Response,
 ) => Promise<MatrixResponseResult<SuccessData, ErrorData>>;
-
-export interface PollListener<SuccessData, ErrorData = MatrixErrorData> {
-  onRequest: () => void;
-  onRequestError: (error: Error) => void;
-  onResponseError: (error: MatrixError<ErrorData>) => void;
-  onResponseSuccess: (data: SuccessData) => Promise<void>;
-}
-export type LongPollRequest = (abortSignal: AbortSignal) => Promise<Response>;
-
-export type LongPoll = <SuccessData, ErrorData = MatrixErrorData>(
-  request: LongPollRequest,
-  abortSignal: AbortSignal,
-  parseResponse: (
-    response: Response,
-  ) => Promise<MatrixResponseResult<SuccessData, ErrorData>>,
-  listener: PollListener<SuccessData, ErrorData>,
-) => Promise<void>;
