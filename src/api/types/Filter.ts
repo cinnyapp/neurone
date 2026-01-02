@@ -6,6 +6,9 @@ export type EventFilter = {
   types?: string[];
 };
 
+/**
+ * @deprecated In spec version v1.13 - Use `RoomEventFilter` instead
+ */
 export type StateFilter = {
   contains_url?: boolean;
   include_redundant_members?: boolean;
@@ -40,7 +43,7 @@ export type RoomFilter = {
   include_leave?: boolean;
   not_rooms?: string[];
   rooms?: string[];
-  state?: StateFilter;
+  state?: RoomEventFilter;
   timeline?: RoomEventFilter;
 };
 
