@@ -7,6 +7,9 @@ export type PostKnockPathParams = {
   roomIdOrAlias: string;
 };
 export type PostKnockSearchParams = {
+  /**
+   * @deprecated In spec version v1.14 - Use `via` param instead
+   */
   server_name?: string;
   via?: string;
 };

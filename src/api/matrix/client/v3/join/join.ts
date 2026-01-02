@@ -2,7 +2,7 @@ import { withSearchParams } from "../../../../utils";
 import { PostJoinEndpoint } from "./join.type";
 
 /**
- * https://spec.matrix.org/v1.12/client-server-api/#post_matrixclientv3joinroomidoralias
+ * https://spec.matrix.org/v1.14/client-server-api/#post_matrixclientv3joinroomidoralias
  */
 export const postJoin: PostJoinEndpoint = ({
   pathParams,
