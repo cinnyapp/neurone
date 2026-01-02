@@ -6,6 +6,6 @@ test("post account deactivate request", () => {
     path: "/_matrix/client/v3/account/deactivate",
     rateLimited: true,
     requireAuthentication: true,
-    body: undefined,
+    body: JSON.stringify({}),
   });
 });

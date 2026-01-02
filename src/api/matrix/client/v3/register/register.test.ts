@@ -5,5 +5,6 @@ test("post register request", () => {
     method: "POST",
     path: "/_matrix/client/v3/register?kind=user",
     rateLimited: true,
+    body: JSON.stringify({}),
   });
 });

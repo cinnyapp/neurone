@@ -26,5 +26,6 @@ test("put redact message without reason body request", () => {
     method: "PUT",
     path: `/_matrix/client/v3/rooms/${encodeURIComponent(roomId)}/redact/${encodeURIComponent(eventId)}/${encodeURIComponent(txnId)}`,
     requireAuthentication: true,
+    body: JSON.stringify({}),
   });
 });
