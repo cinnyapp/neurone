@@ -33,6 +33,7 @@ export type ProtocolInstance = {
   desc: string;
   fields: object;
   icon?: string;
+  instance_id?: string;
   network_id: string;
 };
 
