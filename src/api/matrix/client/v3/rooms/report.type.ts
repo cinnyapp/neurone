@@ -1,18 +1,18 @@
 import { MatrixEndpoint } from "../../../../MatrixEndpoint";
 
 /**
- * postReport types
+ * postReportEventId types
  */
-export type PostReportPathParams = {
+export type PostReportEventIdPathParams = {
   roomId: string;
   eventId: string;
 };
-export type PostReportBody = {
+export type PostReportEventIdBody = {
   reason?: string;
   score?: number;
 };
-export type PostReportOK = Record<string, never>;
-export type PostReportEndpoint = MatrixEndpoint<{
-  pathParams: PostReportPathParams;
-  body?: PostReportBody;
+export type PostReportEventIdOK = Record<string, never>;
+export type PostReportEventIdEndpoint = MatrixEndpoint<{
+  pathParams: PostReportEventIdPathParams;
+  body?: PostReportEventIdBody;
 }>;

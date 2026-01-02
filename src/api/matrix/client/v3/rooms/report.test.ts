@@ -1,4 +1,4 @@
-import { postReport } from "./report";
+import { postReportEventId } from "./report";
 
 test("post event report request", () => {
   const roomId = "!roomId:server.name";
@@ -8,7 +8,7 @@ test("post event report request", () => {
     reason: "xyz",
   };
 
-  expect(postReport({ pathParams: { roomId, eventId }, body })).toEqual({
+  expect(postReportEventId({ pathParams: { roomId, eventId }, body })).toEqual({
     method: "POST",
     path: `/_matrix/client/v3/rooms/${encodeURIComponent(roomId)}/report/${encodeURIComponent(eventId)}`,
     requireAuthentication: true,
