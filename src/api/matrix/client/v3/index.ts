@@ -27,4 +27,5 @@ export * as sync from "./sync";
 export * as thirdparty from "./thirdparty";
 export * as user from "./user";
 export * as userDirectory from "./userDirectory";
+export * as users from "./users";
 export * as voip from "./voip";
