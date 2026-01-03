@@ -9,7 +9,7 @@ export type SpaceHierarchyRoomChunk = {
   avatar_url?: string;
   canonical_alias?: string;
   children_state: StrippedChildStateEvent;
-  encryption?: string[];
+  encryption?: string;
   guest_can_join: boolean;
   join_rule?: string;
   name?: string;
