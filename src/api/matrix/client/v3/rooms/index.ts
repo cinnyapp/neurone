@@ -13,6 +13,9 @@ export * from "./event.type";
 export * from "./forget";
 export * from "./forget.type";
 
+export * from "./initialSync";
+export * from "./initialSync.type";
+
 export * from "./invite";
 export * from "./invite.type";
 
