@@ -2,7 +2,7 @@ import { withSearchParams } from "../../../../utils";
 import { GetHierarchyEndpoint } from "./hierarchy.type";
 
 /**
- * https://spec.matrix.org/v1.9/client-server-api/#get_matrixclientv1roomsroomidhierarchy
+ * https://spec.matrix.org/v1.15/client-server-api/#get_matrixclientv1roomsroomidhierarchy
  */
 export const getHierarchy: GetHierarchyEndpoint = ({
   pathParams,
