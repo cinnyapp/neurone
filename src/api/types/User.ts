@@ -1,6 +1,6 @@
 export type UserProfile = {
   avatar_url?: string;
-  display_name?: string;
+  displayname?: string;
 };
 
 export type User = {
