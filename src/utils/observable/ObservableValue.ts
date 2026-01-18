@@ -1,10 +1,12 @@
+import { Disposable } from "../disposable";
+
 export type ObservableValueListener<T> = (value: T) => void;
 
 const ERR_PUBLISHER_ONLY = "Only the publisher can perform this action.";
 const ERR_DISPOSED = "Cannot operate on a disposed ObservableValue.";
 const ERR_DISPOSE_ALREADY_REGISTERED = "Dispose callback already registered.";
 
-export class ObservableValue<T> {
+export class ObservableValue<T> implements Disposable {
   private value: T;
   private readonly publisherKey: string;
   private readonly listeners: Set<ObservableValueListener<T>> = new Set();
