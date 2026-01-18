@@ -5,7 +5,7 @@ export type PushRuleCondition = {
   key?: string;
   kind: string;
   pattern?: string;
-  value?: (string | number | boolean | null)[];
+  value?: string | number | boolean | null;
 };
 export type PushRule = {
   actions: PushRuleAction[];
