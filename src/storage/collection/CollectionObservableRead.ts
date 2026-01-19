@@ -121,10 +121,7 @@ export class CollectionObservableRead<
           return;
         }
         if (operation === WriteOperation.DELETE) {
-          const remainingKeys = keys.filter(
-            (key) => !updateKeys.find((k) => equalKeyValue(k, key)),
-          );
-          const e = await this.read.getMultiple(remainingKeys);
+          const e = await this.read.getMultiple(keys);
           observable.publish(publisherKey, e);
           return;
         }
