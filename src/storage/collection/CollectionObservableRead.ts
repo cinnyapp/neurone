@@ -116,12 +116,26 @@ export class CollectionObservableRead<
         if (!this.keysHasAnyKey(updateKeys, keys)) return;
 
         if (operation === WriteOperation.PUT) {
-          const e = await this.read.getMultiple(keys);
-          observable.publish(publisherKey, e);
+          const updatedEntries = await this.read.getMultiple(updateKeys);
+
+          const updateKeysToIndex = new Map<E[PrimaryKey], number>();
+          updateKeys.forEach((key, i) => updateKeysToIndex.set(key, i));
+
+          const merged = keys.map((key, index) => {
+            const updateIndex = updateKeysToIndex.get(key);
+            if (updateIndex === undefined) return observable.read[index];
+            return updatedEntries[updateIndex];
+          });
+
+          observable.publish(publisherKey, merged);
           return;
         }
         if (operation === WriteOperation.DELETE) {
-          const e = await this.read.getMultiple(keys);
+          const e = observable.read.map((en) =>
+            en && updateKeys.includes(en[this.meta.primaryKey])
+              ? undefined
+              : en,
+          );
           observable.publish(publisherKey, e);
           return;
         }
