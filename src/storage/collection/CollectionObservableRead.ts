@@ -176,10 +176,11 @@ export class CollectionObservableRead<
     query: Query<E[PrimaryKey]>,
     cursor?: QueryCursor,
   ): Promise<ObservableValue<E[]>> {
-    const entries = await this.read.query(query, cursor);
-
     const publisherKey = Math.random().toString();
-    const observable = new ObservableValue(entries, publisherKey);
+    const observable = new ObservableValue(
+      await this.read.query(query, cursor),
+      publisherKey,
+    );
 
     this.bridgeObservable(observable, publisherKey, {
       onDelete: async (deletedKeys) => {
@@ -211,10 +212,11 @@ export class CollectionObservableRead<
     query: Query<E[IndexKey]>,
     cursor?: QueryCursor,
   ): Promise<ObservableValue<E[]>> {
-    const entries = await this.read.queryIndex(indexKey, query, cursor);
-
     const publisherKey = Math.random().toString();
-    const observable = new ObservableValue(entries, publisherKey);
+    const observable = new ObservableValue(
+      await this.read.queryIndex(indexKey, query, cursor),
+      publisherKey,
+    );
 
     this.bridgeObservable(observable, publisherKey, {
       onDelete: async (deletedKeys) => {
@@ -239,10 +241,11 @@ export class CollectionObservableRead<
     query: Query<E[PrimaryKey]>,
     cursor?: QueryCursor,
   ): Promise<ObservableValue<E[PrimaryKey][]>> {
-    const keys = await this.read.queryKeys(query, cursor);
-
     const publisherKey = Math.random().toString();
-    const observable = new ObservableValue(keys, publisherKey);
+    const observable = new ObservableValue(
+      await this.read.queryKeys(query, cursor),
+      publisherKey,
+    );
 
     this.bridgeObservable(observable, publisherKey, {
       onDelete: async (deletedKeys) => {
@@ -274,10 +277,11 @@ export class CollectionObservableRead<
     query: Query<E[IndexKey]>,
     cursor?: QueryCursor,
   ): Promise<ObservableValue<E[PrimaryKey][]>> {
-    const keys = await this.read.queryIndexKeys(indexKey, query, cursor);
-
     const publisherKey = Math.random().toString();
-    const observable = new ObservableValue(keys, publisherKey);
+    const observable = new ObservableValue(
+      await this.read.queryIndexKeys(indexKey, query, cursor),
+      publisherKey,
+    );
 
     this.bridgeObservable(observable, publisherKey, {
       onDelete: async (deletedKeys) => {
