@@ -28,6 +28,8 @@ export class CollectionWrite<
   }
 
   public async putMultiple(entries: E[]): Promise<void> {
+    if (entries.length === 0) return;
+
     await this.driver.putEntries<PrimaryKey, E>(this.meta, entries);
     this.writeObserverBridge.onWrite(
       WriteOperation.PUT,
@@ -41,6 +43,8 @@ export class CollectionWrite<
   }
 
   public async deleteMultiple(keys: E[PrimaryKey][]): Promise<void> {
+    if (keys.length === 0) return;
+
     await this.driver.deleteEntries<PrimaryKey, E>(this.meta, keys);
     this.writeObserverBridge.onWrite(WriteOperation.DELETE, keys);
   }
