@@ -8,6 +8,10 @@ export interface StorageDriver {
     keys: E[PrimaryKey][],
   ): Promise<Array<E | undefined>>;
 
+  getAllEntries<PrimaryKey extends string, E extends Entry<PrimaryKey>>(
+    collectionMeta: CollectionMeta<PrimaryKey>,
+  ): Promise<E[]>;
+
   putEntries<PrimaryKey extends string, E extends Entry<PrimaryKey>>(
     collectionMeta: CollectionMeta<PrimaryKey>,
     data: E[],

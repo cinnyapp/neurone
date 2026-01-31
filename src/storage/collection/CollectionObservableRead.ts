@@ -101,6 +101,20 @@ export class CollectionObservableRead<
     return observable;
   }
 
+  public async getAll(): Promise<ObservableValue<E[]>> {
+    const entries = await this.read.getAll();
+
+    const publisherKey = Math.random().toString();
+    const observable = new ObservableValue(entries, publisherKey);
+
+    this.bridgeObservable(observable, publisherKey, async () => {
+      const e = await this.read.getAll();
+      observable.publish(publisherKey, e);
+    });
+
+    return observable;
+  }
+
   public async getMultiple(
     keys: E[PrimaryKey][],
   ): Promise<ObservableValue<Array<E | undefined>>> {

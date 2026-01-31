@@ -15,6 +15,11 @@ export class CollectionRead<
     return entry;
   }
 
+  public async getAll(): Promise<E[]> {
+    const entries = await this.driver.getAllEntries<PrimaryKey, E>(this.meta);
+    return entries;
+  }
+
   public async getMultiple(
     keys: E[PrimaryKey][],
   ): Promise<Array<E | undefined>> {

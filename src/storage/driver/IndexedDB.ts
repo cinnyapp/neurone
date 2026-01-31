@@ -77,15 +77,20 @@ export class IndexedDBStorageDriver implements StorageDriver {
       return item;
     });
 
-    const result = await Promise.allSettled(itemsPromises);
-    const values: Array<E | undefined> = [];
-    result.forEach((item) => {
-      if (item.status === "fulfilled") {
-        values.push(item.value);
-      }
-    });
+    const result = await Promise.all(itemsPromises);
 
-    return values;
+    return result;
+  }
+
+  async getAllEntries<PrimaryKey extends string, E extends Entry<PrimaryKey>>(
+    collectionMeta: CollectionMeta<PrimaryKey>,
+  ): Promise<E[]> {
+    const txn = this.db.transaction(collectionMeta.name, "readonly");
+    const store = txn.store;
+
+    const entries = await store.getAll();
+
+    return entries as E[];
   }
 
   async putEntries<PrimaryKey extends string, E extends Entry<PrimaryKey>>(
@@ -93,9 +98,10 @@ export class IndexedDBStorageDriver implements StorageDriver {
     data: E[],
   ): Promise<void> {
     const txn = this.db.transaction(collectionMeta.name, "readwrite");
-    const promises = data.map((entry) => txn.store.put(entry));
+    const store = txn.store;
+    data.map((entry) => store.put(entry));
 
-    await Promise.allSettled(promises);
+    await txn.done;
   }
 
   async deleteEntries<PrimaryKey extends string, E extends Entry<PrimaryKey>>(
@@ -103,9 +109,10 @@ export class IndexedDBStorageDriver implements StorageDriver {
     keys: E[PrimaryKey][],
   ): Promise<void> {
     const txn = this.db.transaction(collectionMeta.name, "readwrite");
-    const promises = keys.map((key) => txn.store.delete(key as string));
+    const store = txn.store;
+    keys.map((key) => store.delete(key as string));
 
-    await Promise.allSettled(promises);
+    await txn.done;
   }
 
   async queryEntries<PrimaryKey extends string, E extends Entry<PrimaryKey>>(

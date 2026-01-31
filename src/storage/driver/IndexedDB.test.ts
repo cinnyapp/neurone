@@ -54,11 +54,26 @@ describe("IndexedDBStorageDriver", () => {
 
     const result = await driver.getEntries<typeof PRIMARY_KEY, UserEntry>(
       collectionMeta,
-      [1, 2],
+      [1, 2, 5],
     );
-    expect(result.length).toBe(2);
+    expect(result.length).toBe(3);
     expect(result[0]?.name).toBe("Alice");
     expect(result[1]?.name).toBe("Bob");
+    expect(result[2]?.name).toBe(undefined);
+  });
+
+  it("should get all entries from the store", async () => {
+    await driver.putEntries(collectionMeta, users);
+
+    const all = await driver.getAllEntries<typeof PRIMARY_KEY, UserEntry>(
+      collectionMeta,
+    );
+
+    expect(all.length).toBe(users.length);
+    expect(all.map((u) => u.id).sort()).toEqual(users.map((u) => u.id).sort());
+    expect(all.map((u) => u.name)).toEqual(
+      expect.arrayContaining(users.map((u) => u.name)),
+    );
   });
 
   it("should delete entries", async () => {
