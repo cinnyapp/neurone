@@ -13,7 +13,11 @@ export class Collection<
 > {
   public readonly meta: CollectionMeta<PrimaryKey>;
 
-  private readonly writeObserverBridge: WriteObserverBridge<PrimaryKey, E>;
+  private readonly writeObserverBridge: WriteObserverBridge<
+    PrimaryKey,
+    IndexKeys,
+    E
+  >;
 
   public readonly read: CollectionRead<PrimaryKey, IndexKeys, E>;
 
@@ -23,7 +27,7 @@ export class Collection<
     E
   >;
 
-  public readonly write: CollectionWrite<PrimaryKey, E>;
+  public readonly write: CollectionWrite<PrimaryKey, IndexKeys, E>;
 
   constructor(name: string, primaryKey: PrimaryKey, driver: StorageDriver) {
     this.meta = new CollectionMeta(name, primaryKey);

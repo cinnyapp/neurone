@@ -1,20 +1,24 @@
 import { StorageDriver } from "../StorageDriver";
 import { CollectionMeta } from "./CollectionMeta";
 import { CollectionOperator } from "./CollectionOperator";
-import { Entry } from "./Entry";
+import { Entry, Indexes } from "./Entry";
 import { WriteObserverBridge } from "./WriteObserverBridge";
-import { WriteOperation } from "./type";
 
 export class CollectionWrite<
   PrimaryKey extends string,
-  E extends Entry<PrimaryKey>,
+  IndexKeys extends Indexes = never,
+  E extends Entry<PrimaryKey, IndexKeys> = Entry<PrimaryKey, Indexes>,
 > extends CollectionOperator<PrimaryKey> {
-  private readonly writeObserverBridge: WriteObserverBridge<PrimaryKey, E>;
+  private readonly writeObserverBridge: WriteObserverBridge<
+    PrimaryKey,
+    IndexKeys,
+    E
+  >;
 
   constructor(
     meta: CollectionMeta<PrimaryKey>,
     driver: StorageDriver,
-    writeObserverBridge: WriteObserverBridge<PrimaryKey, E>,
+    writeObserverBridge: WriteObserverBridge<PrimaryKey, IndexKeys, E>,
   ) {
     super(meta, driver);
 
@@ -22,30 +26,28 @@ export class CollectionWrite<
   }
 
   public async put(entry: E): Promise<void> {
-    await this.driver.putEntries<PrimaryKey, E>(this.meta, [entry]);
-    const key = entry[this.meta.primaryKey];
-    this.writeObserverBridge.onWrite(WriteOperation.PUT, [key]);
+    const entries = [entry];
+    await this.driver.putEntries<PrimaryKey, E>(this.meta, entries);
+    this.writeObserverBridge.onPut(entries);
   }
 
   public async putMultiple(entries: E[]): Promise<void> {
     if (entries.length === 0) return;
 
     await this.driver.putEntries<PrimaryKey, E>(this.meta, entries);
-    this.writeObserverBridge.onWrite(
-      WriteOperation.PUT,
-      entries.map((entry) => entry[this.meta.primaryKey]),
-    );
+    this.writeObserverBridge.onPut(entries);
   }
 
   public async delete(key: E[PrimaryKey]): Promise<void> {
-    await this.driver.deleteEntries<PrimaryKey, E>(this.meta, [key]);
-    this.writeObserverBridge.onWrite(WriteOperation.DELETE, [key]);
+    const keys = [key];
+    await this.driver.deleteEntries<PrimaryKey, E>(this.meta, keys);
+    this.writeObserverBridge.onDelete(keys);
   }
 
   public async deleteMultiple(keys: E[PrimaryKey][]): Promise<void> {
     if (keys.length === 0) return;
 
     await this.driver.deleteEntries<PrimaryKey, E>(this.meta, keys);
-    this.writeObserverBridge.onWrite(WriteOperation.DELETE, keys);
+    this.writeObserverBridge.onDelete(keys);
   }
 }

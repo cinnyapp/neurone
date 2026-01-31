@@ -4,12 +4,7 @@ import { Entry, Indexes, KeyValue } from "./Entry";
 import { ObservableValue } from "../../utils/observable/ObservableValue";
 import { QueryRange } from "./QueryRange";
 import { WriteObserverBridge } from "./WriteObserverBridge";
-import {
-  QueryCursor,
-  Query,
-  WriteObserverCallback,
-  WriteOperation,
-} from "./type";
+import { QueryCursor, Query, WriteObserver } from "./type";
 
 const equalKeyValue = (a: KeyValue, b: KeyValue) => {
   if (Array.isArray(a) && Array.isArray(b) && a.length === b.length) {
@@ -26,12 +21,16 @@ export class CollectionObservableRead<
 > {
   private readonly meta: CollectionMeta<PrimaryKey>;
   private readonly read: CollectionRead<PrimaryKey, IndexKeys, E>;
-  private readonly writeObserverBridge: WriteObserverBridge<PrimaryKey, E>;
+  private readonly writeObserverBridge: WriteObserverBridge<
+    PrimaryKey,
+    IndexKeys,
+    E
+  >;
 
   constructor(
     meta: CollectionMeta<PrimaryKey>,
     read: CollectionRead<PrimaryKey, IndexKeys, E>,
-    writeObserverBridge: WriteObserverBridge<PrimaryKey, E>,
+    writeObserverBridge: WriteObserverBridge<PrimaryKey, IndexKeys, E>,
   ) {
     this.meta = meta;
     this.read = read;
@@ -41,9 +40,9 @@ export class CollectionObservableRead<
   private bridgeObservable<T>(
     observable: ObservableValue<T>,
     publisherKey: string,
-    onWrite: WriteObserverCallback<PrimaryKey, E>,
+    writeObserver: WriteObserver<PrimaryKey, IndexKeys, E>,
   ) {
-    const disconnectObserver = this.writeObserverBridge.observe(onWrite);
+    const disconnectObserver = this.writeObserverBridge.observe(writeObserver);
     observable.onDispose(publisherKey, disconnectObserver);
   }
 
@@ -60,56 +59,77 @@ export class CollectionObservableRead<
     });
   }
 
-  private entriesHasAnyKey(keys: E[PrimaryKey][], entries: E[]) {
-    return keys.some((key) =>
-      entries.find((entry) => equalKeyValue(entry[this.meta.primaryKey], key)),
+  private entriesHasAnyKey(keys: E[PrimaryKey][], entries: E[]): boolean {
+    return entries.some((entry) =>
+      keys.some((key) => equalKeyValue(entry[this.meta.primaryKey], key)),
     );
   }
 
-  private keysHasAnyKey(keys: E[PrimaryKey][], entryKeys: E[PrimaryKey][]) {
-    return keys.some((key) => entryKeys.find((k) => equalKeyValue(k, key)));
+  private keysHasAnyKey(
+    keys: E[PrimaryKey][],
+    entryKeys: E[PrimaryKey][],
+  ): boolean {
+    return entryKeys.some((key) => keys.find((k) => equalKeyValue(k, key)));
+  }
+
+  private keysIncludes(keys: E[PrimaryKey][], key: E[PrimaryKey]): boolean {
+    return keys.some((k) => equalKeyValue(k, key));
+  }
+
+  private hasEntry(entries: E[], key: E[PrimaryKey]): boolean {
+    return entries.some((e) => equalKeyValue(e[this.meta.primaryKey], key));
+  }
+
+  private findEntry(entries: E[], key: E[PrimaryKey]): E | undefined {
+    return entries.find((e) => equalKeyValue(e[this.meta.primaryKey], key));
   }
 
   public async get(
     key: E[PrimaryKey],
   ): Promise<ObservableValue<E | undefined>> {
-    const entry = await this.read.get(key);
-
     const publisherKey = Math.random().toString();
-    const observable = new ObservableValue(entry, publisherKey);
-
-    this.bridgeObservable(
-      observable,
+    const observable = new ObservableValue(
+      await this.read.get(key),
       publisherKey,
-      async (operation, updateKeys) => {
-        const hasUpdate = updateKeys.some((k) => equalKeyValue(k, key));
-        if (!hasUpdate) return;
-
-        if (operation === WriteOperation.PUT) {
-          const e = await this.read.get(key);
-          observable.publish(publisherKey, e);
-          return;
-        }
-
-        if (operation === WriteOperation.DELETE) {
-          observable.publish(publisherKey, undefined);
-          return;
-        }
-      },
     );
+
+    this.bridgeObservable(observable, publisherKey, {
+      onDelete: (deletedKeys) => {
+        if (!this.keysIncludes(deletedKeys, key)) return;
+        observable.publish(publisherKey, undefined);
+      },
+      onPut: (updatedEntries) => {
+        const updatedEntry = this.findEntry(updatedEntries, key);
+        if (!updatedEntry) return;
+        observable.publish(publisherKey, updatedEntry);
+      },
+    });
 
     return observable;
   }
 
   public async getAll(): Promise<ObservableValue<E[]>> {
-    const entries = await this.read.getAll();
-
     const publisherKey = Math.random().toString();
-    const observable = new ObservableValue(entries, publisherKey);
+    const observable = new ObservableValue(
+      await this.read.getAll(),
+      publisherKey,
+    );
 
-    this.bridgeObservable(observable, publisherKey, async () => {
-      const e = await this.read.getAll();
-      observable.publish(publisherKey, e);
+    this.bridgeObservable(observable, publisherKey, {
+      onDelete: (deletedKeys) => {
+        const newEntries = observable.read.filter(
+          (e) => !this.keysIncludes(deletedKeys, e[this.meta.primaryKey]),
+        );
+        observable.publish(publisherKey, newEntries);
+      },
+      onPut: async (updatedEntries) => {
+        const newEntries = observable.read
+          .filter(
+            (e) => !this.hasEntry(updatedEntries, e[this.meta.primaryKey]),
+          )
+          .concat(updatedEntries);
+        observable.publish(publisherKey, newEntries);
+      },
     });
 
     return observable;
@@ -118,43 +138,36 @@ export class CollectionObservableRead<
   public async getMultiple(
     keys: E[PrimaryKey][],
   ): Promise<ObservableValue<Array<E | undefined>>> {
-    const entries = await this.read.getMultiple(keys);
-
     const publisherKey = Math.random().toString();
-    const observable = new ObservableValue(entries, publisherKey);
-
-    this.bridgeObservable(
-      observable,
+    const observable = new ObservableValue(
+      await this.read.getMultiple(keys),
       publisherKey,
-      async (operation, updateKeys) => {
-        if (!this.keysHasAnyKey(updateKeys, keys)) return;
-
-        if (operation === WriteOperation.PUT) {
-          const updatedEntries = await this.read.getMultiple(updateKeys);
-
-          const updateKeysToIndex = new Map<E[PrimaryKey], number>();
-          updateKeys.forEach((key, i) => updateKeysToIndex.set(key, i));
-
-          const merged = keys.map((key, index) => {
-            const updateIndex = updateKeysToIndex.get(key);
-            if (updateIndex === undefined) return observable.read[index];
-            return updatedEntries[updateIndex];
-          });
-
-          observable.publish(publisherKey, merged);
-          return;
-        }
-        if (operation === WriteOperation.DELETE) {
-          const e = observable.read.map((en) =>
-            en && updateKeys.includes(en[this.meta.primaryKey])
-              ? undefined
-              : en,
-          );
-          observable.publish(publisherKey, e);
-          return;
-        }
-      },
     );
+
+    this.bridgeObservable(observable, publisherKey, {
+      onDelete: (deletedKeys) => {
+        if (!this.keysHasAnyKey(deletedKeys, keys)) return;
+        const newEntries = observable.read.map((en) =>
+          en && this.keysIncludes(deletedKeys, en[this.meta.primaryKey])
+            ? undefined
+            : en,
+        );
+        observable.publish(publisherKey, newEntries);
+      },
+      onPut: (updatedEntries) => {
+        if (!this.entriesHasAnyKey(keys, updatedEntries)) return;
+
+        const existing = observable.read;
+        const newEntries: Array<E | undefined> = [];
+
+        keys.forEach((key, index) => {
+          const update = this.findEntry(updatedEntries, key);
+          newEntries.push(update ?? existing[index]);
+        });
+
+        observable.publish(publisherKey, newEntries);
+      },
+    });
 
     return observable;
   }
@@ -168,31 +181,27 @@ export class CollectionObservableRead<
     const publisherKey = Math.random().toString();
     const observable = new ObservableValue(entries, publisherKey);
 
-    this.bridgeObservable(
-      observable,
-      publisherKey,
-      async (operation, updateKeys) => {
-        if (this.entriesHasAnyKey(updateKeys, observable.read)) {
+    this.bridgeObservable(observable, publisherKey, {
+      onDelete: async (deletedKeys) => {
+        if (this.entriesHasAnyKey(deletedKeys, observable.read)) {
           const e = await this.read.query(query, cursor);
           observable.publish(publisherKey, e);
           return;
         }
-        if (operation === WriteOperation.PUT) {
-          const updatedEntries = await this.read.getMultiple(updateKeys);
-
-          if (
-            this.entriesHasQueriedEntry(
-              this.meta.primaryKey,
-              query,
-              updatedEntries,
-            )
-          ) {
-            const e = await this.read.query(query, cursor);
-            observable.publish(publisherKey, e);
-          }
+      },
+      onPut: async (updatedEntries) => {
+        if (
+          this.entriesHasQueriedEntry(
+            this.meta.primaryKey,
+            query,
+            updatedEntries,
+          )
+        ) {
+          const e = await this.read.query(query, cursor);
+          observable.publish(publisherKey, e);
         }
       },
-    );
+    });
 
     return observable;
   }
@@ -207,26 +216,21 @@ export class CollectionObservableRead<
     const publisherKey = Math.random().toString();
     const observable = new ObservableValue(entries, publisherKey);
 
-    this.bridgeObservable(
-      observable,
-      publisherKey,
-      async (operation, updateKeys) => {
-        if (this.entriesHasAnyKey(updateKeys, observable.read)) {
+    this.bridgeObservable(observable, publisherKey, {
+      onDelete: async (deletedKeys) => {
+        if (this.entriesHasAnyKey(deletedKeys, observable.read)) {
           const e = await this.read.queryIndex(indexKey, query, cursor);
           observable.publish(publisherKey, e);
           return;
         }
-
-        if (operation === WriteOperation.PUT) {
-          const updatedEntries = await this.read.getMultiple(updateKeys);
-
-          if (this.entriesHasQueriedEntry(indexKey, query, updatedEntries)) {
-            const e = await this.read.queryIndex(indexKey, query, cursor);
-            observable.publish(publisherKey, e);
-          }
+      },
+      onPut: async (updatedEntries) => {
+        if (this.entriesHasQueriedEntry(indexKey, query, updatedEntries)) {
+          const e = await this.read.queryIndex(indexKey, query, cursor);
+          observable.publish(publisherKey, e);
         }
       },
-    );
+    });
 
     return observable;
   }
@@ -240,31 +244,27 @@ export class CollectionObservableRead<
     const publisherKey = Math.random().toString();
     const observable = new ObservableValue(keys, publisherKey);
 
-    this.bridgeObservable(
-      observable,
-      publisherKey,
-      async (operation, updateKeys) => {
-        if (this.keysHasAnyKey(updateKeys, observable.read)) {
+    this.bridgeObservable(observable, publisherKey, {
+      onDelete: async (deletedKeys) => {
+        if (this.keysHasAnyKey(deletedKeys, observable.read)) {
           const k = await this.read.queryKeys(query, cursor);
           observable.publish(publisherKey, k);
           return;
         }
-        if (operation === WriteOperation.PUT) {
-          const updatedEntries = await this.read.getMultiple(updateKeys);
-
-          if (
-            this.entriesHasQueriedEntry(
-              this.meta.primaryKey,
-              query,
-              updatedEntries,
-            )
-          ) {
-            const k = await this.read.queryKeys(query, cursor);
-            observable.publish(publisherKey, k);
-          }
+      },
+      onPut: async (updatedEntries) => {
+        if (
+          this.entriesHasQueriedEntry(
+            this.meta.primaryKey,
+            query,
+            updatedEntries,
+          )
+        ) {
+          const k = await this.read.queryKeys(query, cursor);
+          observable.publish(publisherKey, k);
         }
       },
-    );
+    });
 
     return observable;
   }
@@ -279,26 +279,21 @@ export class CollectionObservableRead<
     const publisherKey = Math.random().toString();
     const observable = new ObservableValue(keys, publisherKey);
 
-    this.bridgeObservable(
-      observable,
-      publisherKey,
-      async (operation, updateKeys) => {
-        if (this.keysHasAnyKey(updateKeys, observable.read)) {
+    this.bridgeObservable(observable, publisherKey, {
+      onDelete: async (deletedKeys) => {
+        if (this.keysHasAnyKey(deletedKeys, observable.read)) {
           const k = await this.read.queryIndexKeys(indexKey, query, cursor);
           observable.publish(publisherKey, k);
           return;
         }
-
-        if (operation === WriteOperation.PUT) {
-          const updatedEntries = await this.read.getMultiple(updateKeys);
-
-          if (this.entriesHasQueriedEntry(indexKey, query, updatedEntries)) {
-            const k = await this.read.queryIndexKeys(indexKey, query, cursor);
-            observable.publish(publisherKey, k);
-          }
+      },
+      onPut: async (updatedEntries) => {
+        if (this.entriesHasQueriedEntry(indexKey, query, updatedEntries)) {
+          const k = await this.read.queryIndexKeys(indexKey, query, cursor);
+          observable.publish(publisherKey, k);
         }
       },
-    );
+    });
 
     return observable;
   }

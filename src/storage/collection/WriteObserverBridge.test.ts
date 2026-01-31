@@ -1,78 +1,102 @@
 import { Entry } from "./Entry";
 import { WriteObserverBridge } from "./WriteObserverBridge";
-import { WriteOperation } from "./type";
+import { WriteObserver } from "./type";
 
 describe("WriteObserverBridge", () => {
-  let bridge: WriteObserverBridge<"id", Entry<"id">>;
-  let mockObserver1: jest.Mock;
-  let mockObserver2: jest.Mock;
+  type TestEntry = Entry<"id">;
+
+  let bridge: WriteObserverBridge<"id", never, TestEntry>;
+  let observer1: WriteObserver<"id", never, TestEntry>;
+  let observer2: WriteObserver<"id", never, TestEntry>;
+
+  let onPut1: jest.Mock;
+  let onDelete1: jest.Mock;
+  let onPut2: jest.Mock;
+  let onDelete2: jest.Mock;
 
   beforeEach(() => {
-    bridge = new WriteObserverBridge<"id", Entry<"id">>();
-    mockObserver1 = jest.fn();
-    mockObserver2 = jest.fn();
+    bridge = new WriteObserverBridge<"id", never, TestEntry>();
+
+    onPut1 = jest.fn();
+    onDelete1 = jest.fn();
+    onPut2 = jest.fn();
+    onDelete2 = jest.fn();
+
+    observer1 = {
+      onPut: onPut1,
+      onDelete: onDelete1,
+    };
+
+    observer2 = {
+      onPut: onPut2,
+      onDelete: onDelete2,
+    };
   });
 
-  it("should call observers when onWrite is triggered", () => {
-    bridge.observe(mockObserver1);
+  it("calls observer onPut when onPut is triggered", () => {
+    bridge.observe(observer1);
 
-    const keys: string[] = ["key1", "key2"];
+    const entries = [{ id: "1" }] as TestEntry[];
 
-    bridge.onWrite(WriteOperation.PUT, keys);
+    bridge.onPut(entries);
 
-    // Check that mockObserver1 was called with the correct arguments
-    expect(mockObserver1).toHaveBeenCalledWith(WriteOperation.PUT, keys);
-    expect(mockObserver1).toHaveBeenCalledTimes(1);
+    expect(onPut1).toHaveBeenCalledTimes(1);
+    expect(onPut1).toHaveBeenCalledWith(entries);
+    expect(onDelete1).not.toHaveBeenCalled();
   });
 
-  it("should call multiple observers when onWrite is triggered", () => {
-    bridge.observe(mockObserver1);
-    bridge.observe(mockObserver2);
+  it("calls observer onDelete when onDelete is triggered", () => {
+    bridge.observe(observer1);
 
-    const keys: string[] = ["key1"];
+    const keys = ["1"];
 
-    bridge.onWrite(WriteOperation.DELETE, keys);
+    bridge.onDelete(keys);
 
-    // Check that both mockObservers were called
-    expect(mockObserver1).toHaveBeenCalledWith(WriteOperation.DELETE, keys);
-    expect(mockObserver2).toHaveBeenCalledWith(WriteOperation.DELETE, keys);
-    expect(mockObserver1).toHaveBeenCalledTimes(1);
-    expect(mockObserver2).toHaveBeenCalledTimes(1);
+    expect(onDelete1).toHaveBeenCalledTimes(1);
+    expect(onDelete1).toHaveBeenCalledWith(keys);
+    expect(onPut1).not.toHaveBeenCalled();
   });
 
-  it("should stop calling an observer after it is disconnected", () => {
-    const disconnect = bridge.observe(mockObserver1);
+  it("calls multiple observers", () => {
+    bridge.observe(observer1);
+    bridge.observe(observer2);
 
-    const keys: string[] = ["key1"];
+    const entries = [{ id: "1" }] as TestEntry[];
 
-    bridge.onWrite(WriteOperation.DELETE, keys);
-    expect(mockObserver1).toHaveBeenCalledTimes(1);
+    bridge.onPut(entries);
 
-    // Disconnect observer
+    expect(onPut1).toHaveBeenCalledTimes(1);
+    expect(onPut2).toHaveBeenCalledTimes(1);
+  });
+
+  it("stops calling observer after disconnect", () => {
+    const disconnect = bridge.observe(observer1);
+
+    const entries = [{ id: "1" }] as TestEntry[];
+
+    bridge.onPut(entries);
+    expect(onPut1).toHaveBeenCalledTimes(1);
+
     disconnect();
 
-    bridge.onWrite(WriteOperation.DELETE, keys);
-
-    // Check that observer1 is no longer called
-    expect(mockObserver1).toHaveBeenCalledTimes(1);
+    bridge.onPut(entries);
+    expect(onPut1).toHaveBeenCalledTimes(1); // unchanged
   });
 
-  it("should not call removed observers after onWrite", () => {
-    const disconnect1 = bridge.observe(mockObserver1);
-    bridge.observe(mockObserver2);
+  it("only calls remaining observers after one is removed", () => {
+    const disconnect1 = bridge.observe(observer1);
+    bridge.observe(observer2);
 
-    const keys: string[] = ["key1"];
+    const keys = ["1"];
 
-    bridge.onWrite(WriteOperation.PUT, keys);
-    expect(mockObserver1).toHaveBeenCalledTimes(1);
-    expect(mockObserver2).toHaveBeenCalledTimes(1);
+    bridge.onDelete(keys);
+    expect(onDelete1).toHaveBeenCalledTimes(1);
+    expect(onDelete2).toHaveBeenCalledTimes(1);
 
-    // Remove mockObserver1 and trigger again
     disconnect1();
-    bridge.onWrite(WriteOperation.PUT, keys);
 
-    // Ensure only mockObserver2 gets called
-    expect(mockObserver1).toHaveBeenCalledTimes(1); // still only 1 time
-    expect(mockObserver2).toHaveBeenCalledTimes(2); // now called twice
+    bridge.onDelete(keys);
+    expect(onDelete1).toHaveBeenCalledTimes(1);
+    expect(onDelete2).toHaveBeenCalledTimes(2);
   });
 });

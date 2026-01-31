@@ -1,4 +1,4 @@
-import { Entry, KeyValue } from "./Entry";
+import { Entry, Indexes, KeyValue } from "./Entry";
 import { QueryRange } from "./QueryRange";
 
 export type QueryCursor = {
@@ -9,13 +9,13 @@ export type QueryCursor = {
 
 export type Query<T extends KeyValue> = T | QueryRange<T>;
 
-export enum WriteOperation {
-  PUT = "PUT",
-  DELETE = "DELETE",
-}
-
 export type WriteObserverDisconnectHandler = () => void;
-export type WriteObserverCallback<
+
+export interface WriteObserver<
   PrimaryKey extends string,
-  E extends Entry<PrimaryKey>,
-> = (operation: WriteOperation, keys: E[PrimaryKey][]) => void;
+  IndexKeys extends Indexes = never,
+  E extends Entry<PrimaryKey, IndexKeys> = Entry<PrimaryKey, Indexes>,
+> {
+  onDelete: (keys: E[PrimaryKey][]) => void;
+  onPut: (entries: E[]) => void;
+}

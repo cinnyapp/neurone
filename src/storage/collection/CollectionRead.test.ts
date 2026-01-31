@@ -14,6 +14,7 @@ type UserEntry = Entry<
 
 const mockDriver = {
   getEntries: jest.fn(),
+  getAllEntries: jest.fn(),
   putEntries: jest.fn(),
   deleteEntries: jest.fn(),
   queryEntries: jest.fn(),
@@ -56,6 +57,31 @@ describe("CollectionRead", () => {
 
       expect(user).toEqual(undefined);
       expect(mockDriver.getEntries).toHaveBeenCalledWith(meta, [key]);
+    });
+  });
+
+  describe("getAll", () => {
+    it("should return all entries", async () => {
+      const mockEntries: UserEntry[] = [
+        { id: "u1", membership: "join", name: "John" },
+        { id: "u2", membership: "invite", name: undefined },
+      ];
+
+      mockDriver.getAllEntries.mockResolvedValueOnce(mockEntries);
+
+      const result = await read.getAll();
+
+      expect(result).toEqual(mockEntries);
+      expect(mockDriver.getAllEntries).toHaveBeenCalledWith(meta);
+    });
+
+    it("should return an empty array when no entries exist", async () => {
+      mockDriver.getAllEntries.mockResolvedValueOnce([]);
+
+      const result = await read.getAll();
+
+      expect(result).toEqual([]);
+      expect(mockDriver.getAllEntries).toHaveBeenCalledWith(meta);
     });
   });
 

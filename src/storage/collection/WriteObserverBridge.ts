@@ -1,25 +1,28 @@
-import { Entry } from "./Entry";
-import {
-  WriteObserverCallback,
-  WriteObserverDisconnectHandler,
-  WriteOperation,
-} from "./type";
+import { Entry, Indexes } from "./Entry";
+import { WriteObserver, WriteObserverDisconnectHandler } from "./type";
 
 export class WriteObserverBridge<
   PrimaryKey extends string,
-  E extends Entry<PrimaryKey>,
+  IndexKeys extends Indexes = never,
+  E extends Entry<PrimaryKey, IndexKeys> = Entry<PrimaryKey, Indexes>,
 > {
-  private readonly observers: Set<WriteObserverCallback<PrimaryKey, E>> =
+  private readonly observers: Set<WriteObserver<PrimaryKey, Indexes, E>> =
     new Set();
 
-  public onWrite(operation: WriteOperation, keys: E[PrimaryKey][]) {
+  public onPut(entries: E[]): void {
     this.observers.forEach((observer) => {
-      observer(operation, keys);
+      observer.onPut(entries);
+    });
+  }
+
+  public onDelete(keys: E[PrimaryKey][]): void {
+    this.observers.forEach((observer) => {
+      observer.onDelete(keys);
     });
   }
 
   public observe(
-    observer: WriteObserverCallback<PrimaryKey, E>,
+    observer: WriteObserver<PrimaryKey, Indexes, E>,
   ): WriteObserverDisconnectHandler {
     this.observers.add(observer);
     return () => {

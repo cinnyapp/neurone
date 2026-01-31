@@ -1,5 +1,4 @@
 import { CollectionWrite } from "./CollectionWrite";
-import { WriteOperation } from "./type";
 import { CollectionMeta } from "./CollectionMeta";
 import { Entry } from "./Entry";
 import { WriteObserverBridge } from "./WriteObserverBridge";
@@ -15,6 +14,7 @@ type UserEntry = Entry<
 
 const mockDriver = {
   getEntries: jest.fn(),
+  getAllEntries: jest.fn(),
   putEntries: jest.fn(),
   deleteEntries: jest.fn(),
   queryEntries: jest.fn(),
@@ -24,20 +24,22 @@ const mockDriver = {
 };
 
 const mockWriteObserverBridge = {
-  onWrite: jest.fn(),
+  onPut: jest.fn(),
+  onDelete: jest.fn(),
   observe: jest.fn(),
 };
 
 describe("CollectionWrite", () => {
-  let collectionWrite: CollectionWrite<"id", UserEntry>;
+  let collectionWrite: CollectionWrite<"id", never, UserEntry>;
   const mockMeta = new CollectionMeta<"id">("users", "id");
 
   beforeEach(() => {
-    collectionWrite = new CollectionWrite<"id", UserEntry>(
+    collectionWrite = new CollectionWrite<"id", never, UserEntry>(
       mockMeta,
       mockDriver,
       mockWriteObserverBridge as unknown as WriteObserverBridge<
         "id",
+        never,
         UserEntry
       >,
     );
@@ -53,10 +55,7 @@ describe("CollectionWrite", () => {
     await collectionWrite.put(entry);
 
     expect(mockDriver.putEntries).toHaveBeenCalledWith(mockMeta, [entry]);
-    expect(mockWriteObserverBridge.onWrite).toHaveBeenCalledWith(
-      WriteOperation.PUT,
-      ["1"],
-    );
+    expect(mockWriteObserverBridge.onPut).toHaveBeenCalledWith([entry]);
   });
 
   it("should put multiple entries", async () => {
@@ -68,10 +67,7 @@ describe("CollectionWrite", () => {
     await collectionWrite.putMultiple(entries);
 
     expect(mockDriver.putEntries).toHaveBeenCalledWith(mockMeta, entries);
-    expect(mockWriteObserverBridge.onWrite).toHaveBeenCalledWith(
-      WriteOperation.PUT,
-      ["1", "2"],
-    );
+    expect(mockWriteObserverBridge.onPut).toHaveBeenCalledWith(entries);
   });
 
   it("should delete a single entry", async () => {
@@ -80,10 +76,7 @@ describe("CollectionWrite", () => {
     await collectionWrite.delete(key);
 
     expect(mockDriver.deleteEntries).toHaveBeenCalledWith(mockMeta, [key]);
-    expect(mockWriteObserverBridge.onWrite).toHaveBeenCalledWith(
-      WriteOperation.DELETE,
-      [key],
-    );
+    expect(mockWriteObserverBridge.onDelete).toHaveBeenCalledWith([key]);
   });
 
   it("should delete multiple entries", async () => {
@@ -92,9 +85,6 @@ describe("CollectionWrite", () => {
     await collectionWrite.deleteMultiple(keys);
 
     expect(mockDriver.deleteEntries).toHaveBeenCalledWith(mockMeta, keys);
-    expect(mockWriteObserverBridge.onWrite).toHaveBeenCalledWith(
-      WriteOperation.DELETE,
-      keys,
-    );
+    expect(mockWriteObserverBridge.onDelete).toHaveBeenCalledWith(keys);
   });
 });
