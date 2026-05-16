@@ -8,7 +8,7 @@ export type GetRoomSummaryPathParams = {
   roomIdOrAlias: string;
 };
 export type GetRoomSummarySearchParams = {
-  via?: string;
+  via?: string[];
 };
 
 export type GetRoomSummaryOK = {

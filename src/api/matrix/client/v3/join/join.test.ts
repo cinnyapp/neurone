@@ -10,7 +10,7 @@ test("post join room with alias or id request", () => {
     postJoin({
       pathParams: { roomIdOrAlias },
       searchParams: {
-        via: "server.name",
+        via: ["server.name"],
       },
       body,
     }),

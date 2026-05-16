@@ -10,7 +10,7 @@ export type GetThreadsPathParams = {
 export type GetThreadsSearchParams = {
   from?: string;
   include?: "all" | "participated";
-  limit?: string;
+  limit?: number;
 };
 export type GetThreadsOK = {
   chunk: ClientEvent[];

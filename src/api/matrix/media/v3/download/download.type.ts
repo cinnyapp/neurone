@@ -8,9 +8,9 @@ export type GetDownloadPathParams = {
   mediaId: string;
 };
 export type GetDownloadSearchParams = {
-  allow_redirect?: string;
-  allow_remote?: string;
-  timeout_ms?: string;
+  allow_redirect?: boolean;
+  allow_remote?: boolean;
+  timeout_ms?: number;
 };
 
 export type GetDownloadEndpoint = MatrixEndpoint<{
@@ -27,9 +27,9 @@ export type GetDownloadFilePathParams = {
   fileName: string;
 };
 export type GetDownloadFileSearchParams = {
-  allow_redirect?: string;
-  allow_remote?: string;
-  timeout_ms?: string;
+  allow_redirect?: boolean;
+  allow_remote?: boolean;
+  timeout_ms?: number;
 };
 export type GetDownloadFileEndpoint = MatrixEndpoint<{
   pathParams: GetDownloadFilePathParams;

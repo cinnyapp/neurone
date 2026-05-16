@@ -3,7 +3,7 @@ import { getNotifications } from "./notifications";
 test("get notifications request", () => {
   expect(
     getNotifications({
-      searchParams: { limit: "30" },
+      searchParams: { limit: 30 },
     }),
   ).toEqual({
     method: "GET",

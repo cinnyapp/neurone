@@ -8,7 +8,7 @@ test("get timestamp to event request", () => {
       pathParams: { roomId },
       searchParams: {
         dir: "b",
-        ts: "3234",
+        ts: 3234,
       },
     }),
   ).toEqual({

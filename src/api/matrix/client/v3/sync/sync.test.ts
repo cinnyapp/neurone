@@ -28,7 +28,7 @@ test("sync request with multiple search params", () => {
   const syncRequest = getSync({
     searchParams: {
       set_presence: "offline",
-      full_state: "true",
+      full_state: true,
     },
   });
 

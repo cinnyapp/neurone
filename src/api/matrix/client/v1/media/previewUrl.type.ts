@@ -5,7 +5,7 @@ import { MatrixEndpoint } from "../../../../MatrixEndpoint";
  */
 export type GetPreviewUrlSearchParams = {
   url: string;
-  ts?: string;
+  ts?: number;
 };
 export type GetPreviewUrlOK = object;
 export type GetPreviewUrlEndpoint = MatrixEndpoint<{

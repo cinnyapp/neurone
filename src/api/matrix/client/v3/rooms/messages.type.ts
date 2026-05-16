@@ -11,7 +11,7 @@ export type GetMessagesSearchParams = {
   dir: "b" | "f";
   filter?: string;
   from?: string;
-  limit?: string;
+  limit?: number;
   to?: string;
 };
 

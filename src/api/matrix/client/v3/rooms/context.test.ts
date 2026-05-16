@@ -11,7 +11,7 @@ test("event context request", () => {
         eventId,
       },
       searchParams: {
-        limit: "1",
+        limit: 1,
       },
     }),
   ).toEqual({

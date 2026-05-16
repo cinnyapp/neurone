@@ -8,7 +8,7 @@ export type GetDownloadPathParams = {
   mediaId: string;
 };
 export type GetDownloadSearchParams = {
-  timeout_ms?: string;
+  timeout_ms?: number;
 };
 
 export type GetDownloadEndpoint = MatrixEndpoint<{
@@ -25,7 +25,7 @@ export type GetDownloadFilePathParams = {
   fileName: string;
 };
 export type GetDownloadFileSearchParams = {
-  timeout_ms?: string;
+  timeout_ms?: number;
 };
 export type GetDownloadFileEndpoint = MatrixEndpoint<{
   pathParams: GetDownloadFilePathParams;

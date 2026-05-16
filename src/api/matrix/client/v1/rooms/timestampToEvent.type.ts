@@ -8,7 +8,7 @@ export type GetTimestampToEventPathParams = {
 };
 export type GetTimestampToEventSearchParams = {
   dir: "b" | "f";
-  ts: string;
+  ts: number;
 };
 export type GetTimestampToEventOK = {
   event_id: string;

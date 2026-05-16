@@ -12,8 +12,8 @@ export type GetRelationsPathParams = {
 export type GetRelationsSearchParams = {
   dir?: "b" | "f";
   from?: string;
-  limit?: string;
-  recurse?: string;
+  limit?: number;
+  recurse?: boolean;
   to?: string;
 };
 
@@ -40,8 +40,8 @@ export type GetRelationsRelTypePathParams = {
 export type GetRelationsRelTypeSearchParams = {
   dir?: "b" | "f";
   from?: string;
-  limit?: string;
-  recurse?: string;
+  limit?: number;
+  recurse?: boolean;
   to?: string;
 };
 
@@ -69,8 +69,8 @@ export type GetRelationsRelTypeEventTypePathParams = {
 export type GetRelationsRelTypeEventTypeSearchParams = {
   dir?: "b" | "f";
   from?: string;
-  limit?: string;
-  recurse?: string;
+  limit?: number;
+  recurse?: boolean;
   to?: string;
 };
 

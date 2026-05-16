@@ -61,10 +61,10 @@ export type LeaveRoom = {
  */
 export type GetSyncSearchParams = {
   filter?: string;
-  full_state?: string;
+  full_state?: boolean;
   set_presence?: Presence;
   since?: string;
-  timeout?: string;
+  timeout?: number;
 };
 
 export type GetSyncOK = {

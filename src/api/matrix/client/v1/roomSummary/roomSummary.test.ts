@@ -7,7 +7,7 @@ test("get room summary request", () => {
     getRoomSummary({
       pathParams: { roomIdOrAlias },
       searchParams: {
-        via: "server.name",
+        via: ["server.name"],
       },
     }),
   ).toEqual({

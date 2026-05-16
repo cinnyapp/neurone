@@ -9,9 +9,9 @@ export type GetHierarchyPathParams = {
 };
 export type GetHierarchySearchParams = {
   from?: string;
-  limit?: string;
-  max_depth?: string;
-  suggested_only?: string;
+  limit?: number;
+  max_depth?: number;
+  suggested_only?: boolean;
 };
 
 export type GetHierarchyOK = {

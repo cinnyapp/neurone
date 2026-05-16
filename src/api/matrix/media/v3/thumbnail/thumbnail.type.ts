@@ -9,12 +9,12 @@ export type GetThumbnailPathParams = {
   mediaId: string;
 };
 export type GetThumbnailSearchParams = {
-  allow_redirect?: string;
-  allow_remote?: string;
-  height: string;
+  allow_redirect?: boolean;
+  allow_remote?: boolean;
+  height: number;
   method?: ThumbnailMethod;
-  timeout_ms?: string;
-  width: string;
+  timeout_ms?: number;
+  width: number;
 };
 export type GetThumbnailEndpoint = MatrixEndpoint<{
   pathParams: GetThumbnailPathParams;

@@ -10,7 +10,7 @@ test("post knock room with alias or id request", () => {
     postKnock({
       pathParams: { roomIdOrAlias },
       searchParams: {
-        via: "server.name",
+        via: ["server.name"],
       },
       body,
     }),

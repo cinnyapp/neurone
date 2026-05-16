@@ -5,7 +5,7 @@ import { PublicRoomsChunk, PublicRoomsFilter } from "../../../../types";
  * getPublicRooms types
  */
 export type GetPublicRoomsSearchParams = {
-  limit?: string;
+  limit?: number;
   server?: string;
   since?: string;
 };

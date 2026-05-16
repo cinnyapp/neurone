@@ -3,7 +3,7 @@ import { getPublicRooms, postPublicRooms } from "./publicRooms";
 test("get publicRooms request", () => {
   expect(
     getPublicRooms({
-      searchParams: { limit: "32" },
+      searchParams: { limit: 32 },
     }),
   ).toEqual({
     method: "GET",

@@ -7,7 +7,7 @@ test("get media thumbnail request", () => {
   expect(
     getThumbnail({
       pathParams: { serverName, mediaId },
-      searchParams: { width: "28", height: "28" },
+      searchParams: { width: 28, height: 28 },
     }),
   ).toEqual({
     method: "GET",

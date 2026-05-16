@@ -7,7 +7,7 @@ test("get media download request", () => {
   expect(
     getDownload({
       pathParams: { serverName, mediaId },
-      searchParams: { allow_redirect: "true" },
+      searchParams: { allow_redirect: true },
     }),
   ).toEqual({
     method: "GET",
@@ -24,7 +24,7 @@ test("get media download file request", () => {
   expect(
     getDownloadFile({
       pathParams: { serverName, mediaId, fileName },
-      searchParams: { allow_redirect: "true" },
+      searchParams: { allow_redirect: true },
     }),
   ).toEqual({
     method: "GET",

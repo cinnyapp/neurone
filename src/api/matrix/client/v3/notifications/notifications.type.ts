@@ -6,7 +6,7 @@ import { NotificationChunk } from "../../../../types";
  */
 export type GetNotificationsSearchParams = {
   from?: string;
-  limit?: string;
+  limit?: number;
   only?: string;
 };
 export type GetNotificationsOK = {

@@ -10,7 +10,7 @@ export type GetContextPathParams = {
 };
 export type GetContextSearchParams = {
   filter?: string;
-  limit?: string;
+  limit?: number;
 };
 export type GetContextOK = {
   end?: string;
