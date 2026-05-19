@@ -1,6 +1,7 @@
 export * from "./AccountDataEvent";
 export * from "./ClientEvent";
 export * from "./Device";
+export * from "./DeviceLists";
 export * from "./EphemeralEvent";
 export * from "./Filter";
 export * from "./Identifier";
