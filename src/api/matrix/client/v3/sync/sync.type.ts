@@ -2,6 +2,7 @@ import { MatrixEndpoint } from "../../../../MatrixEndpoint";
 import {
   AccountDataEvent,
   ClientEventWithoutRoomId,
+  DeviceLists,
   EphemeralEvent,
   Presence,
   PresenceEvent,
@@ -71,11 +72,9 @@ export type GetSyncOK = {
   account_data?: {
     events?: AccountDataEvent[];
   };
-  device_lists?: {
-    changed: string[];
-    left: string[];
-  };
+  device_lists?: DeviceLists;
   device_one_time_keys_count?: Record<string, number>;
+  device_unused_fallback_key_types?: string[];
   next_batch: string;
   presence?: {
     events?: PresenceEvent[];
