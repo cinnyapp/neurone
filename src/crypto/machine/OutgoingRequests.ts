@@ -75,6 +75,12 @@ export class OutgoingRequests {
     }
   }
 
+  async send(request: OutgoingRequest): Promise<void> {
+    return this.queue.enqueue(async () => {
+      await this.process(request);
+    });
+  }
+
   /**
    * Fetches and processes all pending OlmMachine requests sequentially.
    * Waits for everything already in the chain so the snapshot is taken
