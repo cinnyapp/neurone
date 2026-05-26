@@ -3,3 +3,6 @@ export * as sync from "./sync";
 export * from "./MatrixRequestRetrier";
 export * from "./MatrixUIAHandler";
 export * from "./AsyncTaskQueue";
+export * from "./ObjectReader";
+export * from "./randomString";
+export * from "./Base64";
