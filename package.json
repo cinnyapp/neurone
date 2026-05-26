@@ -39,6 +39,7 @@
   },
   "dependencies": {
     "@matrix-org/matrix-sdk-crypto-wasm": "17.1.0",
+    "bs58": "6.0.0",
     "idb": "8.0.0"
   }
 }
