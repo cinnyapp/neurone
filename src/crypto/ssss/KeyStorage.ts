@@ -1,9 +1,8 @@
 import { ObjectReader } from "../../utils";
-import { PassphraseAlgorithm, PassphraseInfo } from "./Passphrase";
+import { PASSPHRASE_ALGORITHM_PBKDF2, PassphraseInfo } from "./Passphrase";
 
-export enum SecretStorageAlgorithm {
-  V1_AES_HMAC_SHA2 = "m.secret_storage.v1.aes-hmac-sha2",
-}
+export const SECRET_STORAGE_ALGORITHM_V1_AES_HMAC_SHA2 =
+  "m.secret_storage.v1.aes-hmac-sha2";
 
 export type KeyDescription = {
   name?: string;
@@ -12,7 +11,7 @@ export type KeyDescription = {
 };
 
 export type AesHmacSha2KeyDescription = KeyDescription & {
-  algorithm: SecretStorageAlgorithm.V1_AES_HMAC_SHA2;
+  algorithm: typeof SECRET_STORAGE_ALGORITHM_V1_AES_HMAC_SHA2;
   iv?: string;
   mac?: string;
 };
@@ -31,7 +30,7 @@ export class KeyStorage {
     if (algo === undefined || salt === undefined || itr === undefined) {
       return undefined;
     }
-    if (algo !== PassphraseAlgorithm.PBKDF2) return undefined;
+    if (algo !== PASSPHRASE_ALGORITHM_PBKDF2) return undefined;
 
     const passphrase: PassphraseInfo = {
       algorithm: algo,
@@ -47,7 +46,7 @@ export class KeyStorage {
     data: unknown,
   ): AesHmacSha2KeyDescription | undefined {
     const algorithm = ObjectReader.string(data, "algorithm");
-    if (!algorithm || algorithm !== SecretStorageAlgorithm.V1_AES_HMAC_SHA2)
+    if (!algorithm || algorithm !== SECRET_STORAGE_ALGORITHM_V1_AES_HMAC_SHA2)
       return undefined;
 
     const passphrase = ObjectReader.object(data, "passphrase");

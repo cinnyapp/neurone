@@ -75,7 +75,7 @@ const key, passphrase;
 const { iv, mac } = await AesHmacSha2.driveKeyMetaData(key);
 
 const keyDescription: AesHmacSha2KeyDescription = {
-  algorithm: SecretStorageAlgorithm.V1_AES_HMAC_SHA2,
+  algorithm: SECRET_STORAGE_ALGORITHM_V1_AES_HMAC_SHA2,
   passphrase,
   iv,
   mac,

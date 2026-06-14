@@ -1,11 +1,9 @@
 import { randomString } from "../../utils";
 
-export enum PassphraseAlgorithm {
-  PBKDF2 = "m.pbkdf2",
-}
+export const PASSPHRASE_ALGORITHM_PBKDF2 = "m.pbkdf2";
 
 export type PassphraseInfo = {
-  algorithm: PassphraseAlgorithm.PBKDF2;
+  algorithm: typeof PASSPHRASE_ALGORITHM_PBKDF2;
   salt: string;
   iterations: number;
   bits?: number;
@@ -54,7 +52,7 @@ export class Passphrase {
     return {
       key: new Uint8Array(derivedBits),
       passphrase: {
-        algorithm: PassphraseAlgorithm.PBKDF2,
+        algorithm: PASSPHRASE_ALGORITHM_PBKDF2,
         salt,
         iterations,
         bits,
