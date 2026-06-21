@@ -81,6 +81,14 @@ export class OutgoingRequests {
     });
   }
 
+  async sendMultiple(requests: OutgoingRequest[]): Promise<void> {
+    await this.queue.enqueue(async () => {
+      for (const request of requests) {
+        await this.process(request);
+      }
+    });
+  }
+
   /**
    * Fetches and processes all pending OlmMachine requests sequentially.
    * Waits for everything already in the chain so the snapshot is taken
@@ -112,6 +120,23 @@ export class OutgoingRequests {
       if (request) {
         await this.process(request);
       }
+    });
+  }
+
+  /**
+   * Query device keys for the given Matrix users.
+   * Request by preparing `/keys/query` request and
+   * feed it to `olmMachine`
+   *
+   * @param users Matrix user IDs whose device keys should be queried.
+   */
+  async queryKeys(users: string[]): Promise<void> {
+    const request = this.olmMachine.queryKeysForUsers(
+      users.map((userId) => new UserId(userId)),
+    );
+
+    await this.queue.enqueue(async () => {
+      await this.process(request);
     });
   }
 
