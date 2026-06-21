@@ -2,6 +2,7 @@ import {
   OlmMachine,
   UserId,
   DeviceLists as CryptoDeviceLists,
+  ProcessedToDeviceEvent,
 } from "@matrix-org/matrix-sdk-crypto-wasm";
 import { DeviceLists, ToDeviceEvent } from "../../api/types";
 
@@ -74,7 +75,9 @@ export class SyncChanges {
    * @throws Error
    * Propagates errors thrown by the underlying `OlmMachine`.
    */
-  async receive(changes: EncryptionSyncChanges) {
+  async receive(
+    changes: EncryptionSyncChanges,
+  ): Promise<ProcessedToDeviceEvent[]> {
     const deviceLists = new CryptoDeviceLists(
       changes.deviceLists?.changed.map((userId) => new UserId(userId)),
       changes.deviceLists?.left.map((userId) => new UserId(userId)),
