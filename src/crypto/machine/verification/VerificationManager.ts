@@ -3,8 +3,10 @@ import {
   EventId,
   OlmMachine,
   OtherUserIdentity,
+  OwnUserIdentity,
   RoomId,
   UserId,
+  VerificationRequest,
 } from "@matrix-org/matrix-sdk-crypto-wasm";
 import { ClientEventWithoutRoomId, ToDeviceEvent } from "../../../api/types";
 import { OutgoingRequests } from "../OutgoingRequests";
@@ -56,6 +58,14 @@ export class VerificationManager {
     );
   }
 
+  private verificationFlow(
+    verificationRequest: VerificationRequest,
+  ): OutboundVerification | InboundVerification {
+    return verificationRequest.weStarted()
+      ? new OutboundVerification(this.outgoingRequests, verificationRequest)
+      : new InboundVerification(this.outgoingRequests, verificationRequest);
+  }
+
   async receiveMessageEvent(
     roomId: string,
     event: ClientEventWithoutRoomId,
@@ -87,11 +97,7 @@ export class VerificationManager {
       );
 
       if (verificationRequest) {
-        const verificationFlow = verificationRequest.weStarted()
-          ? new OutboundVerification(this.outgoingRequests, verificationRequest)
-          : new InboundVerification(this.outgoingRequests, verificationRequest);
-
-        onVerificationRequest(verificationFlow);
+        onVerificationRequest(this.verificationFlow(verificationRequest));
       }
     }
   }
@@ -114,11 +120,32 @@ export class VerificationManager {
       txnId,
     );
     if (verificationRequest) {
-      const verificationFlow = verificationRequest.weStarted()
-        ? new OutboundVerification(this.outgoingRequests, verificationRequest)
-        : new InboundVerification(this.outgoingRequests, verificationRequest);
+      onVerificationRequest(this.verificationFlow(verificationRequest));
+    }
+  }
 
-      onVerificationRequest(verificationFlow);
+  async requestVerification(
+    myUserId: string,
+    supportedMethods: VerificationMethod[],
+  ): Promise<OutboundVerification | InboundVerification> {
+    const userIdentity = await this.olmMachine.getIdentity(
+      new UserId(myUserId),
+    );
+    if (!(userIdentity instanceof OwnUserIdentity)) {
+      throw new Error("Failed to find own user identity!");
+    }
+
+    try {
+      const [verificationRequest, toDeviceRequest] =
+        await userIdentity.requestVerification(
+          supportedMethods.map((method) => verificationMethodToRust(method)),
+        );
+
+      await this.outgoingRequests.send(toDeviceRequest);
+
+      return this.verificationFlow(verificationRequest);
+    } finally {
+      userIdentity.free();
     }
   }
 
@@ -126,7 +153,7 @@ export class VerificationManager {
     userId: string,
     deviceId: string,
     supportedMethods: VerificationMethod[],
-  ): Promise<OutboundVerification> {
+  ): Promise<OutboundVerification | InboundVerification> {
     const device = await this.olmMachine.getDevice(
       new UserId(userId),
       new DeviceId(deviceId),
@@ -146,10 +173,7 @@ export class VerificationManager {
 
       await this.outgoingRequests.send(toDeviceRequest);
 
-      return new OutboundVerification(
-        this.outgoingRequests,
-        verificationRequest,
-      );
+      return this.verificationFlow(verificationRequest);
     } finally {
       device.free();
     }
@@ -159,8 +183,8 @@ export class VerificationManager {
     userId: string,
     roomId: string,
     supportedMethods: VerificationMethod[],
-    matrixRequest: MatrixRequest,
-  ): Promise<OutboundVerification> {
+    request: MatrixRequest,
+  ): Promise<OutboundVerification | InboundVerification> {
     const userIdentity = await this.olmMachine.getIdentity(new UserId(userId));
 
     if (!(userIdentity instanceof OtherUserIdentity)) {
@@ -176,7 +200,7 @@ export class VerificationManager {
       );
       const txnId = randomString(16);
 
-      const response = await matrixRequest(
+      const response = await request(
         putSend({
           pathParams: {
             roomId,
@@ -192,13 +216,13 @@ export class VerificationManager {
         throw err;
       }
 
-      const request = await userIdentity.requestVerification(
+      const verificationRequest = await userIdentity.requestVerification(
         new RoomId(roomId),
         new EventId(result.event_id),
         methods,
       );
 
-      return new OutboundVerification(this.outgoingRequests, request);
+      return this.verificationFlow(verificationRequest);
     } finally {
       userIdentity.free();
     }
