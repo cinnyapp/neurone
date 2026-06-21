@@ -38,7 +38,7 @@
     "typescript": "5.3.3"
   },
   "dependencies": {
-    "@matrix-org/matrix-sdk-crypto-wasm": "17.1.0",
+    "@matrix-org/matrix-sdk-crypto-wasm": "18.3.1",
     "bs58": "6.0.0",
     "idb": "8.0.0"
   }
