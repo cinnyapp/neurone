@@ -1,6 +1,8 @@
 import {
   DeviceId,
+  EventId,
   OlmMachine,
+  OtherUserIdentity,
   RoomId,
   UserId,
 } from "@matrix-org/matrix-sdk-crypto-wasm";
@@ -10,6 +12,9 @@ import { VerificationMethod } from "./types";
 import { verificationMethodToRust } from "./utils";
 import { OutboundVerification } from "./OutboundVerification";
 import { InboundVerification } from "./InboundVerification";
+import { MatrixRequest, parseMatrixResp } from "../../../matrix-request";
+import { putSend, PutSendOK } from "../../../api/matrix/client/v3/rooms";
+import { randomString } from "../../../utils";
 
 export class VerificationManager {
   private readonly olmMachine: OlmMachine;
@@ -141,14 +146,61 @@ export class VerificationManager {
 
       await this.outgoingRequests.send(toDeviceRequest);
 
-      const verificationFlow = new OutboundVerification(
+      return new OutboundVerification(
         this.outgoingRequests,
         verificationRequest,
       );
-      return verificationFlow;
     } finally {
       device.free();
     }
   }
-  // TODO: request dm verification
+
+  async requestDMVerification(
+    userId: string,
+    roomId: string,
+    supportedMethods: VerificationMethod[],
+    matrixRequest: MatrixRequest,
+  ): Promise<OutboundVerification> {
+    const userIdentity = await this.olmMachine.getIdentity(new UserId(userId));
+
+    if (!(userIdentity instanceof OtherUserIdentity)) {
+      throw new Error("User identity not found!");
+    }
+
+    try {
+      const methods = supportedMethods.map((method) =>
+        verificationMethodToRust(method),
+      );
+      const content = JSON.parse(
+        await userIdentity.verificationRequestContent(methods),
+      );
+      const txnId = randomString(16);
+
+      const response = await matrixRequest(
+        putSend({
+          pathParams: {
+            roomId,
+            eventType: "m.room.message",
+            txnId,
+          },
+          body: content,
+        }),
+      );
+
+      const [err, result] = await parseMatrixResp<PutSendOK>(response);
+      if (err) {
+        throw err;
+      }
+
+      const request = await userIdentity.requestVerification(
+        new RoomId(roomId),
+        new EventId(result.event_id),
+        methods,
+      );
+
+      return new OutboundVerification(this.outgoingRequests, request);
+    } finally {
+      userIdentity.free();
+    }
+  }
 }
