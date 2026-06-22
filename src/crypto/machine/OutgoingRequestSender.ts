@@ -95,7 +95,7 @@ export class OutgoingRequestSender {
     );
   }
 
-  private sendKeysClaimRequest(r: KeysQueryRequest) {
+  private sendKeysClaimRequest(r: KeysClaimRequest) {
     return this.request(
       postClaim({ body: JSON.parse(r.body) }),
       this.abortSignal,
