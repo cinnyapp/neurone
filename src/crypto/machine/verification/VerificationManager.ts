@@ -5,6 +5,7 @@ import {
   OtherUserIdentity,
   OwnUserIdentity,
   RoomId,
+  RoomMessageRequest,
   UserId,
   VerificationRequest,
 } from "@matrix-org/matrix-sdk-crypto-wasm";
@@ -14,8 +15,8 @@ import { VerificationMethod } from "./types";
 import { verificationMethodToRust } from "./utils";
 import { OutboundVerification } from "./OutboundVerification";
 import { InboundVerification } from "./InboundVerification";
-import { MatrixRequest, parseMatrixResp } from "../../../matrix-request";
-import { putSend, PutSendOK } from "../../../api/matrix/client/v3/rooms";
+import { parseMatrixResp } from "../../../matrix-request";
+import { PutSendOK } from "../../../api/matrix/client/v3/rooms";
 import { randomString } from "../../../utils";
 
 export class VerificationManager {
@@ -183,7 +184,6 @@ export class VerificationManager {
     userId: string,
     roomId: string,
     supportedMethods: VerificationMethod[],
-    request: MatrixRequest,
   ): Promise<OutboundVerification | InboundVerification> {
     const userIdentity = await this.olmMachine.getIdentity(new UserId(userId));
 
@@ -195,20 +195,18 @@ export class VerificationManager {
       const methods = supportedMethods.map((method) =>
         verificationMethodToRust(method),
       );
-      const content = JSON.parse(
-        await userIdentity.verificationRequestContent(methods),
-      );
+      const content = await userIdentity.verificationRequestContent(methods);
       const txnId = randomString(16);
+      const requestId = randomString(16);
 
-      const response = await request(
-        putSend({
-          pathParams: {
-            roomId,
-            eventType: "m.room.message",
-            txnId,
-          },
-          body: content,
-        }),
+      const response = await this.outgoingRequests.send(
+        new RoomMessageRequest(
+          requestId,
+          roomId,
+          txnId,
+          "m.room.message",
+          content,
+        ),
       );
 
       const [err, result] = await parseMatrixResp<PutSendOK>(response);

@@ -46,45 +46,43 @@ export class OutgoingRequests {
    * If the request succeeds, it is marked as sent in the `OlmMachine`
    * so it will not be retried again.
    *
-   * Failed requests are logged and safely ignored to avoid blocking
-   * subsequent queued operations.
-   *
    * @param request Outgoing crypto request to process.
+   * @returns Response of network request.
    */
-  private async process(request: OutgoingRequest): Promise<void> {
-    try {
-      const response = await this.retrier.execute(() =>
-        this.sender.send(request),
+  private async process(request: OutgoingRequest): Promise<Response> {
+    const response = await this.retrier.execute(() =>
+      this.sender.send(request),
+    );
+
+    const respText = await response.text();
+
+    if (response.ok && request.id) {
+      await this.olmMachine.markRequestAsSent(
+        request.id,
+        request.type,
+        respText,
       );
+    }
 
-      const respText = await response.text();
+    return response;
+  }
 
-      if (!response.ok) {
-        throw new Error(`${request.type} is not OK. ${respText}`);
-      }
-
-      if (request.id) {
-        await this.olmMachine.markRequestAsSent(
-          request.id,
-          request.type,
-          respText,
-        );
-      }
+  private async processBestEffort(request: OutgoingRequest): Promise<void> {
+    try {
+      await this.process(request);
     } catch (e) {
-      console.error(`MachineOutgoingRequest: ${e}`);
+      console.error(`OutgoingRequests: ${e}`);
     }
   }
 
-  async send(request: OutgoingRequest): Promise<void> {
-    return this.queue.enqueue(async () => {
-      await this.process(request);
-    });
+  async send(request: OutgoingRequest): Promise<Response> {
+    return this.queue.enqueue(async () => await this.process(request));
   }
 
   async sendMultiple(requests: OutgoingRequest[]): Promise<void> {
     await this.queue.enqueue(async () => {
       for (const request of requests) {
-        await this.process(request);
+        await this.processBestEffort(request);
       }
     });
   }
@@ -100,7 +98,7 @@ export class OutgoingRequests {
       const requests = await this.olmMachine.outgoingRequests();
 
       for (const request of requests) {
-        await this.process(request);
+        await this.processBestEffort(request);
       }
     });
   }
@@ -118,7 +116,7 @@ export class OutgoingRequests {
       );
 
       if (request) {
-        await this.process(request);
+        await this.processBestEffort(request);
       }
     });
   }
@@ -136,7 +134,7 @@ export class OutgoingRequests {
     );
 
     await this.queue.enqueue(async () => {
-      await this.process(request);
+      await this.processBestEffort(request);
     });
   }
 
@@ -161,7 +159,7 @@ export class OutgoingRequests {
       if (!Array.isArray(requests)) return;
 
       for (const request of requests) {
-        await this.process(request);
+        await this.processBestEffort(request);
       }
     });
   }
