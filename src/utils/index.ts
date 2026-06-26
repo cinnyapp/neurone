@@ -6,3 +6,4 @@ export * from "./AsyncTaskQueue";
 export * from "./ObjectReader";
 export * from "./randomString";
 export * from "./Base64";
+export * from "./sleep";
