@@ -20,8 +20,9 @@ export interface MatrixUIAData {
  * Responsibilities:
  * - detect UIA responses
  * - publish UIA request state
- * - suspend execution until retry() is called
+ * - suspend execution until retry() or clear() is called
  * - retry request with auth dict
+ * - clear request
  */
 export class MatrixUIAHandler {
   private readonly publishKey = Math.random().toString();
@@ -46,6 +47,10 @@ export class MatrixUIAHandler {
       }
 
       auth = await this.waitForRetry(uiaError);
+
+      if (!auth) {
+        return response;
+      }
     }
   }
 
@@ -72,28 +77,36 @@ export class MatrixUIAHandler {
 
   private waitForRetry(
     error: MatrixError<MatrixUIAData>,
-  ): Promise<Record<string, unknown>> {
+  ): Promise<Record<string, unknown> | undefined> {
     return new Promise((resolve) => {
       this.observable.publish(this.publishKey, error);
 
-      this.pendingRetryResolver = resolve;
+      this.pendingRetryResolver = (auth?: Record<string, unknown>) => {
+        this.observable.publish(this.publishKey, undefined);
+        resolve(auth);
+      };
     });
   }
 
-  private pendingRetryResolver?: (auth: Record<string, unknown>) => void;
+  private pendingRetryResolver?: (auth?: Record<string, unknown>) => void;
 
   /**
    * Retries the suspended UIA request with auth data.
    */
   retry(auth: Record<string, unknown>): void {
-    if (!this.pendingRetryResolver) {
-      throw new Error("No pending UIA request to retry");
-    }
-
     const resolve = this.pendingRetryResolver;
-
     this.pendingRetryResolver = undefined;
 
-    resolve(auth);
+    resolve?.(auth);
+  }
+
+  /**
+   * Clear suspended UIA auth data request.
+   */
+  clear(): void {
+    const resolve = this.pendingRetryResolver;
+    this.pendingRetryResolver = undefined;
+
+    resolve?.();
   }
 }
