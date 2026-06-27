@@ -3,5 +3,8 @@ export * from "./OutgoingRequestSender";
 export * from "./OutgoingRequests";
 export * from "./SyncChanges";
 export * from "./UserTracker";
+export * from "./MachineEvents";
+export * from "./utils";
+export * from "./types";
 export * as verification from "./verification";
 export * as backup from "./backup";
