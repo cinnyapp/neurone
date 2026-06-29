@@ -1,9 +1,6 @@
 import {
   BackupDecryptionKey,
-  CollectStrategy,
   OlmMachine,
-  RoomId,
-  UserId,
 } from "@matrix-org/matrix-sdk-crypto-wasm";
 import { Base64, ObjectReader } from "../../../utils";
 import { BackupVersionInfo } from "../../../api/types";
@@ -14,21 +11,6 @@ export class BackupManager {
   private readonly olmMachine: OlmMachine;
 
   private readonly outgoingRequests: OutgoingRequests;
-
-  static encryptExportedRoomKeys(
-    roomKeys: string,
-    passphrase: string,
-    round: number,
-  ): string {
-    return OlmMachine.encryptExportedRoomKeys(roomKeys, passphrase, round);
-  }
-
-  static decryptExportedRoomKeys(
-    encryptedRoomKeys: string,
-    passphrase: string,
-  ): string {
-    return OlmMachine.decryptExportedRoomKeys(encryptedRoomKeys, passphrase);
-  }
 
   static createBackupKey() {
     const key = BackupDecryptionKey.createRandomKey();
@@ -83,46 +65,5 @@ export class BackupManager {
     const decryptionKey = BackupDecryptionKey.fromBase64(Base64.encode(key));
 
     await this.olmMachine.saveBackupDecryptionKey(decryptionKey, version);
-  }
-
-  async hasDownloadedAllRoomKeys(roomId: string): Promise<boolean> {
-    return this.olmMachine.hasDownloadedAllRoomKeys(new RoomId(roomId));
-  }
-
-  async setDownloadedAllRoomKeys(roomId: string): Promise<void> {
-    await this.olmMachine.setHasDownloadedAllRoomKeys(new RoomId(roomId));
-  }
-
-  async buildRoomKeyBundle(roomId: string): Promise<
-    | undefined
-    | {
-        encryptedData: Uint8Array<ArrayBufferLike>;
-        mediaEncryptionInfo?: string;
-      }
-  > {
-    const bundle = await this.olmMachine.buildRoomKeyBundle(new RoomId(roomId));
-    if (!bundle) return undefined;
-    const { encryptedData, mediaEncryptionInfo } = bundle;
-    return {
-      encryptedData,
-      mediaEncryptionInfo,
-    };
-  }
-
-  async shareRoomKeyBundleData(
-    roomId: string,
-    userId: string,
-    contentUri: string,
-    encryptionInfo: string | undefined,
-  ) {
-    const requests = await this.olmMachine.shareRoomKeyBundleData(
-      new UserId(userId),
-      new RoomId(roomId),
-      contentUri,
-      encryptionInfo,
-      CollectStrategy.identityBasedStrategy(),
-    );
-
-    await this.outgoingRequests.sendMultiple(requests);
   }
 }

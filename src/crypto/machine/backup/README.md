@@ -116,28 +116,6 @@ This uploads any keys that have not yet been backed up.
 
 ---
 
-# Monitoring Backup Progress
-
-Retrieve the number of room keys:
-
-```ts
-const counts = await keyBackup.roomKeyCounts();
-
-console.log(counts.total);
-console.log(counts.backedUp);
-```
-
-Example output:
-
-```ts
-{
-    total: 128,
-    backedUp: 124
-}
-```
-
----
-
 # Receiving a Recovery Key Secret
 
 If the recovery key is received through Matrix Secret Storage (SSSS):
@@ -155,7 +133,7 @@ The key is verified before being stored.
 After downloading the encrypted backup payload from the homeserver:
 
 ```ts
-await keyBackup.importRoomKeys(roomToKeyBackup, (progress, total, failures) => {
+await keyBackup.importBackup(roomToKeyBackup, (progress, total, failures) => {
   console.log(progress, total, failures);
 });
 ```
@@ -165,118 +143,6 @@ This process:
 1. retrieves the stored backup decryption key
 2. decrypts every session
 3. imports all recovered room keys into the local crypto store
-
----
-
-# Exporting Room Keys
-
-To export all local room keys:
-
-```ts
-const json = await keyBackup.exportRoomKeysToJson();
-```
-
-The returned JSON can be saved to disk or encrypted for backup purposes.
-
----
-
-# Importing Exported Room Keys
-
-```ts
-await keyBackup.importRoomKeysFromJson(exportedJson, (progress, total) => {
-  console.log(progress, total);
-});
-```
-
-This imports room keys previously exported from another device.
-
----
-
-# Encrypting Exported Room Keys
-
-To password-protect exported keys:
-
-```ts
-const encrypted = BackupManager.encryptExportedRoomKeys(
-  exportedJson,
-  password,
-  500000,
-);
-```
-
-Arguments:
-
-- exported room keys JSON
-- passphrase
-- PBKDF2 round count
-
-The returned string can safely be stored as an encrypted backup.
-
----
-
-# Decrypting Exported Room Keys
-
-```ts
-const decrypted = BackupManager.decryptExportedRoomKeys(
-  encryptedBackup,
-  password,
-);
-```
-
-Returns the original exported room key JSON.
-
----
-
-# Room Key Bundle Support
-
-## Build a Room Key Bundle
-
-```ts
-const bundle = await backupManager.buildRoomKeyBundle(roomId);
-```
-
-Returns:
-
-```ts
-{
-  encryptedData, mediaEncryptionInfo;
-}
-```
-
-or `undefined` if no bundle exists.
-
----
-
-## Share a Room Key Bundle
-
-```ts
-await backupManager.shareRoomKeyBundleData(
-  roomId,
-  userId,
-  contentUri,
-  mediaEncryptionInfo,
-);
-```
-
-This creates and sends the required Matrix to-device requests for securely sharing room key bundle metadata.
-
----
-
-# Tracking Downloaded Room Keys
-
-Check whether all room keys have already been downloaded:
-
-```ts
-const downloaded = await backupManager.hasDownloadedAllRoomKeys(roomId);
-```
-
-Mark a room as fully restored:
-
-```ts
-await backupManager.setDownloadedAllRoomKeys(roomId);
-```
-
-This can be used to avoid repeated key downloads.
 
 ---
 
@@ -331,9 +197,9 @@ Import room keys
 
 # Summary
 
-| Class           | Responsibility                                                                      |
-| --------------- | ----------------------------------------------------------------------------------- |
-| `BackupManager` | Backup setup, trust verification, recovery key management, room key bundle handling |
-| `KeyBackup`     | Uploading, restoring, exporting, importing, and decrypting room keys                |
+| Class           | Responsibility                                            |
+| --------------- | --------------------------------------------------------- |
+| `BackupManager` | Backup setup, trust verification, recovery key management |
+| `KeyBackup`     | Uploading, restoring, and decrypting room keys            |
 
 Together these classes provide a complete interface for managing Matrix end-to-end encryption key backups.

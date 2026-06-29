@@ -111,18 +111,7 @@ export class KeyBackup {
     return this.outgoingRequests.send(request);
   }
 
-  async roomKeyCounts(): Promise<{
-    total: number;
-    backedUp: number;
-  }> {
-    const keyCount = await this.olmMachine.roomKeyCounts();
-    return {
-      total: keyCount.total,
-      backedUp: keyCount.backedUp,
-    };
-  }
-
-  async importRoomKeys(
+  async importBackup(
     roomToKeyBackup: Record<string, RoomKeyBackup>,
     progress: (progress: bigint, total: bigint, failures: bigint) => void,
   ): Promise<void> {
@@ -142,17 +131,5 @@ export class KeyBackup {
       progress,
       this.backupInfo.version,
     );
-  }
-
-  async importRoomKeysFromJson(
-    roomKeys: string,
-    progress: (progress: bigint, total: bigint) => void,
-  ): Promise<void> {
-    await this.olmMachine.importExportedRoomKeys(roomKeys, progress);
-  }
-
-  async exportRoomKeysToJson(): Promise<string> {
-    const keysJSON = await this.olmMachine.exportRoomKeys(() => true);
-    return keysJSON;
   }
 }

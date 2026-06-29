@@ -1,5 +1,17 @@
-import { EncryptionAlgorithm as RustEncryptionAlgorithm } from "@matrix-org/matrix-sdk-crypto-wasm";
-import { EncryptionAlgorithm } from "./types";
+import {
+  EncryptionInfo,
+  RoomSettings,
+  EncryptionAlgorithm as RustEncryptionAlgorithm,
+  ShieldColor,
+  ShieldStateCode,
+} from "@matrix-org/matrix-sdk-crypto-wasm";
+import {
+  EncryptionAlgorithm,
+  EncryptionShieldCode,
+  EncryptionShieldColor,
+  EventEncryptionInfo,
+  RoomEncryptionSettings,
+} from "./types";
 
 export function encryptionAlgorithmFromRust(
   algorithm: RustEncryptionAlgorithm,
@@ -13,4 +25,91 @@ export function encryptionAlgorithmFromRust(
   }
 
   return undefined;
+}
+
+export function encryptionAlgorithmToRust(
+  algorithm: EncryptionAlgorithm | undefined,
+): RustEncryptionAlgorithm {
+  if (algorithm === "m.megolm.v1.aes-sha2") {
+    return RustEncryptionAlgorithm.MegolmV1AesSha2;
+  }
+
+  if (algorithm === "m.olm.v1.curve25519-aes-sha2") {
+    return RustEncryptionAlgorithm.OlmV1Curve25519AesSha2;
+  }
+
+  return RustEncryptionAlgorithm.Unknown;
+}
+
+export function roomEncryptionSettingsFromRust(
+  settings: RoomSettings,
+): RoomEncryptionSettings {
+  return {
+    algorithm: encryptionAlgorithmFromRust(settings.algorithm),
+    encryptStateEvents: settings.encryptStateEvents,
+    onlyAllowTrustedDevices: settings.onlyAllowTrustedDevices,
+    sessionRotationPeriodMessages: settings.sessionRotationPeriodMessages,
+    sessionRotationPeriodMs: settings.sessionRotationPeriodMs,
+  };
+}
+
+export function roomEncryptionSettingsToRust(
+  settings: RoomEncryptionSettings,
+): RoomSettings {
+  const rustSettings = new RoomSettings();
+  rustSettings.algorithm = encryptionAlgorithmToRust(settings.algorithm);
+  rustSettings.encryptStateEvents = settings.encryptStateEvents;
+  rustSettings.onlyAllowTrustedDevices = settings.onlyAllowTrustedDevices;
+  rustSettings.sessionRotationPeriodMessages =
+    settings.sessionRotationPeriodMessages;
+  rustSettings.sessionRotationPeriodMs = settings.sessionRotationPeriodMs;
+
+  return rustSettings;
+}
+
+export function encryptionShieldColorFromRust(
+  color: ShieldColor,
+): EncryptionShieldColor {
+  if (color === ShieldColor.Red) return "red";
+  if (color === ShieldColor.Grey) return "grey";
+  return "none";
+}
+
+export function encryptionShieldCodeFromRust(
+  code?: ShieldStateCode,
+): EncryptionShieldCode | undefined {
+  switch (code) {
+    case ShieldStateCode.AuthenticityNotGuaranteed:
+      return "authenticity-not-guaranteed";
+    case ShieldStateCode.UnknownDevice:
+      return "unknown-device";
+    case ShieldStateCode.UnsignedDevice:
+      return "unsigned-device";
+    case ShieldStateCode.UnverifiedIdentity:
+      return "unverified-identity";
+    case ShieldStateCode.VerificationViolation:
+      return "verification-violation";
+    case ShieldStateCode.MismatchedSender:
+      return "mismatched-sender";
+  }
+  return undefined;
+}
+
+export function eventEncryptionInfoFromRust(
+  info: EncryptionInfo,
+): EventEncryptionInfo {
+  const shield = info.shieldState(false);
+
+  return {
+    sender: info.sender.toString(),
+    deviceId: info.senderDevice?.toString(),
+    claimedEd25519Key: info.senderClaimedEd25519Key,
+    forwarder: info.forwarder?.toString(),
+    forwardDeviceId: info.forwarderDevice?.toString(),
+    shield: {
+      code: encryptionShieldCodeFromRust(shield.code),
+      color: encryptionShieldColorFromRust(shield.color),
+      message: shield.message,
+    },
+  };
 }

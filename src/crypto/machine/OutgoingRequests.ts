@@ -1,9 +1,6 @@
 import {
-  EncryptionSettings,
   OlmMachine,
   OutgoingRequest,
-  RoomId,
-  ToDeviceRequest,
   UserId,
 } from "@matrix-org/matrix-sdk-crypto-wasm";
 import { OutgoingRequestSender } from "./OutgoingRequestSender";
@@ -135,32 +132,6 @@ export class OutgoingRequests {
 
     await this.queue.enqueue(async () => {
       await this.processBestEffort(request);
-    });
-  }
-
-  /**
-   * Shares the room encryption key with the provided users.
-   *
-   * This generates one or more to-device requests required for
-   * securely distributing the Megolm session key to devices that
-   * do not yet have it.
-   *
-   * @param roomId Matrix room ID whose encryption keys should be shared.
-   * @param users Matrix user IDs that should receive the room keys.
-   */
-  async shareRoomKeys(roomId: string, users: string[]): Promise<void> {
-    return this.queue.enqueue(async () => {
-      const requests: ToDeviceRequest[] = await this.olmMachine.shareRoomKey(
-        new RoomId(roomId),
-        users.map((userId) => new UserId(userId)),
-        // TODO: implement encryption settings
-        new EncryptionSettings(),
-      );
-      if (!Array.isArray(requests)) return;
-
-      for (const request of requests) {
-        await this.processBestEffort(request);
-      }
     });
   }
 }

@@ -16,3 +16,36 @@ export type RoomKeyWithheldInfo = {
   sessionId: string;
   withheldCode: string;
 };
+
+export type RoomEncryptionSettings = {
+  algorithm?: EncryptionAlgorithm;
+  encryptStateEvents: boolean;
+  onlyAllowTrustedDevices: boolean;
+  sessionRotationPeriodMessages?: number;
+  sessionRotationPeriodMs?: number;
+};
+
+export type EncryptionShieldColor = "red" | "grey" | "none";
+
+export type EncryptionShieldCode =
+  | "authenticity-not-guaranteed"
+  | "unknown-device"
+  | "unsigned-device"
+  | "unverified-identity"
+  | "verification-violation"
+  | "mismatched-sender";
+
+export type EncryptionShield = {
+  color: EncryptionShieldColor;
+  code?: EncryptionShieldCode;
+  message?: string;
+};
+
+export type EventEncryptionInfo = {
+  sender: string;
+  deviceId?: string;
+  claimedEd25519Key?: string;
+  forwarder?: string;
+  forwardDeviceId?: string;
+  shield: EncryptionShield;
+};
