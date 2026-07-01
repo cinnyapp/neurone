@@ -4,6 +4,7 @@ export * from "./OutgoingRequests";
 export * from "./OutgoingRequestSender";
 export * from "./RoomEncryption";
 export * from "./RoomKeys";
+export * from "./Secrets";
 export * from "./SyncChanges";
 export * from "./types";
 export * from "./utils";
