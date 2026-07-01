@@ -49,6 +49,22 @@ export class RoomKeys {
     this.outgoingRequests = outgoingRequests;
   }
 
+  get roomKeyForwardingEnabled(): boolean {
+    return this.roomKeyForwardingEnabled;
+  }
+
+  set roomKeyForwardingEnabled(enabled: boolean) {
+    this.roomKeyForwardingEnabled = enabled;
+  }
+
+  get roomKeyRequestsEnabled(): boolean {
+    return this.roomKeyRequestsEnabled;
+  }
+
+  set roomKeyRequestsEnabled(enabled: boolean) {
+    this.roomKeyRequestsEnabled = enabled;
+  }
+
   async count(): Promise<RoomKeyCount> {
     const keyCount = await this.olmMachine.roomKeyCounts();
     return {
