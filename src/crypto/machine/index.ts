@@ -6,7 +6,7 @@ export * from "./RoomEncryption";
 export * from "./RoomKeys";
 export * from "./SyncChanges";
 export * from "./types";
-export * from "./UserTracker";
 export * from "./utils";
+export * as user from "./user";
 export * as verification from "./verification";
 export * as backup from "./backup";
