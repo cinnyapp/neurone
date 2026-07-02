@@ -25,6 +25,27 @@ export type RoomEncryptionSettings = {
   sessionRotationPeriodMs?: number;
 };
 
+export type HistoryVisibility =
+  | "world_readable"
+  | "shared"
+  | "invited"
+  | "joined";
+
+export type DeviceCollectStrategy =
+  | "all-devices"
+  | "error-on-verified-user-problems"
+  | "identity-based"
+  | "only-trusted-devices";
+
+export type EncryptionSettings = {
+  algorithm: EncryptionAlgorithm;
+  encryptStateEvents: boolean;
+  historyVisibility: HistoryVisibility;
+  rotationPeriodMessages: number;
+  rotationPeriod: number;
+  sharingStrategy: DeviceCollectStrategy;
+};
+
 export type EncryptionShieldColor = "red" | "grey" | "none";
 
 export type EncryptionShieldCode =

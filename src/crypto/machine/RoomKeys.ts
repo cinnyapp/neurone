@@ -1,12 +1,13 @@
 import {
   CollectStrategy,
-  EncryptionSettings,
   OlmMachine,
   RoomId,
   StoredRoomKeyBundleData,
   UserId,
 } from "@matrix-org/matrix-sdk-crypto-wasm";
 import { OutgoingRequests } from "./OutgoingRequests";
+import { EncryptionSettings } from "./types";
+import { encryptionSettingsToRust } from "./utils";
 
 export type RoomKeyCount = {
   total: number;
@@ -91,12 +92,15 @@ export class RoomKeys {
    * @param roomId Matrix room ID whose encryption keys should be shared.
    * @param users Matrix user IDs that should receive the room keys.
    */
-  async shareRoomKey(roomId: string, users: string[]): Promise<void> {
+  async shareRoomKey(
+    roomId: string,
+    users: string[],
+    encryptionSettings: EncryptionSettings,
+  ): Promise<void> {
     const requests = await this.olmMachine.shareRoomKey(
       new RoomId(roomId),
       users.map((userId) => new UserId(userId)),
-      // TODO: implement encryption settings
-      new EncryptionSettings(),
+      encryptionSettingsToRust(encryptionSettings),
     );
     if (!Array.isArray(requests)) return;
 

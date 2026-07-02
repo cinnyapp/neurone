@@ -1,15 +1,21 @@
 import {
+  CollectStrategy,
   EncryptionInfo,
   RoomSettings,
   EncryptionAlgorithm as RustEncryptionAlgorithm,
+  HistoryVisibility as RustHistoryVisibility,
+  EncryptionSettings as RustEncryptionSettings,
   ShieldColor,
   ShieldStateCode,
 } from "@matrix-org/matrix-sdk-crypto-wasm";
 import {
+  DeviceCollectStrategy,
   EncryptionAlgorithm,
+  EncryptionSettings,
   EncryptionShieldCode,
   EncryptionShieldColor,
   EventEncryptionInfo,
+  HistoryVisibility,
   RoomEncryptionSettings,
 } from "./types";
 
@@ -112,4 +118,56 @@ export function eventEncryptionInfoFromRust(
       message: shield.message,
     },
   };
+}
+
+export function historyVisibilityToRust(
+  visibility: HistoryVisibility,
+): RustHistoryVisibility {
+  switch (visibility) {
+    case "invited":
+      return RustHistoryVisibility.Invited;
+    case "joined":
+      return RustHistoryVisibility.Joined;
+    case "shared":
+      return RustHistoryVisibility.Shared;
+    case "world_readable":
+      return RustHistoryVisibility.WorldReadable;
+  }
+}
+
+export function deviceCollectStrategyToRust(
+  strategy: DeviceCollectStrategy,
+): CollectStrategy {
+  switch (strategy) {
+    case "all-devices":
+      return CollectStrategy.allDevices();
+    case "error-on-verified-user-problems":
+      return CollectStrategy.errorOnUnverifiedUserProblem();
+    case "identity-based":
+      return CollectStrategy.identityBasedStrategy();
+    case "only-trusted-devices":
+      return CollectStrategy.onlyTrustedDevices();
+  }
+}
+
+export function encryptionSettingsToRust(
+  encryptionSettings: EncryptionSettings,
+): RustEncryptionSettings {
+  const rustEncSettings = new RustEncryptionSettings();
+  rustEncSettings.algorithm = encryptionAlgorithmToRust(
+    encryptionSettings.algorithm,
+  );
+  rustEncSettings.encryptStateEvents = encryptionSettings.encryptStateEvents;
+  rustEncSettings.rotationPeriodMessages = BigInt(
+    encryptionSettings.rotationPeriodMessages,
+  );
+  rustEncSettings.rotationPeriod = BigInt(encryptionSettings.rotationPeriod);
+  rustEncSettings.sharingStrategy = deviceCollectStrategyToRust(
+    encryptionSettings.sharingStrategy,
+  );
+  rustEncSettings.historyVisibility = historyVisibilityToRust(
+    encryptionSettings.historyVisibility,
+  );
+
+  return rustEncSettings;
 }
