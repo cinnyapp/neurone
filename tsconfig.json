@@ -10,7 +10,8 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "skipLibCheck": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "types": ["jest"]
   },
   "exclude": ["node_modules", "lib", "**/*.test.*"],
   "include": ["src/**/*"]
