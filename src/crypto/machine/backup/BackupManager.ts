@@ -61,7 +61,10 @@ export class BackupManager {
     await this.olmMachine.disableBackup();
   }
 
-  async saveDecryptionKey(key: Uint8Array, version: string): Promise<void> {
+  async saveDecryptionKey(
+    key: Uint8Array<ArrayBuffer>,
+    version: string,
+  ): Promise<void> {
     const decryptionKey = BackupDecryptionKey.fromBase64(Base64.encode(key));
 
     await this.olmMachine.saveBackupDecryptionKey(decryptionKey, version);

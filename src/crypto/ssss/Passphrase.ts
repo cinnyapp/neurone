@@ -21,7 +21,7 @@ export class Passphrase {
       salt?: string;
     },
   ): Promise<{
-    key: Uint8Array;
+    key: Uint8Array<ArrayBuffer>;
     passphrase: PassphraseInfo;
   }> {
     const iterations = options?.iterations ?? DEFAULT_ITERATIONS;
@@ -63,7 +63,7 @@ export class Passphrase {
   static async derive(
     passphrase: string,
     info: PassphraseInfo,
-  ): Promise<Uint8Array> {
+  ): Promise<Uint8Array<ArrayBuffer>> {
     const { key } = await Passphrase.create(passphrase, {
       iterations: info.iterations,
       salt: info.salt,

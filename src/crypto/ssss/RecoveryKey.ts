@@ -35,7 +35,7 @@ export class RecoveryKey {
    * @returns Human-readable recovery key string
    * @throws Error if key is not 32 bytes
    */
-  static encode(key: Uint8Array): string {
+  static encode(key: Uint8Array<ArrayBuffer>): string {
     if (key.length !== KEY_LENGTH) {
       throw new Error("Invalid key length");
     }
@@ -72,7 +72,7 @@ export class RecoveryKey {
    * @returns Raw 32-byte secret storage key
    * @throws Error if format, prefix, or checksum is invalid
    */
-  static decode(recoveryKey: string): Uint8Array {
+  static decode(recoveryKey: string): Uint8Array<ArrayBuffer> {
     const cleaned = recoveryKey.replace(/\s+/g, "");
 
     const decoded = bs58.decode(cleaned);

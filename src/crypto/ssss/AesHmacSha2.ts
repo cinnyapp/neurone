@@ -21,7 +21,7 @@ export class AesHmacSha2 {
    * - next 32 bytes = HMAC key
    */
   private static async deriveKeys(
-    key: Uint8Array,
+    key: Uint8Array<ArrayBuffer>,
     name: string,
   ): Promise<{
     aesKey: CryptoKey;
@@ -83,7 +83,7 @@ export class AesHmacSha2 {
    *
    * Bit 63 must be cleared to avoid implementation differences.
    */
-  private static generateIv(): Uint8Array {
+  private static generateIv(): Uint8Array<ArrayBuffer> {
     const iv = globalThis.crypto.getRandomValues(new Uint8Array(16));
 
     // Clear bit 63.
@@ -92,7 +92,7 @@ export class AesHmacSha2 {
     return iv;
   }
 
-  static generateRawKey(): Uint8Array {
+  static generateRawKey(): Uint8Array<ArrayBuffer> {
     const key = new Uint8Array(32);
     globalThis.crypto.getRandomValues(key);
 
@@ -100,7 +100,7 @@ export class AesHmacSha2 {
   }
 
   static async encrypt(
-    key: Uint8Array,
+    key: Uint8Array<ArrayBuffer>,
     name: string,
     secret: string,
     ivStr?: string,
@@ -135,7 +135,7 @@ export class AesHmacSha2 {
   }
 
   static async decrypt(
-    key: Uint8Array,
+    key: Uint8Array<ArrayBuffer>,
     name: string,
     data: AesHmacSha2EncryptedData,
   ): Promise<string> {
@@ -170,7 +170,7 @@ export class AesHmacSha2 {
   }
 
   static async verify(
-    key: Uint8Array,
+    key: Uint8Array<ArrayBuffer>,
     name: string,
     data: AesHmacSha2EncryptedData,
   ): Promise<boolean> {
@@ -188,7 +188,7 @@ export class AesHmacSha2 {
    * @param iv
    */
   static async driveKeyMetaData(
-    key: Uint8Array,
+    key: Uint8Array<ArrayBuffer>,
     ivStr?: string,
   ): Promise<{
     iv: string;

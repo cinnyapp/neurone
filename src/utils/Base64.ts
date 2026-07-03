@@ -1,5 +1,5 @@
 export class Base64 {
-  static encode(data: Uint8Array): string {
+  static encode(data: Uint8Array<ArrayBuffer>): string {
     // Node.js / Bun / Deno (Node compat)
     if (typeof Buffer !== "undefined") {
       return Buffer.from(data).toString("base64");
@@ -15,7 +15,7 @@ export class Base64 {
     return btoa(binary);
   }
 
-  static decode(data: string): Uint8Array {
+  static decode(data: string): Uint8Array<ArrayBuffer> {
     // Support base64url
     let safeData = data.replace(/-/g, "+").replace(/_/g, "/");
 
