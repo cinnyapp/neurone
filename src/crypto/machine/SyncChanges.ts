@@ -2,9 +2,12 @@ import {
   OlmMachine,
   UserId,
   DeviceLists as CryptoDeviceLists,
-  ProcessedToDeviceEvent,
 } from "@matrix-org/matrix-sdk-crypto-wasm";
 import { DeviceLists, ToDeviceEvent } from "../../api/types";
+import {
+  ProcessedToDeviceEvent,
+  processedToDeviceEventFromRust,
+} from "./events";
 
 export type EncryptionSyncChanges = {
   /**
@@ -101,6 +104,8 @@ export class SyncChanges {
       unusedFallbackKeys,
     );
 
-    return processedToDeviceEvents;
+    return processedToDeviceEvents.map((event) =>
+      processedToDeviceEventFromRust(event),
+    );
   }
 }
