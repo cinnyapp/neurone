@@ -1,5 +1,7 @@
 import {
   DecryptionSettings,
+  MegolmDecryptionError as RustMegolmDecryptionError,
+  DecryptionErrorCode as RustDecryptionErrorCode,
   OlmMachine,
   RoomId,
   TrustRequirement,
@@ -57,23 +59,33 @@ export class RoomEncryption {
     roomId: string,
     encryptedEvent: T,
   ): Promise<
-    T extends StateEventWithoutRoomId
-      ? StateEventWithoutRoomId
-      : MessageEventWithoutRoomId
+    | [MegolmDecryptionError, undefined]
+    | [
+        undefined,
+        T extends StateEventWithoutRoomId
+          ? StateEventWithoutRoomId
+          : MessageEventWithoutRoomId,
+      ]
   > {
     const decryptionSettings = new DecryptionSettings(
       TrustRequirement.Untrusted,
     );
 
-    const decryptedEvent = await this.olmMachine.decryptRoomEvent(
-      JSON.stringify(encryptedEvent),
-      new RoomId(roomId),
-      decryptionSettings,
-    );
+    try {
+      const decryptedEvent = await this.olmMachine.decryptRoomEvent(
+        JSON.stringify(encryptedEvent),
+        new RoomId(roomId),
+        decryptionSettings,
+      );
+      const event = JSON.parse(decryptedEvent.event);
 
-    const event = JSON.parse(decryptedEvent.event);
-
-    return event;
+      return [undefined, event];
+    } catch (e) {
+      if (e instanceof MegolmDecryptionError) {
+        return [e, undefined];
+      }
+      throw e;
+    }
   }
 
   async getEventEncryptionInfo(
@@ -110,5 +122,74 @@ export class RoomEncryption {
       new RoomId(roomId),
       roomEncryptionSettingsToRust(settings),
     );
+  }
+}
+
+type DecryptionErrorCode =
+  | "missing-room-key"
+  | "unknown-message-index"
+  | "mismatched-identity-keys"
+  | "unknown-sender-device"
+  | "unsigned-sender-device"
+  | "sender-identity-verification-violation"
+  | "unable-to-decrypt"
+  | "mismatched-sender";
+
+export class MegolmDecryptionError {
+  private readonly error: RustMegolmDecryptionError;
+
+  constructor(error: RustMegolmDecryptionError) {
+    this.error = error;
+  }
+
+  get code(): DecryptionErrorCode {
+    return decryptionErrorCodeFromRust(this.error.code);
+  }
+
+  get description(): string {
+    return this.error.description;
+  }
+
+  get withheldCode(): string | undefined {
+    return this.error.withheldCode;
+  }
+
+  get withheldDescription(): string | undefined {
+    return this.error.maybe_withheld;
+  }
+}
+
+export function decryptionErrorCodeFromRust(
+  code: RustDecryptionErrorCode,
+): DecryptionErrorCode {
+  switch (code) {
+    case RustDecryptionErrorCode.MissingRoomKey:
+      return "missing-room-key";
+
+    case RustDecryptionErrorCode.UnknownMessageIndex:
+      return "unknown-message-index";
+
+    case RustDecryptionErrorCode.MismatchedIdentityKeys:
+      return "mismatched-identity-keys";
+
+    case RustDecryptionErrorCode.UnknownSenderDevice:
+      return "unknown-sender-device";
+
+    case RustDecryptionErrorCode.UnsignedSenderDevice:
+      return "unsigned-sender-device";
+
+    case RustDecryptionErrorCode.SenderIdentityVerificationViolation:
+      return "sender-identity-verification-violation";
+
+    case RustDecryptionErrorCode.UnableToDecrypt:
+      return "unable-to-decrypt";
+
+    case RustDecryptionErrorCode.MismatchedSender:
+      return "mismatched-sender";
+
+    default: {
+      const exhaustiveCheck: never = code;
+      throw new Error(`Unknown decryption error code: ${exhaustiveCheck}`);
+    }
   }
 }
