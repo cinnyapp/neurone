@@ -36,7 +36,7 @@ export type EncryptionSyncChanges = {
    *   "signed_curve25519": 42
    * }
    */
-  oneTimeKeysCounts: Record<string, number>;
+  oneTimeKeysCounts?: Record<string, number>;
 
   /**
    * Unused fallback key algorithms currently stored
@@ -84,11 +84,13 @@ export class SyncChanges {
     );
 
     const oneTimeKeysCounts = new Map<string, number>();
-    Object.entries(changes.oneTimeKeysCounts).forEach(
-      ([algorithm, otkCount]) => {
-        oneTimeKeysCounts.set(algorithm, otkCount);
-      },
-    );
+    if (changes.oneTimeKeysCounts) {
+      Object.entries(changes.oneTimeKeysCounts).forEach(
+        ([algorithm, otkCount]) => {
+          oneTimeKeysCounts.set(algorithm, otkCount);
+        },
+      );
+    }
 
     const unusedFallbackKeys = new Set(changes.unusedFallbackKeys);
 
