@@ -55,18 +55,30 @@ export class Machine {
 
   public readonly backupManager: BackupManager;
 
-  static async init(userId: string, deviceId: string): Promise<OlmMachine> {
+  static async init(
+    userId: string,
+    deviceId: string,
+    storeName: string,
+  ): Promise<{
+    olmMachine: OlmMachine;
+    closeMachine: () => void;
+  }> {
     await initAsync();
 
     const olmMachine = await OlmMachine.initialize(
       new UserId(userId),
       new DeviceId(deviceId),
-      `neurone${userId}`,
+      storeName,
     );
 
     olmMachine.roomKeyRequestsEnabled = false;
 
-    return olmMachine;
+    const closeMachine = () => olmMachine.close();
+
+    return {
+      olmMachine,
+      closeMachine,
+    };
   }
 
   constructor(
