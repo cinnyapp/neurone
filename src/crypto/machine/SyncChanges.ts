@@ -82,8 +82,8 @@ export class SyncChanges {
     changes: EncryptionSyncChanges,
   ): Promise<ProcessedToDeviceEvent[]> {
     const deviceLists = new CryptoDeviceLists(
-      changes.deviceLists?.changed.map((userId) => new UserId(userId)),
-      changes.deviceLists?.left.map((userId) => new UserId(userId)),
+      changes.deviceLists?.changed?.map((userId) => new UserId(userId)),
+      changes.deviceLists?.left?.map((userId) => new UserId(userId)),
     );
 
     const oneTimeKeysCounts = new Map<string, number>();

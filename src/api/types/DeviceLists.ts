@@ -1,4 +1,4 @@
 export type DeviceLists = {
-  changed: string[];
-  left: string[];
+  changed?: string[];
+  left?: string[];
 };
