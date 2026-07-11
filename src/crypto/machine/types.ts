@@ -39,11 +39,11 @@ export type DeviceCollectStrategy =
 
 export type EncryptionSettings = {
   algorithm: EncryptionAlgorithm;
-  encryptStateEvents: boolean;
   historyVisibility: HistoryVisibility;
-  rotationPeriodMessages: number;
-  rotationPeriod: number;
-  sharingStrategy: DeviceCollectStrategy;
+  encryptStateEvents?: boolean;
+  rotationPeriodMessages?: number;
+  rotationPeriod?: number;
+  sharingStrategy?: DeviceCollectStrategy;
 };
 
 export type EncryptionShieldColor = "red" | "grey" | "none";

@@ -157,17 +157,30 @@ export function encryptionSettingsToRust(
   rustEncSettings.algorithm = encryptionAlgorithmToRust(
     encryptionSettings.algorithm,
   );
-  rustEncSettings.encryptStateEvents = encryptionSettings.encryptStateEvents;
-  rustEncSettings.rotationPeriodMessages = BigInt(
-    encryptionSettings.rotationPeriodMessages,
-  );
-  rustEncSettings.rotationPeriod = BigInt(encryptionSettings.rotationPeriod);
-  rustEncSettings.sharingStrategy = deviceCollectStrategyToRust(
-    encryptionSettings.sharingStrategy,
-  );
+
   rustEncSettings.historyVisibility = historyVisibilityToRust(
     encryptionSettings.historyVisibility,
   );
+
+  if (typeof encryptionSettings.encryptStateEvents === "boolean") {
+    rustEncSettings.encryptStateEvents = encryptionSettings.encryptStateEvents;
+  }
+
+  if (typeof encryptionSettings.rotationPeriodMessages === "number") {
+    rustEncSettings.rotationPeriodMessages = BigInt(
+      encryptionSettings.rotationPeriodMessages,
+    );
+  }
+
+  if (typeof encryptionSettings.rotationPeriod === "number") {
+    rustEncSettings.rotationPeriod = BigInt(encryptionSettings.rotationPeriod);
+  }
+
+  if (encryptionSettings.sharingStrategy) {
+    rustEncSettings.sharingStrategy = deviceCollectStrategyToRust(
+      encryptionSettings.sharingStrategy,
+    );
+  }
 
   return rustEncSettings;
 }
