@@ -54,11 +54,11 @@ export class IndexedDBStorageDriver implements StorageDriver {
 
   private prepareIDBQuery<T extends KeyValue>(
     query: Query<T>,
-  ): IDBKeyRange | null | string {
+  ): IDBKeyRange | IDBValidKey | null {
     if (query instanceof QueryRange) {
       return this.getIDBKeyRange(query);
     }
-    return query as string;
+    return query as IDBValidKey;
   }
 
   private prepareIDBCursorDirection(
@@ -73,7 +73,7 @@ export class IndexedDBStorageDriver implements StorageDriver {
   ): Promise<Array<E | undefined>> {
     const txn = this.db.transaction(collectionMeta.name, "readonly");
     const itemsPromises = keys.map((key) => {
-      const item = txn.store.get(key as string) as Promise<E | undefined>;
+      const item = txn.store.get(key as IDBValidKey) as Promise<E | undefined>;
       return item;
     });
 
@@ -99,7 +99,9 @@ export class IndexedDBStorageDriver implements StorageDriver {
   ): Promise<void> {
     const txn = this.db.transaction(collectionMeta.name, "readwrite");
     const store = txn.store;
-    data.map((entry) => store.put(entry));
+    for (const entry of data) {
+      store.put(entry);
+    }
 
     await txn.done;
   }
@@ -110,7 +112,9 @@ export class IndexedDBStorageDriver implements StorageDriver {
   ): Promise<void> {
     const txn = this.db.transaction(collectionMeta.name, "readwrite");
     const store = txn.store;
-    keys.map((key) => store.delete(key as string));
+    for (const key of keys) {
+      store.delete(key);
+    }
 
     await txn.done;
   }
@@ -212,10 +216,12 @@ export class IndexedDBStorageDriver implements StorageDriver {
 
     const keys: E[PrimaryKey][] = [];
     while (idbCursor) {
-      keys.push(idbCursor.key as unknown as E[PrimaryKey]);
+      keys.push(idbCursor.primaryKey as E[PrimaryKey]);
+
       if (keys.length === cursor?.limit) {
         break;
       }
+
       idbCursor = await idbCursor.continue();
     }
 
