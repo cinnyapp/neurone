@@ -16,7 +16,7 @@
     "README.md"
   ],
   "scripts": {
-    "build": "rm -rf lib/* && tsc",
+    "build": "rm -rf lib/* && tsc -p tsconfig.build.json",
     "check:all": "npm run check:type && npm run check:eslint && npm run check:prettier",
     "check:eslint": "eslint .",
     "check:prettier": "prettier --check .",

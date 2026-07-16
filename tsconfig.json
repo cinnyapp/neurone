@@ -20,6 +20,6 @@
 
     "types": ["jest", "node"]
   },
-  "exclude": ["node_modules", "lib", "**/*.test.*"],
+  "exclude": ["node_modules", "lib"],
   "include": ["src/**/*"]
 }
