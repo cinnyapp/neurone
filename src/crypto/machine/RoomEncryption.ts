@@ -81,8 +81,8 @@ export class RoomEncryption {
 
       return [undefined, event];
     } catch (e) {
-      if (e instanceof MegolmDecryptionError) {
-        return [e, undefined];
+      if (e instanceof RustMegolmDecryptionError) {
+        return [new MegolmDecryptionError(e), undefined];
       }
       throw e;
     }
