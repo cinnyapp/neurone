@@ -1,8 +1,8 @@
 export class Base64 {
   static encode(data: Uint8Array<ArrayBuffer>): string {
     // Node.js / Bun / Deno (Node compat)
-    if (typeof Buffer !== "undefined") {
-      return Buffer.from(data).toString("base64");
+    if (typeof globalThis.Buffer !== "undefined") {
+      return globalThis.Buffer.from(data).toString("base64");
     }
 
     // Browser
@@ -25,8 +25,8 @@ export class Base64 {
     }
 
     // Node.js / Bun / Deno (Node compat)
-    if (typeof Buffer !== "undefined") {
-      return new Uint8Array(Buffer.from(safeData, "base64"));
+    if (typeof globalThis.Buffer !== "undefined") {
+      return new Uint8Array(globalThis.Buffer.from(safeData, "base64"));
     }
 
     // Browser
