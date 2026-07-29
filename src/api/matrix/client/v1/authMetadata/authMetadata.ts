@@ -1,7 +1,7 @@
 import { GetAuthMetadataEndpoint } from "./authMetadata.type";
 
 /**
- * https://spec.matrix.org/v1.15/client-server-api/#get_matrixclientv1auth_metadata
+ * https://spec.matrix.org/v1.18/client-server-api/#get_matrixclientv1auth_metadata
  */
 export const getAuthMetadata: GetAuthMetadataEndpoint = () => {
   const path = "/_matrix/client/v1/auth_metadata";
