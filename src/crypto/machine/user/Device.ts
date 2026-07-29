@@ -29,6 +29,18 @@ export class Device {
     return this.device.isVerified();
   }
 
+  get crossSigningTrusted(): boolean {
+    return this.device.isCrossSigningTrusted();
+  }
+
+  get locallyTrusted(): boolean {
+    return this.device.isLocallyTrusted();
+  }
+
+  get crossSignedByOwner(): boolean {
+    return this.device.isCrossSignedByOwner();
+  }
+
   get blacklisted(): boolean {
     return this.device.isBlacklisted();
   }
