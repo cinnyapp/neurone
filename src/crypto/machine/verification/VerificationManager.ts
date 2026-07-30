@@ -167,10 +167,9 @@ export class VerificationManager {
     }
 
     try {
-      const [verificationRequest, toDeviceRequest] =
-        await device.requestVerification(
-          supportedMethods.map((method) => verificationMethodToRust(method)),
-        );
+      const [verificationRequest, toDeviceRequest] = device.requestVerification(
+        supportedMethods.map((method) => verificationMethodToRust(method)),
+      );
 
       await this.outgoingRequests.send(toDeviceRequest);
 
@@ -195,7 +194,7 @@ export class VerificationManager {
       const methods = supportedMethods.map((method) =>
         verificationMethodToRust(method),
       );
-      const content = await userIdentity.verificationRequestContent(methods);
+      const content = userIdentity.verificationRequestContent(methods);
       const txnId = randomString(16);
       const requestId = randomString(16);
 
@@ -214,7 +213,7 @@ export class VerificationManager {
         throw err;
       }
 
-      const verificationRequest = await userIdentity.requestVerification(
+      const verificationRequest = userIdentity.requestVerification(
         new RoomId(roomId),
         new EventId(result.event_id),
         methods,
