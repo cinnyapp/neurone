@@ -30,16 +30,12 @@ export class MachineEvents {
   constructor(olmMachine: OlmMachine) {
     this.olmMachine = olmMachine;
 
-    const weakThis = new globalThis.WeakRef(this);
-
     this.olmMachine.registerDevicesUpdatedCallback(async (userIds) => {
-      weakThis.deref()?.onDevicesUpdated.publish(this.publishKey, userIds);
+      this.onDevicesUpdated.publish(this.publishKey, userIds);
     });
 
     this.olmMachine.registerReceiveSecretCallback(async (name, value) => {
-      weakThis
-        .deref()
-        ?.onReceiveSecret.publish(this.publishKey, { name, value });
+      this.onReceiveSecret.publish(this.publishKey, { name, value });
     });
 
     this.olmMachine.registerRoomKeyUpdatedCallback(async (infos) => {
