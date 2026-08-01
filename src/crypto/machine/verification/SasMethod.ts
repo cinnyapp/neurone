@@ -63,7 +63,7 @@ export class SasStage {
 
 export class SasStartStage extends SasStage {
   async accept(): Promise<void> {
-    const request = await this.sas.accept();
+    const request = this.sas.accept();
 
     if (request) {
       await this.outgoingRequests.send(request);
@@ -71,7 +71,7 @@ export class SasStartStage extends SasStage {
   }
 
   async cancel(): Promise<void> {
-    const request = await this.sas.cancel();
+    const request = this.sas.cancel();
 
     if (request) {
       await this.outgoingRequests.send(request);
@@ -119,7 +119,7 @@ export class SasAcceptStage extends SasStage {
   }
 
   async cancel(): Promise<void> {
-    const request = await this.sas.cancel();
+    const request = this.sas.cancel();
 
     if (request) {
       await this.outgoingRequests.send(request);

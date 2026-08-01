@@ -98,7 +98,7 @@ export class InboundRequestStage extends CancelableVerificationStage {
   }
 
   async ready(supportedMethods: VerificationMethod[]): Promise<void> {
-    const request = await this.verificationRequest.acceptWithMethods(
+    const request = this.verificationRequest.acceptWithMethods(
       supportedMethods.map((method) => verificationMethodToRust(method)),
     );
 
