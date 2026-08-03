@@ -58,7 +58,7 @@ Returns:
 If the user already has a backup recovery key:
 
 ```ts
-await backupManager.saveDecryptionKey(keyBytes, backupVersion);
+await backupManager.saveDecryptionKey(keyBytes, backupVersionInfo);
 ```
 
 This stores the backup decryption key inside the `OlmMachine`.
@@ -113,18 +113,6 @@ await keyBackup.backupRoomKeys();
 ```
 
 This uploads any keys that have not yet been backed up.
-
----
-
-# Receiving a Recovery Key Secret
-
-If the recovery key is received through Matrix Secret Storage (SSSS):
-
-```ts
-await keyBackup.onSecret(secret);
-```
-
-The key is verified before being stored.
 
 ---
 

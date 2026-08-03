@@ -19,19 +19,6 @@ export class KeyBackup {
 
   public readonly backupInfo: BackupVersionInfo;
 
-  static validDecryptionKey(
-    backupInfo: BackupVersionInfo,
-    decryptionKey: BackupDecryptionKey,
-  ): boolean {
-    if (backupInfo.algorithm !== "m.megolm_backup.v1.curve25519-aes-sha2")
-      return false;
-
-    const publicKey = ObjectReader.string(backupInfo.auth_data, "public_key");
-    if (!publicKey) return false;
-
-    return publicKey === decryptionKey.megolmV1PublicKey.publicKeyBase64;
-  }
-
   constructor(
     olmMachine: OlmMachine,
     outgoingRequests: OutgoingRequests,
@@ -87,19 +74,6 @@ export class KeyBackup {
     }
 
     return roomKeys;
-  }
-
-  public async onSecret(secret: string): Promise<void> {
-    const decryptionKey = BackupDecryptionKey.fromBase64(secret);
-    if (!KeyBackup.validDecryptionKey(this.backupInfo, decryptionKey)) {
-      console.warn("Invalid key-backup decryption key received!");
-      return;
-    }
-
-    await this.olmMachine.saveBackupDecryptionKey(
-      decryptionKey,
-      this.backupInfo.version,
-    );
   }
 
   public async backupRoomKeys(): Promise<Response | undefined> {
