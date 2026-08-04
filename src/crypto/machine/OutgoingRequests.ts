@@ -51,7 +51,7 @@ export class OutgoingRequests {
       this.sender.send(request),
     );
 
-    const respText = await response.text();
+    const respText = await response.clone().text();
 
     if (response.ok && request.id) {
       await this.olmMachine.markRequestAsSent(
