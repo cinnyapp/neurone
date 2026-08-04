@@ -8,7 +8,7 @@ import {
   KeyBackupData,
   RoomKeyBackup,
 } from "../../../api/types";
-import { MegolmSessionData } from "./types";
+import { MegolmSessionData, RoomKeysImportResult } from "./types";
 import { ObjectReader } from "../../../utils";
 import { OutgoingRequests } from "../OutgoingRequests";
 
@@ -88,7 +88,7 @@ export class KeyBackup {
   async importBackup(
     roomToKeyBackup: Record<string, RoomKeyBackup>,
     progress: (progress: bigint, total: bigint, failures: bigint) => void,
-  ): Promise<void> {
+  ): Promise<RoomKeysImportResult> {
     const { decryptionKey } = await this.olmMachine.getBackupKeys();
 
     if (!decryptionKey) {
@@ -100,10 +100,15 @@ export class KeyBackup {
       roomToKeyBackup,
     );
 
-    await this.olmMachine.importBackedUpRoomKeys(
+    const r = await this.olmMachine.importBackedUpRoomKeys(
       decryptedKeys,
       progress,
       this.backupInfo.version,
     );
+
+    return {
+      imported: r.importedCount,
+      total: r.totalCount,
+    };
   }
 }

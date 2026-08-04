@@ -8,6 +8,7 @@ import {
 import { OutgoingRequests } from "./OutgoingRequests";
 import { EncryptionSettings } from "./types";
 import { encryptionSettingsToRust } from "./utils";
+import { RoomKeysImportResult } from "./backup";
 
 export type RoomKeyCount = {
   total: number;
@@ -197,8 +198,12 @@ export class RoomKeys {
   async importRoomKeysFromJson(
     roomKeys: string,
     progress: (progress: bigint, total: bigint) => void,
-  ): Promise<void> {
-    await this.olmMachine.importExportedRoomKeys(roomKeys, progress);
+  ): Promise<RoomKeysImportResult> {
+    const r = await this.olmMachine.importExportedRoomKeys(roomKeys, progress);
+    return {
+      imported: r.importedCount,
+      total: r.totalCount,
+    };
   }
 
   async exportRoomKeysToJson(): Promise<string> {

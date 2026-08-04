@@ -8,3 +8,8 @@ export type MegolmSessionData = {
   algorithm?: string;
   untrusted?: boolean;
 };
+
+export type RoomKeysImportResult = {
+  imported: number;
+  total: number;
+};
