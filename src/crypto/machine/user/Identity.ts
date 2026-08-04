@@ -34,9 +34,9 @@ export class OwnIdentity {
     return this.identity.wasPreviouslyVerified();
   }
 
-  async verify(): Promise<void> {
+  async verify(): Promise<Response> {
     const request = await this.identity.verify();
-    await this.outgoingRequests.send(request);
+    return await this.outgoingRequests.send(request);
   }
 
   async withdrawVerification(): Promise<void> {

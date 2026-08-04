@@ -63,8 +63,8 @@ export class Device {
     return this.device.ed25519Key?.toBase64();
   }
 
-  async verify(): Promise<void> {
+  async verify(): Promise<Response> {
     const request = await this.device.verify();
-    await this.outgoingRequests.send(request);
+    return await this.outgoingRequests.send(request);
   }
 }
