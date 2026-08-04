@@ -57,14 +57,13 @@ export class CrossSigning {
   }
 
   async bootstrapCrossSigning(
-    reset: boolean,
     uploadSigningKeys: (body: string) => Promise<void>,
   ) {
     const {
       uploadKeysRequest,
       uploadSignaturesRequest,
       uploadSigningKeysRequest,
-    } = await this.olmMachine.bootstrapCrossSigning(reset);
+    } = await this.olmMachine.bootstrapCrossSigning(true);
 
     if (uploadKeysRequest) {
       await this.outgoingRequests.send(uploadKeysRequest);
