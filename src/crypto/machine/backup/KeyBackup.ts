@@ -52,9 +52,8 @@ export class KeyBackup {
       const decrypted = decryptionKey.decryptV1(ephemeral, mac, ciphertext);
 
       const decryptedData = JSON.parse(decrypted);
-      if (ObjectReader.string(decryptedData, "session_id") === sessionId) {
-        keys.set(sessionId, decryptedData);
-      }
+      decryptedData.session_id = sessionId;
+      keys.set(sessionId, decryptedData);
     }
 
     return keys;
