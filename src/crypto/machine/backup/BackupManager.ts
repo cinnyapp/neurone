@@ -22,10 +22,13 @@ export class BackupManager {
    */
   static createBackupKey() {
     const key = BackupDecryptionKey.createRandomKey();
+
+    const algorithm = key.megolmV1PublicKey.algorithm;
     const publicKey = key.megolmV1PublicKey.publicKeyBase64;
     const privateKey = key.toBase64();
 
     return {
+      algorithm,
       publicKey,
       privateKey,
     };
