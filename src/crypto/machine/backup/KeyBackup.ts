@@ -8,7 +8,11 @@ import {
   KeyBackupData,
   RoomKeyBackup,
 } from "../../../api/types";
-import { MegolmSessionData, RoomKeysImportResult } from "./types";
+import {
+  BackupRoomKeysResult,
+  MegolmSessionData,
+  RoomKeysImportResult,
+} from "./types";
 import { ObjectReader } from "../../../utils";
 import { OutgoingRequests } from "../OutgoingRequests";
 
@@ -75,13 +79,25 @@ export class KeyBackup {
     return roomKeys;
   }
 
-  public async backupRoomKeys(): Promise<Response | undefined> {
+  public async backupRoomKeys(): Promise<BackupRoomKeysResult | undefined> {
     const request = await this.olmMachine.backupRoomKeys();
     if (!request) {
       return;
     }
 
-    return this.outgoingRequests.send(request);
+    const keyBackup: Record<string, RoomKeyBackup> = JSON.parse(request.body);
+
+    let uploaded = 0;
+    for (const { sessions } of Object.values(keyBackup.rooms)) {
+      uploaded += Object.keys(sessions).length;
+    }
+
+    const response = await this.outgoingRequests.send(request);
+
+    return {
+      uploaded,
+      response,
+    };
   }
 
   async importBackup(

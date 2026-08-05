@@ -13,3 +13,8 @@ export type RoomKeysImportResult = {
   imported: number;
   total: number;
 };
+
+export type BackupRoomKeysResult = {
+  uploaded: number;
+  response: Response;
+};
