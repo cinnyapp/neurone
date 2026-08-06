@@ -17,6 +17,7 @@ import { SyncChanges } from "./SyncChanges";
 import { VerificationManager } from "./verification";
 import { UserTracker } from "./user";
 import { BackupManager } from "./backup";
+import { SignedObject } from "./types";
 
 export * from "./CrossSigning";
 export * from "./MachineEvents";
@@ -124,30 +125,46 @@ export class Machine {
     return this.olmMachine.identityKeys.ed25519.toBase64();
   }
 
-  async sign<
-    T extends {
-      signatures?: Record<string, Record<string, string>>;
-      unsigned?: object;
-    },
-  >(obj: T): Promise<void> {
-    const sigs = new Map(Object.entries(obj.signatures || {}));
+  /**
+   * Signs a Matrix object using the local Olm machine.
+   *
+   * The Matrix signing algorithm requires the `signatures` and `unsigned`
+   * properties to be excluded from the canonical JSON before signing. This
+   * method temporarily removes those fields, computes the signature, and then
+   * restores them.
+   *
+   * If the object already contains signatures for the local user, the newly
+   * generated signatures are merged with the existing ones.
+   *
+   * @param obj - The object to sign. It is modified in place.
+   */
+  async sign<T extends SignedObject>(obj: T): Promise<void> {
+    const signatures = new Map(Object.entries(obj.signatures ?? {}));
     const unsigned = obj.unsigned;
 
     delete obj.signatures;
     delete obj.unsigned;
 
     const userId = this.olmMachine.userId.toString();
+    const existingUserSignatures = signatures.get(userId) ?? {};
 
-    const userSignatures = sigs.get(userId) || {};
+    const canonicalJson = anotherjson.stringify(obj);
+    const signed = await this.olmMachine.sign(canonicalJson);
 
-    const canonalizedJson = anotherjson.stringify(obj);
-    const signatures = await this.olmMachine.sign(canonalizedJson);
+    const newSignatures = JSON.parse(signed.asJSON()) as Record<
+      string,
+      Record<string, string>
+    >;
 
-    const map = JSON.parse(signatures.asJSON());
+    signatures.set(userId, {
+      ...existingUserSignatures,
+      ...(newSignatures[userId] ?? {}),
+    });
 
-    sigs.set(userId, { ...userSignatures, ...map[userId] });
+    if (unsigned !== undefined) {
+      obj.unsigned = unsigned;
+    }
 
-    if (unsigned) obj.unsigned = unsigned;
-    obj.signatures = Object.fromEntries(sigs.entries());
+    obj.signatures = Object.fromEntries(signatures);
   }
 }

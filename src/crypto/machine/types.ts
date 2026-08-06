@@ -70,3 +70,10 @@ export type EventEncryptionInfo = {
   forwardDeviceId?: string;
   shield: EncryptionShield;
 };
+
+export interface SignedObject {
+  [key: string]: unknown;
+
+  signatures?: Record<string, Record<string, string>>;
+  unsigned?: Record<string, unknown>;
+}
