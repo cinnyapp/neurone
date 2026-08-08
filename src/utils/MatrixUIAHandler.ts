@@ -1,5 +1,5 @@
 import { MatrixError, parseMatrixResp } from "../matrix-request";
-import { ObservableValue } from "./observable";
+import { Observable } from "./observable";
 
 export interface MatrixUIAData {
   errcode?: string;
@@ -27,9 +27,7 @@ export interface MatrixUIAData {
 export class MatrixUIAHandler {
   private readonly publishKey = Math.random().toString();
 
-  public readonly observable = new ObservableValue<
-    MatrixError<MatrixUIAData> | undefined
-  >(undefined, this.publishKey);
+  public readonly onUIA = new Observable<MatrixUIAData>(this.publishKey);
 
   async execute(
     request: (auth?: object) => Promise<Response>,
@@ -79,10 +77,9 @@ export class MatrixUIAHandler {
     error: MatrixError<MatrixUIAData>,
   ): Promise<Record<string, unknown> | undefined> {
     return new Promise((resolve) => {
-      this.observable.publish(this.publishKey, error);
+      this.onUIA.publish(this.publishKey, error.data);
 
       this.pendingRetryResolver = (auth?: Record<string, unknown>) => {
-        this.observable.publish(this.publishKey, undefined);
         resolve(auth);
       };
     });
