@@ -75,22 +75,22 @@ export class MatrixUIAHandler {
 
   private waitForRetry(
     error: MatrixError<MatrixUIAData>,
-  ): Promise<Record<string, unknown> | undefined> {
+  ): Promise<object | undefined> {
     return new Promise((resolve) => {
       this.onUIA.publish(this.publishKey, error.data);
 
-      this.pendingRetryResolver = (auth?: Record<string, unknown>) => {
+      this.pendingRetryResolver = (auth?: object) => {
         resolve(auth);
       };
     });
   }
 
-  private pendingRetryResolver?: (auth?: Record<string, unknown>) => void;
+  private pendingRetryResolver?: (auth?: object) => void;
 
   /**
    * Retries the suspended UIA request with auth data.
    */
-  retry(auth: Record<string, unknown>): void {
+  retry(auth: object): void {
     const resolve = this.pendingRetryResolver;
     this.pendingRetryResolver = undefined;
 
