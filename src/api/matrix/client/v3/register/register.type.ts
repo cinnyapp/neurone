@@ -18,7 +18,7 @@ export type PostRegisterBody = {
 export type PostRegisterOK = {
   access_token?: string;
   device_id?: string;
-  expires_in_ms?: string;
+  expires_in_ms?: number;
   refresh_token?: string;
   user_id: string;
 };
