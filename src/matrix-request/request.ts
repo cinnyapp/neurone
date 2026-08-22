@@ -9,13 +9,10 @@ export const makeRequest = (
     matrixEndpointStruct,
     abortSignal,
   ): Promise<Response> => {
-    const { method, path, requireAuthentication, body } = matrixEndpointStruct;
+    const { method, path, body } = matrixEndpointStruct;
     const signal = abortSignal ?? requestInit.signal;
 
     const headers = new Headers(requestInit.headers);
-    if (!requireAuthentication) {
-      headers.delete("Authorization");
-    }
 
     const response = await fetchFunc(`${baseUrl}${path}`, {
       ...requestInit,
