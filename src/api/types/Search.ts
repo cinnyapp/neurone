@@ -24,7 +24,7 @@ export type SearchRoomEventsCriteria = {
   groupings?: SearchEventGroupings;
   include_state?: boolean;
   keys?: string[];
-  order_by?: string;
+  order_by?: SearchEventOrder;
   search_term: string;
 };
 
