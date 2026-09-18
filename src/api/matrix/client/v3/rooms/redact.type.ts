@@ -12,7 +12,7 @@ export type PutRedactBody = {
   reason?: string;
 };
 export type PutRedactOK = {
-  event_id?: string;
+  event_id: string;
 };
 export type PutRedactEndpoint = MatrixEndpoint<{
   pathParams: PutRedactPathParams;
