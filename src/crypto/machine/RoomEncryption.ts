@@ -30,13 +30,13 @@ export class RoomEncryption {
     eventType: string,
     content: object,
   ): Promise<string> {
-    const cipherText = await this.olmMachine.encryptRoomEvent(
+    const eventStr = await this.olmMachine.encryptRoomEvent(
       new RoomId(roomId),
       eventType,
       JSON.stringify(content),
     );
 
-    return cipherText;
+    return eventStr;
   }
 
   async encryptStateEvent(
@@ -45,14 +45,14 @@ export class RoomEncryption {
     stateKey: string,
     content: object,
   ): Promise<string> {
-    const cipherText = await this.olmMachine.encryptStateEvent(
+    const eventStr = await this.olmMachine.encryptStateEvent(
       new RoomId(roomId),
       eventType,
       stateKey,
       JSON.stringify(content),
     );
 
-    return cipherText;
+    return eventStr;
   }
 
   async decryptEvent<T extends ClientEventWithoutRoomId>(

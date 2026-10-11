@@ -76,11 +76,11 @@ export class Device {
     content: object,
     strategy?: DeviceCollectStrategy,
   ): Promise<string> {
-    const cipherText = this.device.encryptToDeviceEvent(
+    const contentStr = this.device.encryptToDeviceEvent(
       eventType,
       content,
       strategy ? deviceCollectStrategyToRust(strategy) : null,
     );
-    return cipherText;
+    return contentStr;
   }
 }
