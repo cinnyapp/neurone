@@ -1,7 +1,10 @@
 import { Device as RustDevice } from "@matrix-org/matrix-sdk-crypto-wasm";
 import { OutgoingRequests } from "../OutgoingRequests";
-import { EncryptionAlgorithm } from "../types";
-import { encryptionAlgorithmFromRust } from "../utils";
+import { DeviceCollectStrategy, EncryptionAlgorithm } from "../types";
+import {
+  deviceCollectStrategyToRust,
+  encryptionAlgorithmFromRust,
+} from "../utils";
 
 export class Device {
   private readonly outgoingRequests: OutgoingRequests;
@@ -66,5 +69,18 @@ export class Device {
   async verify(): Promise<Response> {
     const request = await this.device.verify();
     return await this.outgoingRequests.send(request);
+  }
+
+  async encryptToDeviceEvent(
+    eventType: string,
+    content: object,
+    strategy?: DeviceCollectStrategy,
+  ): Promise<string> {
+    const cipherText = this.device.encryptToDeviceEvent(
+      eventType,
+      content,
+      strategy ? deviceCollectStrategyToRust(strategy) : null,
+    );
+    return cipherText;
   }
 }
