@@ -18,8 +18,8 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
 
-    "types": ["jest", "node"]
+    "types": ["jest", "node"],
   },
   "exclude": ["node_modules", "lib"],
-  "include": ["src/**/*"]
+  "include": ["src/**/*"],
 }

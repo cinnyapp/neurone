@@ -1,63 +1,49 @@
 module.exports = {
-  "env": {
-    "browser": true,
-    "es2021": true
+  env: {
+    browser: true,
+    es2021: true,
   },
-  "extends": [
+  extends: [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
-    "prettier"
+    "prettier",
   ],
-  "overrides": [
+  overrides: [
     {
-      "env": {
-        "node": true
+      env: {
+        node: true,
       },
-      "files": [
-        ".eslintrc.{js,cjs}"
-      ],
-      "parserOptions": {
-        "sourceType": "script"
-      }
-    }
+      files: [".eslintrc.{js,cjs}"],
+      parserOptions: {
+        sourceType: "script",
+      },
+    },
   ],
-  "parser": "@typescript-eslint/parser",
-  "parserOptions": {
-    "ecmaVersion": "latest",
-    "sourceType": "module"
+  parser: "@typescript-eslint/parser",
+  parserOptions: {
+    ecmaVersion: "latest",
+    sourceType: "module",
   },
-  "plugins": [
-    "@typescript-eslint"
-  ],
-  "ignorePatterns": ["lib"],
-  "rules": {
-    "indent": [
+  plugins: ["@typescript-eslint"],
+  ignorePatterns: ["lib"],
+  rules: {
+    indent: [
       "error",
       2,
       {
-        "SwitchCase": 1,
-      }
+        SwitchCase: 1,
+      },
     ],
-    "linebreak-style": [
-      "error",
-      "unix"
-    ],
-    "quotes": [
+    "linebreak-style": ["error", "unix"],
+    quotes: [
       "error",
       "double",
       {
-        "allowTemplateLiterals": true
-      }
+        allowTemplateLiterals: true,
+      },
     ],
-    "semi": [
-      "error",
-      "always"
-    ],
-    "no-param-reassign": [
-      "error",
-    ],
-    "no-nested-ternary": [
-      "error"
-    ]
-  }
+    semi: ["error", "always"],
+    "no-param-reassign": ["error"],
+    "no-nested-ternary": ["error"],
+  },
 };
