@@ -1,3 +1,10 @@
+## [0.0.5](https://github.com/cinnyapp/neurone/compare/v0.0.4...v0.0.5) (2026-10-13)
+
+
+### Bug Fixes
+
+* add pr lint, type and test checks ([#3](https://github.com/cinnyapp/neurone/issues/3)) ([f3c2769](https://github.com/cinnyapp/neurone/commit/f3c276935e9662f83f8edd8cbae145b9177c42bc))
+
 ## [0.0.4](https://github.com/cinnyapp/neurone/compare/v0.0.3...v0.0.4) (2026-10-13)
 
 
