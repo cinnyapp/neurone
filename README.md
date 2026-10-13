@@ -7,6 +7,14 @@ A [Matrix](https://matrix.org) client-server SDK focusing on simplicity, perform
 
 **Spec Compatibility**: v1.0 to v1.15
 
+## Local development
+
+Execute the following commands to build the package:
+
+```
+npm run build # Build package into lib directory
+```
+
 ## License
 Cinny Project  
 Copyright © 2024–present Ajay Bura  
