@@ -11,9 +11,10 @@
   "types": "./lib/index.d.js",
   "files": [
     "lib",
-    "src",
-    "package.json",
-    "README.md"
+    "LICENSE",
+    "README.md",
+    "CHANGELOG.md",
+    "package.json"
   ],
   "scripts": {
     "build": "rm -rf lib/* && tsc -p tsconfig.build.json",
@@ -22,18 +23,31 @@
     "check:prettier": "prettier --check .",
     "check:type": "tsc --noEmit",
     "fix:prettier": "prettier --write .",
-    "test": "jest"
+    "test": "jest",
+    "prepare": "husky install",
+    "commit": "git-cz",
+    "semantic-release": "semantic-release"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cinnyapp/folds.git"
   },
   "keywords": [],
   "devDependencies": {
+    "@semantic-release/changelog": "6.0.2",
+    "@semantic-release/git": "10.0.1",
     "@types/jest": "30.0.0",
     "@typescript-eslint/eslint-plugin": "6.19.1",
     "@typescript-eslint/parser": "6.19.1",
+    "cz-conventional-changelog": "3.3.0",
     "eslint": "8.56.0",
     "eslint-config-prettier": "9.1.0",
     "fake-indexeddb": "5.0.2",
+    "husky": "8.0.1",
     "jest": "30.4.2",
+    "lint-staged": "13.0.2",
     "prettier": "3.2.4",
+    "semantic-release": "19.0.5",
     "ts-jest": "29.4.11",
     "typescript": "6.0.3"
   },
@@ -42,5 +56,23 @@
     "another-json": "0.2.0",
     "bs58": "6.0.0",
     "idb": "8.0.0"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "release": {
+    "branches": [
+      "main"
+    ],
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/changelog",
+      "@semantic-release/npm",
+      "@semantic-release/github",
+      "@semantic-release/git"
+    ]
   }
 }
