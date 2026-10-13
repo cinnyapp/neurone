@@ -1,5 +1,8 @@
 # Neurone
 
+<a href="https://npmjs.com/package/neurone">
+        <img alt="Npm package" src="https://img.shields.io/npm/v/neurone?label=neurone&logo=npm&style=social"></a>
+
 A [Matrix](https://matrix.org) client-server SDK focusing on simplicity, performance, composable architecture and independent spec-based development.
 
 **Spec Compatibility**: v1.0 to v1.15
