@@ -1,4 +1,10 @@
-# Ignore artifacts:
 lib
-node_bodules
-*.json
+.github
+storybook-static
+node_modules
+yarn.lock
+yarn-error.log
+package-lock.json
+LICENSE
+README.md
+NOTICE.md
