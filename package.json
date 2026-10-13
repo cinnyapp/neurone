@@ -5,7 +5,6 @@
   "author": "Ajay Bura (ajbura)",
   "license": "Apache-2.0",
   "type": "module",
-  "private": true,
   "sideEffects": false,
   "main": "./lib/index.js",
   "types": "./lib/index.d.js",
