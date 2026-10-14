@@ -1,3 +1,10 @@
+## [0.0.6](https://github.com/cinnyapp/neurone/compare/v0.0.5...v0.0.6) (2026-10-14)
+
+
+### Bug Fixes
+
+* change workflow for trusted publishing ([#4](https://github.com/cinnyapp/neurone/issues/4)) ([8aceb00](https://github.com/cinnyapp/neurone/commit/8aceb005346143a677cb69cb6271de1faa153554))
+
 ## [0.0.5](https://github.com/cinnyapp/neurone/compare/v0.0.4...v0.0.5) (2026-10-13)
 
 
