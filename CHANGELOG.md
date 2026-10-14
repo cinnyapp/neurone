@@ -1,3 +1,10 @@
+## [0.0.7](https://github.com/cinnyapp/neurone/compare/v0.0.6...v0.0.7) (2026-10-14)
+
+
+### Bug Fixes
+
+* build command for windows ([#6](https://github.com/cinnyapp/neurone/issues/6)) ([beeb231](https://github.com/cinnyapp/neurone/commit/beeb231a4c9f8c2f7bbdfb75b893421247b07b49))
+
 ## [0.0.6](https://github.com/cinnyapp/neurone/compare/v0.0.5...v0.0.6) (2026-10-14)
 
 
