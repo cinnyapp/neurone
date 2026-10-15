@@ -29,7 +29,7 @@ export * as joinedRooms from "./joinedRooms";
 export * as keys from "./keys";
 export * as knock from "./knock";
 export * as login from "./login";
-export * as logout from "./login";
+export * as logout from "./logout";
 export * as notifications from "./notifications";
 export * as presence from "./presence";
 export * as profile from "./profile";
