@@ -3,9 +3,23 @@
 <a href="https://npmjs.com/package/neurone">
         <img alt="Npm package" src="https://img.shields.io/npm/v/neurone?label=neurone&logo=npm&style=social"></a>
 
-A [Matrix](https://matrix.org) client-server SDK focusing on simplicity, performance, composable architecture and independent spec-based development.
+A [Matrix](https://matrix.org) client-server SDK focusing on simplicity,
+performance, composable architecture and independent spec-based development.
 
 **Spec Compatibility**: v1.0 to v1.15
+
+## Scope
+
+Neurone provides a low-level interface to the Matrix Client-Server API. 
+It handles protocol communication and exposes the primitives needed to 
+build Matrix clients, while leaving application-specific behavior to the
+libraries and applications built on top of it.
+
+Neurone does not aim to be a batteries-included client SDK. Features 
+such as room state management, sync orchestration, message queues, retries, 
+and UI-oriented abstractions should live in higher-level libraries where 
+possible. The goal is to keep the core small and composable, so applications 
+can choose how much functionality they need without inheriting a large framework.
 
 ## Local development
 
