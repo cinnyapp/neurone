@@ -1,3 +1,11 @@
+## [0.0.8](https://github.com/cinnyapp/neurone/compare/v0.0.7...v0.0.8) (2026-10-16)
+
+
+### Bug Fixes
+
+* logout import path in index.ts ([#9](https://github.com/cinnyapp/neurone/issues/9)) ([7081782](https://github.com/cinnyapp/neurone/commit/70817821e567817f92dbf5b7e8d7abf1e808adde))
+* observable query with index stale  when index changes ([#8](https://github.com/cinnyapp/neurone/issues/8)) ([e9d600b](https://github.com/cinnyapp/neurone/commit/e9d600bcdccff7fdab6fe8bb6140b559b4619589))
+
 ## [0.0.7](https://github.com/cinnyapp/neurone/compare/v0.0.6...v0.0.7) (2026-10-14)
 
 
