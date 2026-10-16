@@ -84,6 +84,17 @@ export class CollectionObservableRead<
     );
   }
 
+  private entriesHasAnyEntry(
+    updatedEntries: Array<E | undefined>,
+    currentKeys: E[PrimaryKey][],
+  ): boolean {
+    return updatedEntries.some(
+      (entry) =>
+        entry !== undefined &&
+        this.keysIncludes(currentKeys, entry[this.meta.primaryKey]),
+    );
+  }
+
   private keysHasAnyKey(
     keys: E[PrimaryKey][],
     entryKeys: E[PrimaryKey][],
@@ -246,7 +257,13 @@ export class CollectionObservableRead<
         }
       },
       onPut: async (updatedEntries) => {
-        if (this.entriesHasQueriedEntry(indexKey, query, updatedEntries)) {
+        if (
+          this.entriesHasQueriedEntry(indexKey, query, updatedEntries) ||
+          this.entriesHasAnyEntry(
+            updatedEntries,
+            observable.read.map((e) => e[this.meta.primaryKey]),
+          )
+        ) {
           const e = await this.read.queryIndex(indexKey, query, cursor);
           observable.publish(publisherKey, e);
         }
@@ -311,7 +328,10 @@ export class CollectionObservableRead<
         }
       },
       onPut: async (updatedEntries) => {
-        if (this.entriesHasQueriedEntry(indexKey, query, updatedEntries)) {
+        if (
+          this.entriesHasQueriedEntry(indexKey, query, updatedEntries) ||
+          this.entriesHasAnyEntry(updatedEntries, observable.read)
+        ) {
           const k = await this.read.queryIndexKeys(indexKey, query, cursor);
           observable.publish(publisherKey, k);
         }
