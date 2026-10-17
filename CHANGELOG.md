@@ -1,3 +1,10 @@
+## [0.0.9](https://github.com/cinnyapp/neurone/compare/v0.0.8...v0.0.9) (2026-10-17)
+
+
+### Bug Fixes
+
+* missing openid request token body ([#11](https://github.com/cinnyapp/neurone/issues/11)) ([076196f](https://github.com/cinnyapp/neurone/commit/076196f0e42ab96eba62a110eb68e4165308e9d4))
+
 ## [0.0.8](https://github.com/cinnyapp/neurone/compare/v0.0.7...v0.0.8) (2026-10-16)
 
 
