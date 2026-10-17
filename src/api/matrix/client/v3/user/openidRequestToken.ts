@@ -32,5 +32,6 @@ export const postOpenidRequestToken: PostOpenidRequestTokenEndpoint = ({
     path,
     rateLimited: true,
     requireAuthentication: true,
+    body: JSON.stringify({}),
   };
 };

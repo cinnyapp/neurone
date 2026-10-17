@@ -27,5 +27,6 @@ test("test post openid request token request", () => {
     path: `/_matrix/client/v3/user/${encodeURIComponent(userId)}/openid/request_token`,
     rateLimited: true,
     requireAuthentication: true,
+    body: JSON.stringify({}),
   });
 });
