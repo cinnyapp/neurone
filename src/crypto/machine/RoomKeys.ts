@@ -71,19 +71,19 @@ export class RoomKeys {
   }
 
   get roomKeyForwardingEnabled(): boolean {
-    return this.roomKeyForwardingEnabled;
+    return this.olmMachine.roomKeyForwardingEnabled;
   }
 
   set roomKeyForwardingEnabled(enabled: boolean) {
-    this.roomKeyForwardingEnabled = enabled;
+    this.olmMachine.roomKeyForwardingEnabled = enabled;
   }
 
   get roomKeyRequestsEnabled(): boolean {
-    return this.roomKeyRequestsEnabled;
+    return this.olmMachine.roomKeyRequestsEnabled;
   }
 
   set roomKeyRequestsEnabled(enabled: boolean) {
-    this.roomKeyRequestsEnabled = enabled;
+    this.olmMachine.roomKeyRequestsEnabled = enabled;
   }
 
   async count(): Promise<RoomKeyCount> {
@@ -124,7 +124,7 @@ export class RoomKeys {
     );
     if (!Array.isArray(requests)) return;
 
-    this.outgoingRequests.sendMultiple(requests);
+    await this.outgoingRequests.sendMultiple(requests);
   }
 
   async bundleRoomKeys(roomId: string): Promise<undefined | RoomKeysBundle> {
