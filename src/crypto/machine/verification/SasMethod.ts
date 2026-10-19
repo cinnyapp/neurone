@@ -133,7 +133,7 @@ export class SasAcceptStage extends SasStage {
   async mismatch(): Promise<void> {
     const request = this.sas.cancelWithCode("m.mismatched_sas");
     if (request) {
-      this.outgoingRequests.send(request);
+      await this.outgoingRequests.send(request);
     }
   }
 
