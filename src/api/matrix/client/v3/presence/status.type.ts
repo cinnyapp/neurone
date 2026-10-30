@@ -41,7 +41,7 @@ export type PutStatusPathParams = {
 
 export type PutStatusBody = {
   presence: Presence;
-  status?: string;
+  status_msg?: string;
 };
 
 export type PutStatusOK = Record<string, never>;
