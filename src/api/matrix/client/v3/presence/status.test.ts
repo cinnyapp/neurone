@@ -35,7 +35,7 @@ test("put status request", () => {
 
   const body: PutStatusBody = {
     presence: "online",
-    status: "Hello, World! I am online.",
+    status_msg: "Hello, World! I am online.",
   };
 
   expect(putStatus({ pathParams: { userId }, body })).toEqual({
