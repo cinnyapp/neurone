@@ -1,3 +1,14 @@
+## [0.0.10](https://github.com/cinnyapp/neurone/compare/v0.0.9...v0.0.10) (2026-11-04)
+
+
+### Bug Fixes
+
+* make pre-commit hook executable ([02cbc11](https://github.com/cinnyapp/neurone/commit/02cbc11a1349544cf569c82978bf5652ab01383a))
+* put status body state_msg type ([646e670](https://github.com/cinnyapp/neurone/commit/646e670336fd66917ff99fb6b035da1e0121a7ef))
+* sas mismatch method awaits outgoing request ([25683d4](https://github.com/cinnyapp/neurone/commit/25683d4319edacde313cceda36882315a5749be8))
+* stack overflow when touching room key request configs ([f88e8ff](https://github.com/cinnyapp/neurone/commit/f88e8ffc599d48d12f4b038f2aab50150d79f559))
+* update presence status test ([b5816e8](https://github.com/cinnyapp/neurone/commit/b5816e820e73e92e7e5c74a730aaa0cc5eca9e1e))
+
 ## [0.0.9](https://github.com/cinnyapp/neurone/compare/v0.0.8...v0.0.9) (2026-10-17)
 
 
