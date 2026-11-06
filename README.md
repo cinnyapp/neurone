@@ -21,6 +21,14 @@ and UI-oriented abstractions should live in higher-level libraries where
 possible. The goal is to keep the core small and composable, so applications 
 can choose how much functionality they need without inheriting a large framework.
 
+## Used By
+
+<p align="center">
+  <a id="cinny-link" href="https://cinny.in">
+    <img src="https://avatars.githubusercontent.com/u/90386163" alt="Cinny Logo" width="40" height="40" style="margin: 10px; max-width: 100%;" />
+  </a>
+</p>
+
 ## Local development
 
 Execute the following commands to build the package:
