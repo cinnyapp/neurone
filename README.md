@@ -23,7 +23,7 @@ can choose how much functionality they need without inheriting a large framework
 
 ## Used By
 
-<p align="center">
+<p align="left">
   <a id="cinny-link" href="https://cinny.in">
     <img src="https://avatars.githubusercontent.com/u/90386163" alt="Cinny Logo" width="40" height="40" style="margin: 10px; max-width: 100%;" />
   </a>
